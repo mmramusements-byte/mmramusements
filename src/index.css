@@ -1,0 +1,297 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+@import "tailwindcss";
+
+/* ─── DESIGN TOKENS ─── */
+:root {
+  --black:      #030303;
+  --dark:       #0a0a0c;
+  --surface:    #111114;
+  --card:       #18181c;
+  --border:     rgba(255,255,255,0.05);
+  --text:       #ffffff;
+  --muted:      rgba(240,240,255,0.45);
+
+  --accent:  #ef4444; /* Esports Red as primary */
+  --blue:    #3b82f6; /* Gaming Blue */
+  --green:   #22c55e; /* Emerald */
+  --orange:  #f97316; /* Premium Orange */
+
+  --ease-expo:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ─── GLOBAL RESET ─── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: auto;
+  /* Prevent any horizontal scroll caused by animations */
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--black);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+  /* Ensure full width always */
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 99px; }
+
+::selection { background: rgba(34,197,94,0.22); color: #fff; }
+
+/* ─── ROOT APP ─── */
+#root {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── CONTAINER SYSTEM ─── */
+/*
+  Single source of truth for content width.
+  Every section uses: <section class="mmr-section"> <div class="mmr-container"> ... </div> </section>
+*/
+.mmr-section {
+  position: relative;      /* critical: makes absolute children stay inside */
+  width: 100%;
+  overflow: hidden;
+}
+
+.mmr-container {
+  width: 100%;
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(1.25rem, 4vw, 5rem);
+  padding-right: clamp(1.25rem, 4vw, 5rem);
+}
+
+.mmr-section-pad {
+  padding-top: clamp(4rem, 8vw, 7rem);
+  padding-bottom: clamp(4rem, 8vw, 7rem);
+}
+
+/* ─── TYPOGRAPHY CLASSES ─── */
+.font-display { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.03em; }
+.font-heading  { font-family: 'Oswald', sans-serif; }
+.font-body     { font-family: 'Inter', sans-serif; }
+.font-mono     { font-family: 'JetBrains Mono', monospace; }
+
+/* ─── SECTION LABEL ─── */
+.section-label {
+  display: block;
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ─── CUSTOM CURSOR ─── */
+.cursor-dot {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px var(--accent), 0 0 20px rgba(34,197,94,0.35);
+  will-change: left, top;
+}
+.cursor-ring {
+  position: fixed;
+  width: 30px;
+  height: 30px;
+  border: 1.5px solid rgba(34,197,94,0.45);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99998;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s var(--ease-expo), height 0.2s var(--ease-expo), opacity 0.2s;
+  will-change: left, top;
+}
+.cursor-ring.hovering {
+  width: 48px;
+  height: 48px;
+  opacity: 0.28;
+}
+
+/* ─── NAVBAR ─── */
+.navbar-glass {
+  background: rgba(5, 5, 5, 0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+/* ─── IMAGE CARDS ─── */
+.img-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--card);
+  /* ensures card fills grid cell width */
+  width: 100%;
+}
+
+.img-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.95) 0%,
+    rgba(0,0,0,0.45) 45%,
+    rgba(0,0,0,0.05) 100%
+  );
+  pointer-events: none;
+}
+
+/* ─── DIVIDERS ─── */
+.rule {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+}
+.rule-gold {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent) 40%, transparent);
+}
+
+/* ─── BUTTONS ─── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 30px;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  border-radius: 6px;
+  border: none;
+  cursor: none;
+  transition: all 0.22s var(--ease-expo);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn-accent {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-accent:hover {
+  background: #dc2626; /* Darker red on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(239, 68, 68, 0.25);
+}
+.btn-outline {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+.btn-sm {
+  padding: 9px 20px;
+  font-size: 12px;
+}
+
+/* ─── BADGE ─── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 3px;
+}
+
+/* ─── TICKET CARD / STORE CARD ─── */
+.ticket-border {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  width: 100%;
+  height: 100%;
+  transition: border-color 0.3s;
+}
+.ticket-border:hover { 
+  border-color: rgba(255,255,255,0.15);
+}
+
+/* ─── SCROLL INDICATOR ─── */
+@keyframes scroll-line {
+  0%   { transform: scaleY(0); transform-origin: top; }
+  50%  { transform: scaleY(1); transform-origin: top; }
+  51%  { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+.scroll-line {
+  width: 1px;
+  height: 44px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scroll-line 2s ease-in-out infinite;
+}
+
+/* ─── MARQUEE ─── */
+@keyframes marquee-l {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes marquee-r {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+.marquee-left  {
+  display: flex;
+  width: max-content;
+  animation: marquee-l 45s linear infinite;
+}
+.marquee-right {
+  display: flex;
+  width: max-content;
+  animation: marquee-r 40s linear infinite;
+}
+.marquee-left:hover,
+.marquee-right:hover { animation-play-state: paused; }
+
+/* ─── LIVE DOT ─── */
+@keyframes live-pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%     { opacity: 0.4; transform: scale(1.6); }
+}
+.live-dot { animation: live-pulse 1.4s ease-in-out infinite; }
+
+/* ─── SCROLL LINE ─── */
+@keyframes scroll-anim {
+  0%   { transform: scaleY(0); transform-origin: top; }
+  50%  { transform: scaleY(1); transform-origin: top; }
+  51%  { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
