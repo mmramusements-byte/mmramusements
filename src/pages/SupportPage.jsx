@@ -160,7 +160,7 @@ export default function SupportPage() {
               
               {/* Telephone Hotline */}
               <a
-                href="tel:+18005556677"
+                href="tel:+12103888416"
                 onClick={() => playClickSound()}
                 onMouseEnter={() => playHoverSound()}
                 style={{
@@ -182,13 +182,13 @@ export default function SupportPage() {
                 </div>
                 <div>
                   <p className="font-heading" style={{ fontSize: '13px', color: '#fff', margin: 0, fontWeight: 600 }}>Tavern & Route Hotline</p>
-                  <p className="font-mono" style={{ fontSize: '12px', color: 'var(--accent)', margin: '2px 0 0', fontWeight: 'bold' }}>1-800-555-6677</p>
+                  <p className="font-mono" style={{ fontSize: '12px', color: 'var(--accent)', margin: '2px 0 0', fontWeight: 'bold' }}>+1 (210) 388-8416</p>
                 </div>
               </a>
 
               {/* Technical WhatsApp support */}
               <a
-                href="https://wa.me/18005556677?text=Hello%20MMR%20Amusements%20Support,%20I%20have%20a%20technical%20question%20regarding%20my%20route%20equipment."
+                href="https://wa.me/12103888416?text=Hello%20MMR%20Amusements%20Support,%20I%20have%20a%20technical%20question%20regarding%20my%20route%20equipment."
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => playClickSound()}
@@ -290,11 +290,25 @@ export default function SupportPage() {
                 <MapPin size={16} style={{ color: 'var(--accent)', marginTop: '2px', flexShrink: 0 }} />
                 <div>
                   <p className="font-heading" style={{ fontSize: '11px', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Distribution Center</p>
-                  <p className="font-body" style={{ fontSize: '12px', color: 'var(--muted)', margin: '4px 0 0', lineHeight: 1.5 }}>
-                    MMR Logistics Hub<br />
-                    1400 Industrial Parkway, Sector 4<br />
-                    New Delhi, 110020, India
-                  </p>
+                  <a
+                    href="https://maps.google.com/?q=2543+Boardwalk+st,+San+Antonio,+TX+78240"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => playClickSound()}
+                    onMouseEnter={() => playHoverSound()}
+                    style={{
+                      display: 'block',
+                      textDecoration: 'none',
+                      cursor: 'none',
+                      marginTop: '4px',
+                      transition: 'color 0.2s'
+                    }}
+                    className="font-body maps-link"
+                  >
+                    MMR Texas Distribution Hub<br />
+                    2543 Boardwalk st<br />
+                    San Antonio, TX 78240
+                  </a>
                 </div>
               </div>
 
@@ -309,6 +323,14 @@ export default function SupportPage() {
         .directory-row:hover {
           background: rgba(255,255,255,0.06) !important;
           border-color: var(--accent) !important;
+        }
+        .maps-link {
+          color: var(--muted);
+          line-height: 1.5;
+          font-size: 12px;
+        }
+        .maps-link:hover {
+          color: #fff !important;
         }
         @media (max-width: 900px) {
           .support-layout-grid { grid-template-columns: 1fr !important; }

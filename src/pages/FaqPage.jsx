@@ -23,7 +23,7 @@ const faqs = [
   {
     category: "Validators & Warranties",
     questions: [
-      { q: "What currency notes do MMR AMUSEMENTS bill acceptors support?", a: "All pre-installed validators (Pyramid Apex 5400 and ICT A6) are pre-configured to accept all current Indian rupee notes. Bezel LED lighting prompts users on correct insertion directions." },
+      { q: "What currency notes do MMR AMUSEMENTS bill acceptors support?", a: "All pre-installed validators (Pyramid Apex 5400 and ICT A6) are pre-configured to accept all standard US dollar bills ($1, $5, $10, $20, $50, and $100). Bezel LED lighting prompts users on correct insertion directions." },
       { q: "What is your hardware component warranty protocol?", a: "All brand new complete cabinets carry a 2-Year MMR Amusements warranty. Motherboards and bill acceptors have a 1-Year warranty, while refurbished boards and clearance parts carry a standard 90-day certified replacement guarantee." }
     ]
   }

@@ -159,7 +159,7 @@ export default function InquiryModal({ isOpen, onClose, item }) {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                     {/* Call Channel */}
                     <a
-                      href="tel:+18005556677"
+                      href="tel:+12103888416"
                       onClick={() => playClickSound()}
                       onMouseEnter={() => playHoverSound()}
                       style={{
@@ -186,14 +186,14 @@ export default function InquiryModal({ isOpen, onClose, item }) {
                         </div>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span className="font-mono" style={{ fontSize: '12px', color: 'var(--accent)', fontWeight: 'bold' }}>1-800-555-6677</span>
+                        <span className="font-mono" style={{ fontSize: '12px', color: 'var(--accent)', fontWeight: 'bold' }}>+1 (210) 388-8416</span>
                         <ExternalLink size={12} style={{ color: 'var(--muted)' }} />
                       </div>
                     </a>
 
                     {/* WhatsApp Channel */}
                     <a
-                      href={`https://wa.me/18005556677?text=${whatsappText}`}
+                      href={`https://wa.me/12103888416?text=${whatsappText}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={() => playClickSound()}

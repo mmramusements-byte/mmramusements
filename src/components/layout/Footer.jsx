@@ -62,13 +62,13 @@ export default function Footer() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {[
-                { icon: <Phone size={14} />, text: '+91 98765 43210 (Sales & Support)' },
-                { icon: <Mail size={14} />, text: 'sales@mmramusements.com' },
-                { icon: <MapPin size={14} />, text: 'National Equipment Distribution Center' },
+                { icon: <Phone size={14} />, text: '+1 (210) 388-8416 (Sales & Support)', href: 'tel:+12103888416' },
+                { icon: <Mail size={14} />, text: 'sales@mmramusements.com', href: 'mailto:sales@mmramusements.com' },
+                { icon: <MapPin size={14} />, text: '2543 Boardwalk st, San Antonio, TX 78240', href: 'https://maps.google.com/?q=2543+Boardwalk+st,+San+Antonio,+TX+78240' },
               ].map((c, i) => (
-                <div key={i} className="font-body" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: 'var(--muted)' }}>
+                <a key={i} href={c.href} target={c.href.startsWith('http') ? '_blank' : undefined} rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined} className="font-body contact-footer-link" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: 'var(--muted)', textDecoration: 'none', cursor: 'none', transition: 'color 0.2s' }}>
                   <span style={{ color: 'var(--accent)', flexShrink: 0 }}>{c.icon}</span> {c.text}
-                </div>
+                </a>
               ))}
             </div>
           </div>
@@ -147,6 +147,8 @@ export default function Footer() {
         .footer-link:hover::after { transform: scaleX(1); }
         .active-footer-link { color: #fff; }
         .active-footer-link::after { transform: scaleX(1); }
+
+        .contact-footer-link:hover { color: #fff !important; }
 
         @media (max-width: 1024px) { .footer-grid { grid-template-columns: 1fr 1fr !important; } }
         @media (max-width: 640px) { .footer-grid { grid-template-columns: 1fr !important; } }
