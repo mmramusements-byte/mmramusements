@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { NavLink } from 'react-router-dom';
-import { Phone, MapPin, Mail, Heart } from 'lucide-react';
+import { Phone, MapPin, Mail } from 'lucide-react';
 import { FaInstagram, FaYoutube, FaXTwitter, FaWhatsapp } from 'react-icons/fa6';
 
 const footerNav = [

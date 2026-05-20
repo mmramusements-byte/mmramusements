@@ -2,21 +2,43 @@
 // Zero network load, ultra low latency, works instantly out-of-the-box
 
 let audioCtx = null;
+let hasUserGesture = false;
+
+// Register global listeners for first user gesture to unlock AudioContext cleanly
+if (typeof window !== 'undefined') {
+  const enableAudio = () => {
+    hasUserGesture = true;
+    cleanup();
+  };
+  const cleanup = () => {
+    window.removeEventListener('click', enableAudio);
+    window.removeEventListener('keydown', enableAudio);
+    window.removeEventListener('touchstart', enableAudio);
+  };
+  window.addEventListener('click', enableAudio, { passive: true });
+  window.addEventListener('keydown', enableAudio, { passive: true });
+  window.addEventListener('touchstart', enableAudio, { passive: true });
+}
 
 function getAudioContext() {
+  if (!hasUserGesture) {
+    return null; // Prevent warnings prior to user interaction
+  }
   if (!audioCtx) {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   }
   // Resume if suspended (browser security auto-lock override)
   if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
+    audioCtx.resume().catch(() => {}); // Safely catch promise rejections
   }
   return audioCtx;
 }
 
 export const playHoverSound = () => {
+  if (!hasUserGesture) return; // Fail fast silently to prevent console warnings
   try {
     const ctx = getAudioContext();
+    if (!ctx) return;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
@@ -33,14 +55,16 @@ export const playHoverSound = () => {
 
     osc.start();
     osc.stop(ctx.currentTime + 0.08);
-  } catch (e) {
+  } catch {
     // Fail silently if browser blocks audio autoplay initially
   }
 };
 
 export const playClickSound = () => {
+  hasUserGesture = true; // An explicit click counts as an immediate gesture
   try {
     const ctx = getAudioContext();
+    if (!ctx) return;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
@@ -56,14 +80,16 @@ export const playClickSound = () => {
 
     osc.start();
     osc.stop(ctx.currentTime + 0.12);
-  } catch (e) {
+  } catch {
     // Fail silently
   }
 };
 
 export const playSuccessSound = () => {
+  hasUserGesture = true; // An explicit action counts as an immediate gesture
   try {
     const ctx = getAudioContext();
+    if (!ctx) return;
     const now = ctx.currentTime;
     
     // Quick ascending clean micro arpeggio
@@ -89,7 +115,7 @@ export const playSuccessSound = () => {
     playNote(659.25, 0.06, 0.18);   // E5
     playNote(783.99, 0.12, 0.24);   // G5
     playNote(1046.50, 0.18, 0.35);  // C6
-  } catch (e) {
+  } catch {
     // Fail silently
   }
 };
