@@ -1,4 +1,6 @@
+import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { useProductStore } from './admin/store/useProductStore';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import HomePage from './pages/HomePage';
@@ -44,6 +46,12 @@ function StorefrontLayout({ children }) {
 }
 
 function App() {
+  const fetchProducts = useProductStore((state) => state.fetchProducts);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
+
   return (
     <Routes>
       {/* ─── ADMIN AUTH ROUTE ─── */}

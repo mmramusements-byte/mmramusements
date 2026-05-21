@@ -13,12 +13,15 @@ export default function AddProductPage() {
   
   const handleSubmit = async (data) => {
     setIsSubmitting(true);
-    // Simulate API delay
-    await new Promise(r => setTimeout(r, 600)); 
-    addProduct(data);
-    toast.success('Product created successfully!');
-    setIsSubmitting(false);
-    navigate('/admin/products');
+    try {
+      await addProduct(data);
+      toast.success('Product created successfully!');
+      navigate('/admin/products');
+    } catch (error) {
+      toast.error(error.message || 'Failed to create product');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   
   return (

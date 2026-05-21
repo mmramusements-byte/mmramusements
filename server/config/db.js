@@ -1,0 +1,134 @@
+import pg from 'pg';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const { Pool } = pg;
+
+export const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
+// Automatic table creation
+export const initializeDatabase = async () => {
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    
+    // Create admins table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS admins (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    // Create otp_codes table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS otp_codes (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(255) NOT NULL,
+        otp_hash VARCHAR(255) NOT NULL,
+        expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+        attempts INT DEFAULT 0,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    // Ensure attempts column exists if table was already created in a previous iteration
+    await client.query(`
+      ALTER TABLE otp_codes ADD COLUMN IF NOT EXISTS attempts INT DEFAULT 0;
+    `);
+
+    // Create homepage_settings table (only one row is ever used)
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS homepage_settings (
+        id SERIAL PRIMARY KEY,
+        hero_visible BOOLEAN DEFAULT true,
+        featured_visible BOOLEAN DEFAULT true,
+        trending_visible BOOLEAN DEFAULT true,
+        deals_visible BOOLEAN DEFAULT true,
+        reviews_visible BOOLEAN DEFAULT true,
+        best_sellers_visible BOOLEAN DEFAULT true,
+        new_arrivals_visible BOOLEAN DEFAULT true,
+        popular_visible BOOLEAN DEFAULT true,
+        recommended_visible BOOLEAN DEFAULT true,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    // Ensure all visibility columns exist if the table was already created
+    await client.query(`
+      ALTER TABLE homepage_settings ADD COLUMN IF NOT EXISTS best_sellers_visible BOOLEAN DEFAULT true;
+      ALTER TABLE homepage_settings ADD COLUMN IF NOT EXISTS new_arrivals_visible BOOLEAN DEFAULT true;
+      ALTER TABLE homepage_settings ADD COLUMN IF NOT EXISTS popular_visible BOOLEAN DEFAULT true;
+      ALTER TABLE homepage_settings ADD COLUMN IF NOT EXISTS recommended_visible BOOLEAN DEFAULT true;
+    `);
+
+    // Seed the homepage_settings if it doesn't exist
+    const settingsCheck = await client.query('SELECT COUNT(*) FROM homepage_settings');
+    if (parseInt(settingsCheck.rows[0].count) === 0) {
+      await client.query(`
+        INSERT INTO homepage_settings (hero_visible, featured_visible, trending_visible, deals_visible, reviews_visible, best_sellers_visible, new_arrivals_visible, popular_visible, recommended_visible) 
+        VALUES (true, true, true, true, true, true, true, true, true)
+      `);
+    }
+
+    // Create products table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS products (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        price NUMERIC NOT NULL,
+        discount_price NUMERIC,
+        category VARCHAR(255) NOT NULL,
+        condition VARCHAR(255) NOT NULL,
+        players INT DEFAULT 0,
+        yield VARCHAR(255),
+        warranty VARCHAR(255),
+        description TEXT,
+        image_url TEXT,
+        tags JSONB DEFAULT '[]'::jsonb,
+        features JSONB DEFAULT '[]'::jsonb,
+        active BOOLEAN DEFAULT true,
+        featured BOOLEAN DEFAULT false,
+        trending BOOLEAN DEFAULT false,
+        best_seller BOOLEAN DEFAULT false,
+        new_arrival BOOLEAN DEFAULT false,
+        popular BOOLEAN DEFAULT false,
+        recommended BOOLEAN DEFAULT false,
+        stock VARCHAR(255) DEFAULT 'In Stock',
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    
+    // Ensure all new product columns exist if the table was already created
+    await client.query(`
+      ALTER TABLE products ADD COLUMN IF NOT EXISTS new_arrival BOOLEAN DEFAULT false;
+      ALTER TABLE products ADD COLUMN IF NOT EXISTS popular BOOLEAN DEFAULT false;
+      ALTER TABLE products ADD COLUMN IF NOT EXISTS recommended BOOLEAN DEFAULT false;
+    `);
+    
+    // Optionally insert the whitelisted admin if not exists (hardcoded check is also done in logic)
+    // But inserting it is a good practice
+    await client.query(`
+      INSERT INTO admins (email) 
+      VALUES ($1) 
+      ON CONFLICT (email) DO NOTHING;
+    `, [process.env.ADMIN_EMAIL || 'mmramusements@gmail.com']);
+
+    await client.query('COMMIT');
+    console.log('Database tables initialized successfully');
+  } catch (err) {
+    await client.query('ROLLBACK');
+    console.error('Error initializing database tables:', err);
+    throw err;
+  } finally {
+    client.release();
+  }
+};

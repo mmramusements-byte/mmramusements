@@ -20,69 +20,63 @@ const delay = (ms = 300) => new Promise((resolve) => setTimeout(resolve, ms));
 export const productApi = {
   /** Fetch all products */
   getAll: async () => {
-    await delay();
     return useProductStore.getState().products;
   },
 
   /** Fetch single product by id */
   getById: async (id) => {
-    await delay(100);
     return useProductStore.getState().getProduct(id);
   },
 
   /** Create a new product */
   create: async (data) => {
-    await delay();
-    useProductStore.getState().addProduct(data);
+    await useProductStore.getState().addProduct(data);
     return { success: true };
   },
 
   /** Update an existing product */
   update: async (id, data) => {
-    await delay();
-    useProductStore.getState().updateProduct(id, data);
+    await useProductStore.getState().updateProduct(id, data);
     return { success: true };
   },
 
   /** Delete a product */
   delete: async (id) => {
-    await delay();
-    useProductStore.getState().deleteProduct(id);
+    await useProductStore.getState().deleteProduct(id);
     return { success: true };
   },
 
   /** Duplicate a product */
   duplicate: async (id) => {
-    await delay(100);
-    useProductStore.getState().duplicateProduct(id);
+    const product = useProductStore.getState().getProduct(id);
+    if (!product) return { success: false };
+    const { id: _, ...data } = product;
+    data.title = `${data.title} (Copy)`;
+    await useProductStore.getState().addProduct(data);
     return { success: true };
   },
 
   /** Toggle featured flag */
   toggleFeatured: async (id) => {
-    await delay(100);
-    useProductStore.getState().toggleFeatured(id);
+    await useProductStore.getState().toggleFeatured(id);
     return { success: true };
   },
 
   /** Toggle trending flag */
   toggleTrending: async (id) => {
-    await delay(100);
-    useProductStore.getState().toggleTrending(id);
+    await useProductStore.getState().toggleTrending(id);
     return { success: true };
   },
 
   /** Toggle best-seller flag */
   toggleBestSeller: async (id) => {
-    await delay(100);
-    useProductStore.getState().toggleBestSeller(id);
+    await useProductStore.getState().toggleBestSeller(id);
     return { success: true };
   },
 
   /** Toggle active/inactive */
   toggleActive: async (id) => {
-    await delay(100);
-    useProductStore.getState().toggleActive(id);
+    await useProductStore.getState().toggleActive(id);
     return { success: true };
   },
 };

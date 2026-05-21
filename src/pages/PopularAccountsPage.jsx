@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Award, ShieldCheck, Flame, MessageSquare, CheckCircle2, Truck } from 'lucide-react';
-import { products } from '../data/products';
+import { useProductStore } from '../admin/store/useProductStore';
 import { playHoverSound, playClickSound, playSuccessSound } from '../utils/audio';
 import InquiryModal from '../components/common/InquiryModal';
 
@@ -161,8 +161,10 @@ export default function PopularAccountsPage() {
     setIsInquiryOpen(true);
   };
 
+  const products = useProductStore(state => state.products);
+  const activeProducts = products.filter(prod => prod.active);
   // Filter for elite top earner machines (Complete Cabinets & Genuine OEM boards)
-  const eliteEquipment = products.filter(prod => prod.category === 'Cabinets' || prod.badge === 'Genuine OEM');
+  const eliteEquipment = activeProducts.filter(prod => prod.category === 'Cabinets' || prod.badge === 'Genuine OEM');
 
   return (
     <div style={{ background: 'var(--black)', minHeight: '100vh', paddingTop: '120px', paddingBottom: '80px' }}>

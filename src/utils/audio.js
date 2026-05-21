@@ -2,40 +2,45 @@
 // Zero network load, ultra low latency, works instantly out-of-the-box
 
 let audioCtx = null;
-let hasUserGesture = false;
+let audioUnlocked = false;
 
 // Register global listeners for first user gesture to unlock AudioContext cleanly
 if (typeof window !== 'undefined') {
-  const enableAudio = () => {
-    hasUserGesture = true;
-    cleanup();
+  const initAudio = () => {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume().then(() => {
+        audioUnlocked = true;
+        cleanup();
+      }).catch(() => {});
+    } else {
+      audioUnlocked = true;
+      cleanup();
+    }
   };
+  
   const cleanup = () => {
-    window.removeEventListener('click', enableAudio);
-    window.removeEventListener('keydown', enableAudio);
-    window.removeEventListener('touchstart', enableAudio);
+    window.removeEventListener('click', initAudio);
+    window.removeEventListener('keydown', initAudio);
+    window.removeEventListener('touchstart', initAudio);
   };
-  window.addEventListener('click', enableAudio, { passive: true });
-  window.addEventListener('keydown', enableAudio, { passive: true });
-  window.addEventListener('touchstart', enableAudio, { passive: true });
+  
+  window.addEventListener('click', initAudio, { passive: true });
+  window.addEventListener('keydown', initAudio, { passive: true });
+  window.addEventListener('touchstart', initAudio, { passive: true });
 }
 
 function getAudioContext() {
-  if (!hasUserGesture) {
-    return null; // Prevent warnings prior to user interaction
-  }
-  if (!audioCtx) {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-  // Resume if suspended (browser security auto-lock override)
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume().catch(() => {}); // Safely catch promise rejections
+  if (!audioUnlocked || !audioCtx) {
+    return null; // Prevent warnings prior to true user interaction
   }
   return audioCtx;
 }
 
 export const playHoverSound = () => {
-  if (!hasUserGesture) return; // Fail fast silently to prevent console warnings
+  if (!audioUnlocked) return; // Fail fast silently to prevent console warnings
   try {
     const ctx = getAudioContext();
     if (!ctx) return;
@@ -61,7 +66,6 @@ export const playHoverSound = () => {
 };
 
 export const playClickSound = () => {
-  hasUserGesture = true; // An explicit click counts as an immediate gesture
   try {
     const ctx = getAudioContext();
     if (!ctx) return;
@@ -86,7 +90,6 @@ export const playClickSound = () => {
 };
 
 export const playSuccessSound = () => {
-  hasUserGesture = true; // An explicit action counts as an immediate gesture
   try {
     const ctx = getAudioContext();
     if (!ctx) return;

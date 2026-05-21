@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { ArrowRight, ShieldCheck, Zap, Layers, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { products } from '../../data/products';
+import { useProductStore } from '../../admin/store/useProductStore';
 import { playHoverSound, playClickSound, playSuccessSound } from '../../utils/audio';
 import InquiryModal from '../common/InquiryModal';
 
@@ -165,14 +165,15 @@ export default function FeaturedAccounts() {
   const inView = useInView(ref, { once: true });
   const [selectedItem, setSelectedItem] = useState(null);
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
+  const products = useProductStore((state) => state.products);
+  const featuredProducts = products.filter(p => p.featured && p.active).slice(0, 3);
 
   const handleInquire = (item) => {
     setSelectedItem(item);
     setIsInquiryOpen(true);
   };
 
-  // Filter products to complete cabinets for featured section
-  const cabinetProducts = products.filter(p => p.category === 'Cabinets').slice(0, 3);
+  if (featuredProducts.length === 0) return null;
 
   return (
     <section id="featured-accounts" className="mmr-section mmr-section-pad" style={{ background: 'var(--surface)' }}>
@@ -213,7 +214,7 @@ export default function FeaturedAccounts() {
 
         {/* Storefront Grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', width: '100%' }} className="storefront-grid">
-          {cabinetProducts.map((item, i) => (
+          {featuredProducts.map((item, i) => (
             <ProductCard key={item.id} item={item} index={i} onInquire={handleInquire} />
           ))}
         </div>

@@ -1,126 +1,173 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { products as initialProducts } from '../../data/products';
+import api from '../../lib/api';
 
-// Enrich initial products with admin-only fields
-const enrichProducts = (products) =>
-  products.map((p) => ({
-    ...p,
-    featured: ['p1', 'p3'].includes(p.id),
-    trending: ['p2', 'p4', 'p5'].includes(p.id),
-    bestSeller: ['p1', 'p6'].includes(p.id),
-    active: true,
-    tags: [],
-    stock: 'In Stock',
-    discountPrice: '',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  }));
+export const useProductStore = create((set, get) => ({
+  products: [],
+  isLoading: false,
+  isInitialized: false, // Prevents re-fetching if already loaded in same session
+  error: null,
 
-export const useProductStore = create(
-  persist(
-    (set, get) => ({
-      products: enrichProducts(initialProducts),
+  // ── Fetch ───────────────────────────────────────────────────────────────
+  fetchProducts: async (force = false) => {
+    // If already initialized and not forced, don't refetch on every mount
+    if (get().isInitialized && !force) return;
 
-      // ── Create ─────────────────────────────────────────────────────────────
-      addProduct: (product) =>
-        set((state) => ({
-          products: [
-            {
-              ...product,
-              id: `p${Date.now()}`,
-              featured: false,
-              trending: false,
-              bestSeller: false,
-              active: true,
-              tags: product.tags ?? [],
-              stock: product.stock ?? 'In Stock',
-              discountPrice: product.discountPrice ?? '',
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
-            },
-            ...state.products,
-          ],
-        })),
+    set({ isLoading: true, error: null });
+    try {
+      // api.get automatically unpacks response.data because of the interceptor
+      const data = await api.get('/products');
+      
+      const realProducts = data.map(p => ({
+        ...p,
+        id: String(p.id),
+        discountPrice: p.discount_price,
+        bestSeller: p.best_seller,
+        newArrival: p.new_arrival,
+        popular: p.popular,
+        recommended: p.recommended,
+        image: p.image_url,
+        createdAt: p.created_at,
+        updatedAt: p.updated_at
+      }));
 
-      // ── Read ────────────────────────────────────────────────────────────────
-      getProduct: (id) => get().products.find((p) => p.id === id),
-      getFeatured: () => get().products.filter((p) => p.featured && p.active),
-      getTrending: () => get().products.filter((p) => p.trending && p.active),
-      getBestSellers: () => get().products.filter((p) => p.bestSeller && p.active),
-      getActive: () => get().products.filter((p) => p.active),
+      set({ products: realProducts, isLoading: false, isInitialized: true });
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+    }
+  },
 
-      // ── Update ──────────────────────────────────────────────────────────────
-      updateProduct: (id, updates) =>
-        set((state) => ({
-          products: state.products.map((p) =>
-            p.id === id
-              ? { ...p, ...updates, updatedAt: new Date().toISOString() }
-              : p
-          ),
-        })),
+  // ── Create ─────────────────────────────────────────────────────────────
+  addProduct: async (productData) => {
+    set({ isLoading: true, error: null });
+    try {
+      const data = await api.post('/products', productData);
 
-      // ── Delete ──────────────────────────────────────────────────────────────
-      deleteProduct: (id) =>
-        set((state) => ({
-          products: state.products.filter((p) => p.id !== id),
-        })),
+      const newProduct = {
+        ...data,
+        id: String(data.id),
+        discountPrice: data.discount_price,
+        bestSeller: data.best_seller,
+        newArrival: data.new_arrival,
+        popular: data.popular,
+        recommended: data.recommended,
+        image: data.image_url,
+        createdAt: data.created_at,
+        updatedAt: data.updated_at
+      };
 
-      // ── Duplicate ───────────────────────────────────────────────────────────
-      duplicateProduct: (id) => {
-        const product = get().products.find((p) => p.id === id);
-        if (!product) return;
-        set((state) => ({
-          products: [
-            {
-              ...product,
-              id: `p${Date.now()}`,
-              title: `${product.title} (Copy)`,
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
-            },
-            ...state.products,
-          ],
-        }));
-      },
+      set((state) => ({
+        products: [newProduct, ...state.products],
+        isLoading: false
+      }));
+      return newProduct;
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
 
-      // ── Toggles ─────────────────────────────────────────────────────────────
-      toggleFeatured: (id) =>
-        set((state) => ({
-          products: state.products.map((p) =>
-            p.id === id
-              ? { ...p, featured: !p.featured, updatedAt: new Date().toISOString() }
-              : p
-          ),
-        })),
+  duplicateProduct: async (id) => {
+    const product = get().getProduct(id);
+    if (!product) return;
+    const { id: _, createdAt, updatedAt, ...data } = product;
+    data.title = `${data.title} (Copy)`;
+    await get().addProduct(data);
+  },
 
-      toggleTrending: (id) =>
-        set((state) => ({
-          products: state.products.map((p) =>
-            p.id === id
-              ? { ...p, trending: !p.trending, updatedAt: new Date().toISOString() }
-              : p
-          ),
-        })),
+  // ── Read ────────────────────────────────────────────────────────────────
+  getProduct: (id) => get().products.find((p) => String(p.id) === String(id)),
+  getFeatured: () => get().products.filter((p) => p.featured && p.active),
+  getTrending: () => get().products.filter((p) => p.trending && p.active),
+  getBestSellers: () => get().products.filter((p) => p.bestSeller && p.active),
+  getNewArrivals: () => get().products.filter((p) => p.newArrival && p.active),
+  getPopular: () => get().products.filter((p) => p.popular && p.active),
+  getRecommended: () => get().products.filter((p) => p.recommended && p.active),
+  getActive: () => get().products.filter((p) => p.active),
 
-      toggleBestSeller: (id) =>
-        set((state) => ({
-          products: state.products.map((p) =>
-            p.id === id
-              ? { ...p, bestSeller: !p.bestSeller, updatedAt: new Date().toISOString() }
-              : p
-          ),
-        })),
+  // ── Update ──────────────────────────────────────────────────────────────
+  updateProduct: async (id, updates) => {
+    set({ isLoading: true, error: null });
+    try {
+      const data = await api.put(`/products/${id}`, updates);
 
-      toggleActive: (id) =>
-        set((state) => ({
-          products: state.products.map((p) =>
-            p.id === id
-              ? { ...p, active: !p.active, updatedAt: new Date().toISOString() }
-              : p
-          ),
-        })),
-    }),
-    { name: 'mmr-admin-products' }
-  )
-);
+      const updatedProduct = {
+        ...data,
+        id: String(data.id),
+        discountPrice: data.discount_price,
+        bestSeller: data.best_seller,
+        newArrival: data.new_arrival,
+        popular: data.popular,
+        recommended: data.recommended,
+        image: data.image_url,
+        createdAt: data.created_at,
+        updatedAt: data.updated_at
+      };
+
+      set((state) => ({
+        products: state.products.map((p) => (String(p.id) === String(id) ? { ...p, ...updatedProduct } : p)),
+        isLoading: false
+      }));
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
+
+  // ── Delete ──────────────────────────────────────────────────────────────
+  deleteProduct: async (id) => {
+    set({ isLoading: true, error: null });
+    try {
+      await api.delete(`/products/${id}`);
+      set((state) => ({
+        products: state.products.filter((p) => String(p.id) !== String(id)),
+        isLoading: false
+      }));
+    } catch (error) {
+      set({ error: error.message, isLoading: false });
+      throw error;
+    }
+  },
+
+  // ── Toggles ─────────────────────────────────────────────────────────────
+  toggleFeatured: async (id) => {
+    const p = get().getProduct(id);
+    if (!p) return;
+    await get().updateProduct(id, { featured: !p.featured });
+  },
+
+  toggleTrending: async (id) => {
+    const p = get().getProduct(id);
+    if (!p) return;
+    await get().updateProduct(id, { trending: !p.trending });
+  },
+
+  toggleBestSeller: async (id) => {
+    const p = get().getProduct(id);
+    if (!p) return;
+    await get().updateProduct(id, { bestSeller: !p.bestSeller });
+  },
+  
+  toggleNewArrival: async (id) => {
+    const p = get().getProduct(id);
+    if (!p) return;
+    await get().updateProduct(id, { newArrival: !p.newArrival });
+  },
+
+  togglePopular: async (id) => {
+    const p = get().getProduct(id);
+    if (!p) return;
+    await get().updateProduct(id, { popular: !p.popular });
+  },
+
+  toggleRecommended: async (id) => {
+    const p = get().getProduct(id);
+    if (!p) return;
+    await get().updateProduct(id, { recommended: !p.recommended });
+  },
+
+  toggleActive: async (id) => {
+    const p = get().getProduct(id);
+    if (!p) return;
+    await get().updateProduct(id, { active: !p.active });
+  },
+}));

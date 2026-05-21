@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { ShoppingCart, Zap, Star, BadgeCheck } from 'lucide-react';
-import { products } from '../../data/products';
+import { useProductStore } from '../../admin/store/useProductStore';
 import { games } from '../../data/games';
 
 function ProductCard({ product, game, index }) {
@@ -121,8 +121,11 @@ export default function ProductDisplay() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
 
+  const products = useProductStore(state => state.products);
+  const activeProducts = products.filter(prod => prod.active);
+  
   // Show products for first 4 games
-  const displayProducts = products.filter(p =>
+  const displayProducts = activeProducts.filter(p =>
     ['free-fire', 'pubg', 'valorant', 'mobile-legends'].includes(p.gameId)
   );
 

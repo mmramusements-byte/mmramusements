@@ -1,23 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { deals as initialDeals } from '../../data/products';
-
-// Enrich initial deals with admin-only fields
-const enrichDeals = (deals) =>
-  deals.map((d) => ({
-    ...d,
-    active: true,
-    featured: false,
-    startDate: '',
-    endDate: '',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  }));
 
 export const useDealStore = create(
   persist(
     (set, get) => ({
-      deals: enrichDeals(initialDeals),
+      deals: [],
 
       // ── Create ─────────────────────────────────────────────────────────────
       addDeal: (deal) =>

@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useProductStore } from '../store/useProductStore';
 import { useBannerStore } from '../store/useBannerStore';
+import { useSettingsStore } from '../../store/useSettingsStore';
 import PageHeader from '../components/ui/PageHeader';
 import { Star, TrendingUp, Zap, MessageSquare, Image as ImageIcon } from 'lucide-react';
 import { truncate } from '../utils/formatters';
+import { useEffect } from 'react';
 
 function AdminToggle({ checked, onChange, label, description }) {
   return (
@@ -23,15 +25,23 @@ export default function HomepagePage() {
   const featured = products.filter(p => p.featured && p.active);
   const trending = products.filter(p => p.trending && p.active);
   const bestSellers = products.filter(p => p.bestSeller && p.active);
-  
+  const newArrivals = products.filter(p => p.newArrival && p.active);
+  const popular = products.filter(p => p.popular && p.active);
+  const recommended = products.filter(p => p.recommended && p.active);
+  const { settings, updateSettings, fetchSettings } = useSettingsStore();
   const [activeTab, setActiveTab] = useState('featured');
-  const [toggles, setToggles] = useState({
-    hero: true,
-    featured: true,
-    trending: true,
-    deals: true,
-    reviews: true
-  });
+
+  useEffect(() => {
+    fetchSettings();
+  }, [fetchSettings]);
+
+  const handleToggle = async (key, value) => {
+    try {
+      await updateSettings({ [key]: value });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div>
@@ -69,7 +79,7 @@ export default function HomepagePage() {
             onClick={() => setActiveTab('trending')}
             style={{ width: '100%', border: 'none', background: activeTab === 'trending' ? 'rgba(99,102,241,0.1)' : 'transparent' }}
           >
-            <TrendingUp size={16} /> Trending & Best
+            <TrendingUp size={16} /> Product Sections
           </button>
 
           <button 
@@ -93,14 +103,14 @@ export default function HomepagePage() {
         <div>
           {activeTab === 'hero' && (
             <div>
-              <AdminToggle checked={toggles.hero} onChange={(v) => setToggles({...toggles, hero: v})} label="Hero Banners Section" description="Show the rotating hero banners at the top of the homepage." />
+              <AdminToggle checked={settings.hero_visible} onChange={(v) => handleToggle('hero_visible', v)} label="Hero Banners Section" description="Show the rotating hero banners at the top of the homepage." />
               <p style={{ fontSize: '13px', color: 'var(--adm-muted)' }}>To edit the actual banners, go to <b>Content › Banners</b>.</p>
             </div>
           )}
 
           {activeTab === 'featured' && (
             <div>
-              <AdminToggle checked={toggles.featured} onChange={(v) => setToggles({...toggles, featured: v})} label="Featured Products Section" description="Display the grid of featured products on the homepage." />
+              <AdminToggle checked={settings.featured_visible} onChange={(v) => handleToggle('featured_visible', v)} label="Featured Products Section" description="Display the grid of featured products on the homepage." />
               
               <div style={{ marginTop: '24px' }}>
                 <h3 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px' }}>Select Featured Products</h3>
@@ -127,23 +137,30 @@ export default function HomepagePage() {
           )}
 
           {activeTab === 'trending' && (
-            <div>
-              <AdminToggle checked={toggles.trending} onChange={(v) => setToggles({...toggles, trending: v})} label="Trending & Best Sellers Sections" description="Show the horizontal scrolling carousels on the homepage." />
-              <p style={{ fontSize: '13px', color: 'var(--adm-muted)' }}>Currently displaying <b>{trending.length}</b> trending and <b>{bestSellers.length}</b> best seller items.</p>
-              <p style={{ fontSize: '13px', color: 'var(--adm-muted)', marginTop: '8px' }}>To edit these lists, go to <b>Catalog › Products</b> and edit individual products.</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <AdminToggle checked={settings.trending_visible} onChange={(v) => handleToggle('trending_visible', v)} label="Trending Section" description="Show the horizontal scrolling carousel for trending products." />
+              <AdminToggle checked={settings.best_sellers_visible} onChange={(v) => handleToggle('best_sellers_visible', v)} label="Best Sellers Section" description="Show the best sellers grid section." />
+              <AdminToggle checked={settings.new_arrivals_visible} onChange={(v) => handleToggle('new_arrivals_visible', v)} label="New Arrivals Section" description="Show the new arrivals section." />
+              <AdminToggle checked={settings.popular_visible} onChange={(v) => handleToggle('popular_visible', v)} label="Popular Products Section" description="Show the popular products section." />
+              <AdminToggle checked={settings.recommended_visible} onChange={(v) => handleToggle('recommended_visible', v)} label="Recommended Section" description="Show the recommended for you section." />
+              
+              <div style={{ marginTop: '16px' }}>
+                <p style={{ fontSize: '13px', color: 'var(--adm-muted)' }}>Currently displaying <b>{trending.length}</b> trending, <b>{bestSellers.length}</b> best sellers, <b>{newArrivals.length}</b> new arrivals, <b>{popular.length}</b> popular, and <b>{recommended.length}</b> recommended items.</p>
+                <p style={{ fontSize: '13px', color: 'var(--adm-muted)', marginTop: '8px' }}>To edit these lists, go to <b>Catalog › Products</b> and edit individual products.</p>
+              </div>
             </div>
           )}
 
           {activeTab === 'deals' && (
             <div>
-              <AdminToggle checked={toggles.deals} onChange={(v) => setToggles({...toggles, deals: v})} label="Deals Strip" description="Show the promotional deals banner on the homepage." />
+              <AdminToggle checked={settings.deals_visible} onChange={(v) => handleToggle('deals_visible', v)} label="Deals Strip" description="Show the promotional deals banner on the homepage." />
               <p style={{ fontSize: '13px', color: 'var(--adm-muted)' }}>To manage deals, go to <b>Catalog › Deals</b>.</p>
             </div>
           )}
 
           {activeTab === 'reviews' && (
             <div>
-              <AdminToggle checked={toggles.reviews} onChange={(v) => setToggles({...toggles, reviews: v})} label="Reviews Section" description="Show the customer testimonials on the homepage." />
+              <AdminToggle checked={settings.reviews_visible} onChange={(v) => handleToggle('reviews_visible', v)} label="Reviews Section" description="Show the customer testimonials on the homepage." />
               <p style={{ fontSize: '13px', color: 'var(--adm-muted)' }}>To manage reviews, go to <b>Content › Reviews</b>.</p>
             </div>
           )}

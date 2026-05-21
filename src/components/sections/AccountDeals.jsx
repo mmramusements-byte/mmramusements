@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Check, ArrowRight, Tag, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { deals } from '../../data/products';
+import { useDealStore } from '../../admin/store/useDealStore';
 import { playHoverSound, playClickSound, playSuccessSound } from '../../utils/audio';
 import InquiryModal from '../common/InquiryModal';
 
@@ -212,7 +212,7 @@ export default function AccountDeals() {
         }}
           className="packages-grid"
         >
-          {deals.map((pkg, i) => (
+          {useDealStore(state => state.deals).map((pkg, i) => (
             <DealCard key={pkg.id} pkg={pkg} i={i} onInquire={handleInquire} />
           ))}
         </div>

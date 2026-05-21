@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Check, Tag, Clock, HelpCircle, ArrowRight, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { deals } from '../data/products';
+import { useDealStore } from '../admin/store/useDealStore';
 import { playHoverSound, playClickSound, playSuccessSound } from '../utils/audio';
 import InquiryModal from '../components/common/InquiryModal';
 
@@ -67,7 +67,7 @@ export default function DealsPage() {
         }}
           className="deals-grid"
         >
-          {deals.map((pkg, i) => (
+          {useDealStore(state => state.deals).map((pkg, i) => (
             <motion.div
               key={pkg.id}
               initial={{ opacity: 0, y: 30 }}

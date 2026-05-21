@@ -1,12 +1,12 @@
 import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { ArrowRight, MessageSquare, Flame } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Zap, Layers, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useProductStore } from '../../admin/store/useProductStore';
 import { playHoverSound, playClickSound, playSuccessSound } from '../../utils/audio';
 import InquiryModal from '../common/InquiryModal';
 
-function TrendingCard({ item, index, onInquire }) {
+function ProductCard({ item, index, onInquire }) {
   const [hovered, setHovered] = useState(false);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
@@ -44,7 +44,7 @@ function TrendingCard({ item, index, onInquire }) {
       initial={{ opacity: 0, y: 36 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
-      transition={{ delay: index * 0.1, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ delay: index * 0.07, duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -52,7 +52,7 @@ function TrendingCard({ item, index, onInquire }) {
       style={{
         position: 'relative',
         cursor: 'none',
-        height: '360px',
+        height: '420px',
         width: '100%',
         borderRadius: '16px',
         overflow: 'hidden',
@@ -70,62 +70,81 @@ function TrendingCard({ item, index, onInquire }) {
           alt={item.title}
           loading="lazy"
           animate={{ scale: hovered ? 1.08 : 1, filter: hovered ? 'brightness(1.2)' : 'brightness(1.05)' }}
-          transition={{ duration: 0.7, ease: [0.16,1,0.3,1] }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         />
+        {/* Gradient overlay to ensure text legibility */}
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(3,3,3,0.7) 0%, rgba(3,3,3,0.35) 50%, transparent 100%)' }} />
       </div>
 
-      {/* Badges */}
-      <div style={{ position: 'absolute', top: '16px', left: '16px', zIndex: 10 }}>
-        {item.badge && (
-          <span className="badge" style={{ background: item.badgeColor, color: '#000', fontWeight: 700, fontSize: '10px' }}>{item.badge}</span>
-        )}
+      {/* Badges & Tags */}
+      <div style={{ position: 'absolute', top: '16px', left: '16px', right: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', zIndex: 10 }}>
+        {item.badge ? (
+          <span className="badge" style={{ background: item.badgeColor, color: '#000', fontWeight: 700, fontSize: '11px', letterSpacing: '0.05em' }}>{item.badge}</span>
+        ) : <div />}
+        <span className="font-mono" style={{ fontSize: '12px', fontWeight: 700, padding: '4px 10px', borderRadius: '5px', background: 'rgba(3,3,3,0.85)', color: 'var(--accent)', border: '1px solid var(--accent)' }}>
+          ${item.price}
+        </span>
       </div>
 
       {/* Bottom Content */}
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 10, padding: '24px' }}>
-        <span className="font-heading" style={{ fontSize: '9px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '6px' }}>
-          <Flame size={10} style={{ color: 'var(--accent)' }} /> {item.category}
-        </span>
-        <h3 className="font-display" style={{ fontSize: '1.6rem', color: '#fff', lineHeight: 1.1, marginBottom: '6px' }}>
+        <p className="font-heading" style={{ fontSize: '10px', letterSpacing: '0.15em', textTransform: 'uppercase', color: item.accentColor, marginBottom: '6px', fontWeight: 600 }}>
+          {item.category} • {item.condition}
+        </p>
+        <h3 className="font-display" style={{ fontSize: '1.8rem', color: '#fff', lineHeight: 1.1, marginBottom: '12px' }}>
           {item.title}
         </h3>
-        <p className="font-heading" style={{ fontSize: '11px', letterSpacing: '0.05em', color: item.accentColor, marginBottom: '12px' }}>
-          {item.condition} • {item.warranty} Warranty
-        </p>
 
+        {/* Hidden on default, reveal on hover */}
         <motion.div
           initial={false}
           animate={{ height: hovered ? 'auto' : 0, opacity: hovered ? 1 : 0 }}
-          transition={{ duration: 0.32, ease: [0.16,1,0.3,1] }}
+          transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
           style={{ overflow: 'hidden' }}
         >
+          {/* Key Stats Row */}
+          <div style={{ display: 'flex', gap: '12px', marginBottom: '14px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <Award size={13} style={{ color: 'var(--accent)' }} />
+              <span className="font-heading" style={{ fontSize: '11px', color: 'var(--text)' }}>{item.warranty} Warranty</span>
+            </div>
+            {item.players > 0 && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Layers size={13} style={{ color: 'var(--accent)' }} />
+                <span className="font-heading" style={{ fontSize: '11px', color: 'var(--text)' }}>{item.players}-Player Setup</span>
+              </div>
+            )}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <span style={{ fontSize: '9px', padding: '1px 5px', borderRadius: '3px', background: '#ef4444', color: '#fff', fontWeight: 700 }}>{item.yield}</span>
+            </div>
+          </div>
+
           <p className="font-body" style={{ fontSize: '12px', color: 'var(--muted)', lineHeight: 1.6, marginBottom: '16px' }}>
             {item.description}
           </p>
-        </motion.div>
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto' }}>
-          <span className="font-display" style={{ fontSize: '1.6rem', color: hovered ? 'var(--accent)' : '#fff', transition: 'color 0.3s' }}>
-            ${item.price}
-          </span>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={(e) => {
-              e.stopPropagation();
-              playSuccessSound();
-              onInquire(item);
-            }}
-            style={{ cursor: 'none', background: item.accentColor || 'var(--accent)', color: '#000', padding: '8px 16px', borderRadius: '6px', fontSize: '12px', fontWeight: 700, border: 'none', display: 'flex', alignItems: 'center', gap: '6px', opacity: hovered ? 1 : 0 }}
-            data-cursor="buy"
-          >
-            <MessageSquare size={12} /> B2B Inquiry
-          </motion.button>
-        </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span className="font-body" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: 'var(--text)' }}>
+              <ShieldCheck size={12} style={{ color: item.accentColor }} /> Quality Inspected
+            </span>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={(e) => {
+                e.stopPropagation();
+                playSuccessSound();
+                onInquire(item);
+              }}
+              style={{ cursor: 'none', background: item.accentColor, color: '#000', padding: '8px 16px', borderRadius: '6px', fontSize: '12px', fontWeight: 600, border: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
+              data-cursor="buy"
+            >
+              Order Cabinet <ArrowRight size={12} />
+            </motion.button>
+          </div>
+        </motion.div>
       </div>
-      
+
       {/* Hover border glow */}
       <motion.div
         initial={false}
@@ -133,7 +152,7 @@ function TrendingCard({ item, index, onInquire }) {
         transition={{ duration: 0.4 }}
         style={{
           position: 'absolute', inset: 0,
-          border: `1px solid ${item.accentColor || 'var(--accent)'}`,
+          border: `1px solid ${item.accentColor}`,
           borderRadius: '16px', pointerEvents: 'none', zIndex: 20
         }}
       />
@@ -141,24 +160,23 @@ function TrendingCard({ item, index, onInquire }) {
   );
 }
 
-export default function TrendingAccounts() {
+export default function NewArrivals() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
   const [selectedItem, setSelectedItem] = useState(null);
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
+  const products = useProductStore((state) => state.products);
+  const displayProducts = products.filter(p => p.newArrival && p.active).slice(0, 3);
 
   const handleInquire = (item) => {
     setSelectedItem(item);
     setIsInquiryOpen(true);
   };
 
-  const products = useProductStore((state) => state.products);
-  const hardwareList = products.filter(p => p.trending && p.active && p.category !== 'Cabinets').slice(0, 3);
-
-  if (hardwareList.length === 0) return null;
+  if (displayProducts.length === 0) return null;
 
   return (
-    <section id="trending-accounts" className="mmr-section mmr-section-pad" style={{ background: 'var(--black)' }}>
+    <section id="new-arrivals" className="mmr-section mmr-section-pad" style={{ background: 'var(--surface)' }}>
       <div className="mmr-container">
         {/* Header */}
         <div ref={ref} style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between', gap: '24px', marginBottom: '48px' }}>
@@ -170,7 +188,7 @@ export default function TrendingAccounts() {
               className="section-label"
               style={{ marginBottom: '12px' }}
             >
-              Hardware Parts & PCB Kits
+              Latest Additions
             </motion.span>
             <motion.h2
               initial={{ opacity: 0, y: 22 }}
@@ -179,8 +197,8 @@ export default function TrendingAccounts() {
               className="font-display"
               style={{ fontSize: 'clamp(2.6rem, 5vw, 4.2rem)', color: '#fff', lineHeight: 0.95 }}
             >
-              TRENDING<br />
-              <span style={{ color: 'var(--accent)' }}>PCB BOARDS</span>
+              NEW<br />
+              <span style={{ color: 'var(--accent)' }}>ARRIVALS</span>
             </motion.h2>
           </div>
           <motion.p
@@ -190,14 +208,14 @@ export default function TrendingAccounts() {
             className="font-body"
             style={{ fontSize: '14px', color: 'var(--muted)', maxWidth: '340px', lineHeight: 1.75 }}
           >
-            Explore high-popularity replacement components, genuine OEM game motherboards, and stable payout skill boards to upgrade your route terminals.
+            Fresh off the truck. Be the first to grab the latest inventory before it hits the broader market.
           </motion.p>
         </div>
 
-        {/* Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', width: '100%' }} className="trending-grid">
-          {hardwareList.map((item, i) => (
-            <TrendingCard key={item.id} item={item} index={i} onInquire={handleInquire} />
+        {/* Storefront Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', width: '100%' }} className="storefront-grid">
+          {displayProducts.map((item, i) => (
+            <ProductCard key={item.id} item={item} index={i} onInquire={handleInquire} />
           ))}
         </div>
 
@@ -209,8 +227,14 @@ export default function TrendingAccounts() {
           transition={{ duration: 0.55 }}
           style={{ textAlign: 'center', marginTop: '56px' }}
         >
-          <Link to="/popular" style={{ cursor: 'none', padding: '16px 36px', fontSize: '14px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }} className="btn btn-outline">
-            Browse Top Hardware <ArrowRight size={14} style={{ marginLeft: '6px' }} />
+          <Link 
+            to="/gaming-carts" 
+            onMouseEnter={() => playHoverSound()}
+            onClick={() => playClickSound()}
+            style={{ cursor: 'none', padding: '16px 36px', fontSize: '14px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }} 
+            className="btn btn-outline"
+          >
+            Browse Full Equipment Catalog <ArrowRight size={14} style={{ marginLeft: '6px' }} />
           </Link>
         </motion.div>
       </div>
@@ -223,9 +247,11 @@ export default function TrendingAccounts() {
       />
 
       <style>{`
-        @media (max-width: 1024px) { .trending-grid { grid-template-columns: repeat(2, 1fr) !important; } }
-        @media (max-width: 640px)  { .trending-grid { grid-template-columns: 1fr !important; } }
+        @media (max-width: 1024px) { .storefront-grid { grid-template-columns: repeat(2, 1fr) !important; } }
+        @media (max-width: 640px)  { .storefront-grid { grid-template-columns: 1fr !important; } }
       `}</style>
+
+      <div className="rule" style={{ marginTop: '80px' }} />
     </section>
   );
 }

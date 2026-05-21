@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ShieldCheck, Zap, Award, Layers, Sparkles, Truck, MessageSquare } from 'lucide-react';
-import { products } from '../data/products';
+import { useProductStore } from '../admin/store/useProductStore';
 import { playHoverSound, playClickSound, playSuccessSound } from '../utils/audio';
 import InquiryModal from '../components/common/InquiryModal';
 
@@ -18,8 +18,11 @@ export default function GamingCartsPage() {
     setIsInquiryOpen(true);
   };
 
+  const products = useProductStore(state => state.products);
+  const activeProducts = products.filter(prod => prod.active);
+
   // Filter products based on search and category selection
-  const filteredProducts = products.filter(prod => {
+  const filteredProducts = activeProducts.filter(prod => {
     const matchesSearch = prod.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           prod.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           prod.category.toLowerCase().includes(searchTerm.toLowerCase());

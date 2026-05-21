@@ -446,6 +446,9 @@ export default function ProductForm({ defaultValues, onSubmit, onCancel, isSubmi
     featured: false,
     trending: false,
     bestSeller: false,
+    newArrival: false,
+    popular: false,
+    recommended: false,
     active: true,
     image: '',
     images: []
@@ -644,7 +647,28 @@ export default function ProductForm({ defaultValues, onSubmit, onCancel, isSubmi
           name="bestSeller"
           control={control}
           render={({ field }) => (
-            <AdminToggle checked={field.value} onChange={field.onChange} label="Best Seller" description="Add Best Seller styling in the catalog." />
+            <AdminToggle checked={field.value} onChange={field.onChange} label="Best Seller" description="Show in the Best Sellers section on the homepage." />
+          )}
+        />
+        <Controller
+          name="newArrival"
+          control={control}
+          render={({ field }) => (
+            <AdminToggle checked={field.value} onChange={field.onChange} label="New Arrival" description="Show in the New Arrivals section on the homepage." />
+          )}
+        />
+        <Controller
+          name="popular"
+          control={control}
+          render={({ field }) => (
+            <AdminToggle checked={field.value} onChange={field.onChange} label="Popular Product" description="Show in the Popular Products section on the homepage." />
+          )}
+        />
+        <Controller
+          name="recommended"
+          control={control}
+          render={({ field }) => (
+            <AdminToggle checked={field.value} onChange={field.onChange} label="Recommended" description="Show in the Recommended section on the homepage." />
           )}
         />
       </div>
