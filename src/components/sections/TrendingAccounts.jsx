@@ -155,7 +155,7 @@ export default function TrendingAccounts() {
   const products = useProductStore((state) => state.products);
   const hardwareList = products.filter(p => p.trending && p.active && p.category !== 'Cabinets').slice(0, 3);
 
-  if (hardwareList.length === 0) return null;
+
 
   return (
     <section id="trending-accounts" className="mmr-section mmr-section-pad" style={{ background: 'var(--black)' }}>

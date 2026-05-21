@@ -173,7 +173,7 @@ export default function PopularProducts() {
     setIsInquiryOpen(true);
   };
 
-  if (displayProducts.length === 0) return null;
+
 
   return (
     <section id="popular-products" className="mmr-section mmr-section-pad" style={{ background: 'var(--void)' }}>

@@ -173,7 +173,7 @@ export default function RecommendedProducts() {
     setIsInquiryOpen(true);
   };
 
-  if (displayProducts.length === 0) return null;
+
 
   return (
     <section id="recommended-products" className="mmr-section mmr-section-pad" style={{ background: 'var(--surface)' }}>

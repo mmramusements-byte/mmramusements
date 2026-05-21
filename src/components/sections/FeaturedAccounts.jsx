@@ -173,7 +173,7 @@ export default function FeaturedAccounts() {
     setIsInquiryOpen(true);
   };
 
-  if (featuredProducts.length === 0) return null;
+
 
   return (
     <section id="featured-accounts" className="mmr-section mmr-section-pad" style={{ background: 'var(--surface)' }}>

@@ -173,7 +173,7 @@ export default function BestSellers() {
     setIsInquiryOpen(true);
   };
 
-  if (displayProducts.length === 0) return null;
+
 
   return (
     <section id="best-sellers" className="mmr-section mmr-section-pad" style={{ background: 'var(--void)' }}>

@@ -58,43 +58,39 @@ export default function HomepagePage() {
             Storefront Sections
           </div>
           
-          <button 
-            className={`adm-nav-link ${activeTab === 'hero' ? 'active' : ''}`}
-            onClick={() => setActiveTab('hero')}
-            style={{ width: '100%', border: 'none', background: activeTab === 'hero' ? 'rgba(99,102,241,0.1)' : 'transparent' }}
-          >
+          <button className={`adm-nav-link ${activeTab === 'hero' ? 'active' : ''}`} onClick={() => setActiveTab('hero')} style={{ width: '100%', border: 'none', background: activeTab === 'hero' ? 'rgba(99,102,241,0.1)' : 'transparent' }}>
             <ImageIcon size={16} /> Hero Banners
           </button>
           
-          <button 
-            className={`adm-nav-link ${activeTab === 'featured' ? 'active' : ''}`}
-            onClick={() => setActiveTab('featured')}
-            style={{ width: '100%', border: 'none', background: activeTab === 'featured' ? 'rgba(99,102,241,0.1)' : 'transparent' }}
-          >
+          <button className={`adm-nav-link ${activeTab === 'featured' ? 'active' : ''}`} onClick={() => setActiveTab('featured')} style={{ width: '100%', border: 'none', background: activeTab === 'featured' ? 'rgba(99,102,241,0.1)' : 'transparent' }}>
             <Star size={16} /> Featured Products
           </button>
 
-          <button 
-            className={`adm-nav-link ${activeTab === 'trending' ? 'active' : ''}`}
-            onClick={() => setActiveTab('trending')}
-            style={{ width: '100%', border: 'none', background: activeTab === 'trending' ? 'rgba(99,102,241,0.1)' : 'transparent' }}
-          >
-            <TrendingUp size={16} /> Product Sections
+          <button className={`adm-nav-link ${activeTab === 'trending' ? 'active' : ''}`} onClick={() => setActiveTab('trending')} style={{ width: '100%', border: 'none', background: activeTab === 'trending' ? 'rgba(99,102,241,0.1)' : 'transparent' }}>
+            <TrendingUp size={16} /> Trending Accounts
           </button>
 
-          <button 
-            className={`adm-nav-link ${activeTab === 'deals' ? 'active' : ''}`}
-            onClick={() => setActiveTab('deals')}
-            style={{ width: '100%', border: 'none', background: activeTab === 'deals' ? 'rgba(99,102,241,0.1)' : 'transparent' }}
-          >
+          <button className={`adm-nav-link ${activeTab === 'bestsellers' ? 'active' : ''}`} onClick={() => setActiveTab('bestsellers')} style={{ width: '100%', border: 'none', background: activeTab === 'bestsellers' ? 'rgba(99,102,241,0.1)' : 'transparent' }}>
+            <Star size={16} /> Best Sellers
+          </button>
+
+          <button className={`adm-nav-link ${activeTab === 'newarrivals' ? 'active' : ''}`} onClick={() => setActiveTab('newarrivals')} style={{ width: '100%', border: 'none', background: activeTab === 'newarrivals' ? 'rgba(99,102,241,0.1)' : 'transparent' }}>
+            <Star size={16} /> New Arrivals
+          </button>
+
+          <button className={`adm-nav-link ${activeTab === 'popular' ? 'active' : ''}`} onClick={() => setActiveTab('popular')} style={{ width: '100%', border: 'none', background: activeTab === 'popular' ? 'rgba(99,102,241,0.1)' : 'transparent' }}>
+            <Star size={16} /> Popular Products
+          </button>
+
+          <button className={`adm-nav-link ${activeTab === 'recommended' ? 'active' : ''}`} onClick={() => setActiveTab('recommended')} style={{ width: '100%', border: 'none', background: activeTab === 'recommended' ? 'rgba(99,102,241,0.1)' : 'transparent' }}>
+            <Star size={16} /> Recommended
+          </button>
+
+          <button className={`adm-nav-link ${activeTab === 'deals' ? 'active' : ''}`} onClick={() => setActiveTab('deals')} style={{ width: '100%', border: 'none', background: activeTab === 'deals' ? 'rgba(99,102,241,0.1)' : 'transparent' }}>
             <Zap size={16} /> Deals Strip
           </button>
 
-          <button 
-            className={`adm-nav-link ${activeTab === 'reviews' ? 'active' : ''}`}
-            onClick={() => setActiveTab('reviews')}
-            style={{ width: '100%', border: 'none', background: activeTab === 'reviews' ? 'rgba(99,102,241,0.1)' : 'transparent' }}
-          >
+          <button className={`adm-nav-link ${activeTab === 'reviews' ? 'active' : ''}`} onClick={() => setActiveTab('reviews')} style={{ width: '100%', border: 'none', background: activeTab === 'reviews' ? 'rgba(99,102,241,0.1)' : 'transparent' }}>
             <MessageSquare size={16} /> Customer Reviews
           </button>
         </div>
@@ -108,45 +104,47 @@ export default function HomepagePage() {
             </div>
           )}
 
-          {activeTab === 'featured' && (
+          {['featured', 'trending', 'bestsellers', 'newarrivals', 'popular', 'recommended'].includes(activeTab) && (
             <div>
-              <AdminToggle checked={settings.featured_visible} onChange={(v) => handleToggle('featured_visible', v)} label="Featured Products Section" description="Display the grid of featured products on the homepage." />
+              {activeTab === 'featured' && <AdminToggle checked={settings.featured_visible} onChange={(v) => handleToggle('featured_visible', v)} label="Featured Products Section" description="Display the grid of featured products." />}
+              {activeTab === 'trending' && <AdminToggle checked={settings.trending_visible} onChange={(v) => handleToggle('trending_visible', v)} label="Trending Section" description="Display the horizontal scrolling carousel for trending products." />}
+              {activeTab === 'bestsellers' && <AdminToggle checked={settings.best_sellers_visible} onChange={(v) => handleToggle('best_sellers_visible', v)} label="Best Sellers Section" description="Display the best sellers grid." />}
+              {activeTab === 'newarrivals' && <AdminToggle checked={settings.new_arrivals_visible} onChange={(v) => handleToggle('new_arrivals_visible', v)} label="New Arrivals Section" description="Display the new arrivals grid." />}
+              {activeTab === 'popular' && <AdminToggle checked={settings.popular_visible} onChange={(v) => handleToggle('popular_visible', v)} label="Popular Products Section" description="Display the popular products grid." />}
+              {activeTab === 'recommended' && <AdminToggle checked={settings.recommended_visible} onChange={(v) => handleToggle('recommended_visible', v)} label="Recommended Section" description="Display the recommended for you section." />}
               
               <div style={{ marginTop: '24px' }}>
-                <h3 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px' }}>Select Featured Products</h3>
+                <h3 style={{ fontSize: '15px', fontWeight: 600, marginBottom: '16px' }}>Select Products for this Section</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '16px' }}>
-                  {products.map(p => (
-                    <div 
-                      key={p.id} 
-                      className="adm-card" 
-                      style={{ padding: '12px', cursor: 'pointer', borderColor: p.featured ? 'var(--adm-accent)' : 'var(--adm-border)', background: p.featured ? 'rgba(99,102,241,0.05)' : 'var(--adm-card)' }}
-                      onClick={() => toggleFeatured(p.id)}
-                    >
-                      <div style={{ display: 'flex', gap: '10px' }}>
-                        <input type="checkbox" className="adm-checkbox" checked={p.featured} readOnly style={{ pointerEvents: 'none', marginTop: '2px' }} />
-                        <div>
-                          <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--adm-text)', lineHeight: 1.3 }}>{truncate(p.title, 35)}</div>
-                          <div style={{ fontSize: '11px', color: 'var(--adm-muted)', marginTop: '4px' }}>{p.category}</div>
+                  {products.map(p => {
+                    let isSelected = false;
+                    let toggleFn = () => {};
+                    
+                    if (activeTab === 'featured') { isSelected = p.featured; toggleFn = () => useProductStore.getState().toggleFeatured(p.id); }
+                    if (activeTab === 'trending') { isSelected = p.trending; toggleFn = () => useProductStore.getState().toggleTrending(p.id); }
+                    if (activeTab === 'bestsellers') { isSelected = p.bestSeller; toggleFn = () => useProductStore.getState().toggleBestSeller(p.id); }
+                    if (activeTab === 'newarrivals') { isSelected = p.newArrival; toggleFn = () => useProductStore.getState().toggleNewArrival(p.id); }
+                    if (activeTab === 'popular') { isSelected = p.popular; toggleFn = () => useProductStore.getState().togglePopular(p.id); }
+                    if (activeTab === 'recommended') { isSelected = p.recommended; toggleFn = () => useProductStore.getState().toggleRecommended(p.id); }
+
+                    return (
+                      <div 
+                        key={p.id} 
+                        className="adm-card" 
+                        style={{ padding: '12px', cursor: 'pointer', borderColor: isSelected ? 'var(--adm-accent)' : 'var(--adm-border)', background: isSelected ? 'rgba(99,102,241,0.05)' : 'var(--adm-card)' }}
+                        onClick={toggleFn}
+                      >
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                          <input type="checkbox" className="adm-checkbox" checked={isSelected} readOnly style={{ pointerEvents: 'none', marginTop: '2px' }} />
+                          <div>
+                            <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--adm-text)', lineHeight: 1.3 }}>{truncate(p.title, 35)}</div>
+                            <div style={{ fontSize: '11px', color: 'var(--adm-muted)', marginTop: '4px' }}>{p.category}</div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'trending' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <AdminToggle checked={settings.trending_visible} onChange={(v) => handleToggle('trending_visible', v)} label="Trending Section" description="Show the horizontal scrolling carousel for trending products." />
-              <AdminToggle checked={settings.best_sellers_visible} onChange={(v) => handleToggle('best_sellers_visible', v)} label="Best Sellers Section" description="Show the best sellers grid section." />
-              <AdminToggle checked={settings.new_arrivals_visible} onChange={(v) => handleToggle('new_arrivals_visible', v)} label="New Arrivals Section" description="Show the new arrivals section." />
-              <AdminToggle checked={settings.popular_visible} onChange={(v) => handleToggle('popular_visible', v)} label="Popular Products Section" description="Show the popular products section." />
-              <AdminToggle checked={settings.recommended_visible} onChange={(v) => handleToggle('recommended_visible', v)} label="Recommended Section" description="Show the recommended for you section." />
-              
-              <div style={{ marginTop: '16px' }}>
-                <p style={{ fontSize: '13px', color: 'var(--adm-muted)' }}>Currently displaying <b>{trending.length}</b> trending, <b>{bestSellers.length}</b> best sellers, <b>{newArrivals.length}</b> new arrivals, <b>{popular.length}</b> popular, and <b>{recommended.length}</b> recommended items.</p>
-                <p style={{ fontSize: '13px', color: 'var(--adm-muted)', marginTop: '8px' }}>To edit these lists, go to <b>Catalog › Products</b> and edit individual products.</p>
               </div>
             </div>
           )}

@@ -173,7 +173,7 @@ export default function NewArrivals() {
     setIsInquiryOpen(true);
   };
 
-  if (displayProducts.length === 0) return null;
+
 
   return (
     <section id="new-arrivals" className="mmr-section mmr-section-pad" style={{ background: 'var(--surface)' }}>
