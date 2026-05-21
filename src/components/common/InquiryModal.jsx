@@ -227,39 +227,6 @@ export default function InquiryModal({ isOpen, onClose, item }) {
                       </div>
                     </a>
 
-                    {/* Email Channel */}
-                    <a
-                      href={`mailto:orders@mmramusements.com?subject=${emailSubject}&body=${emailBody}`}
-                      onClick={() => playClickSound()}
-                      onMouseEnter={() => playHoverSound()}
-                      style={{
-                        cursor: 'none',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        padding: '14px 20px',
-                        background: 'rgba(255,255,255,0.03)',
-                        border: '1px solid rgba(255,255,255,0.06)',
-                        borderRadius: '12px',
-                        textDecoration: 'none',
-                        transition: 'all 0.2s',
-                      }}
-                      className="channel-row"
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                        <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: 'rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', justifySelf: 'center', justifyContent: 'center', color: 'var(--accent)' }}>
-                          <Mail size={16} />
-                        </div>
-                        <div>
-                          <p className="font-heading" style={{ fontSize: '13px', color: '#fff', margin: 0, fontWeight: 600 }}>Submit Purchase Request</p>
-                          <p className="font-body" style={{ fontSize: '11px', color: 'var(--muted)', margin: 0 }}>Receive hardware wiring documents and pro-forma invoice</p>
-                        </div>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span className="font-mono" style={{ fontSize: '12px', color: 'var(--muted)' }}>orders@mmramusements.com</span>
-                        <ExternalLink size={12} style={{ color: 'var(--muted)' }} />
-                      </div>
-                    </a>
                   </div>
                 </div>
 

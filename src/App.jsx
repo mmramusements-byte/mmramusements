@@ -17,6 +17,7 @@ import SecurityPage from './pages/SecurityPage';
 import RefundPolicyPage from './pages/RefundPolicyPage';
 import CustomCursor from './components/common/CustomCursor';
 import Preloader from './components/common/Preloader';
+import ScrollToTop from './components/common/ScrollToTop';
 
 // Admin Imports
 import AdminLayout from './admin/components/layout/AdminLayout';
@@ -36,6 +37,7 @@ import SocialsPage from './admin/pages/SocialsPage';
 function StorefrontLayout({ children }) {
   return (
     <div className="app-wrapper">
+      <ScrollToTop />
       <Preloader />
       <CustomCursor />
       <Navbar />

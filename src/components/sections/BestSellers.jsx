@@ -52,7 +52,7 @@ function ProductCard({ item, index, onInquire }) {
       style={{
         position: 'relative',
         cursor: 'none',
-        height: '420px',
+        height: '480px',
         width: '100%',
         borderRadius: '16px',
         overflow: 'hidden',
