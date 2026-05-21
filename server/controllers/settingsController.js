@@ -14,6 +14,7 @@ export const getHomepageSettings = async (req, res) => {
         new_arrivals_visible: true,
         popular_visible: true,
         recommended_visible: true,
+        logo_url: null,
       });
     }
     res.status(200).json(result.rows[0]);
@@ -27,7 +28,7 @@ export const updateHomepageSettings = async (req, res) => {
   try {
     const { 
       hero_visible, featured_visible, trending_visible, deals_visible, reviews_visible,
-      best_sellers_visible, new_arrivals_visible, popular_visible, recommended_visible
+      best_sellers_visible, new_arrivals_visible, popular_visible, recommended_visible, logo_url
     } = req.body;
 
     const result = await pool.query(
@@ -41,9 +42,10 @@ export const updateHomepageSettings = async (req, res) => {
         new_arrivals_visible = COALESCE($7, new_arrivals_visible),
         popular_visible = COALESCE($8, popular_visible),
         recommended_visible = COALESCE($9, recommended_visible),
+        logo_url = COALESCE($10, logo_url),
         updated_at = CURRENT_TIMESTAMP
       RETURNING *`,
-      [hero_visible, featured_visible, trending_visible, deals_visible, reviews_visible, best_sellers_visible, new_arrivals_visible, popular_visible, recommended_visible]
+      [hero_visible, featured_visible, trending_visible, deals_visible, reviews_visible, best_sellers_visible, new_arrivals_visible, popular_visible, recommended_visible, logo_url]
     );
 
     res.status(200).json(result.rows[0]);

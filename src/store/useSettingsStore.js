@@ -12,6 +12,7 @@ export const useSettingsStore = create((set) => ({
     new_arrivals_visible: true,
     popular_visible: true,
     recommended_visible: true,
+    logo_url: null,
   },
   isLoading: false,
   error: null,

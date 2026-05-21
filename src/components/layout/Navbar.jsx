@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ShieldAlert, PhoneCall } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { playClickSound, playHoverSound } from '../../utils/audio';
+import { useSettingsStore } from '../../store/useSettingsStore';
 
 const navLinks = [
   { name: 'Home', path: '/' },
@@ -17,6 +18,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const settings = useSettingsStore((state) => state.settings);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -54,9 +56,17 @@ export default function Navbar() {
             onMouseEnter={() => playHoverSound()}
             onClick={() => playClickSound()}
           >
-            <div style={{ width: '32px', height: '32px', background: 'var(--accent)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <ShieldAlert size={18} color="#000" strokeWidth={2.5} />
-            </div>
+            {settings?.logo_url ? (
+              <img 
+                src={settings.logo_url} 
+                alt="MMR Logo" 
+                style={{ width: '32px', height: '32px', objectFit: 'contain', borderRadius: '4px' }}
+              />
+            ) : (
+              <div style={{ width: '32px', height: '32px', background: 'var(--accent)', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <ShieldAlert size={18} color="#000" strokeWidth={2.5} />
+              </div>
+            )}
             <span className="font-display" style={{ fontSize: '1.6rem', color: '#fff', letterSpacing: '0.05em' }}>
               MMR <span style={{ color: 'var(--accent)' }}>AMUSEMENTS</span>
             </span>

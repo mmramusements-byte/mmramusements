@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useProductStore } from './admin/store/useProductStore';
+import { useSettingsStore } from './store/useSettingsStore';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import HomePage from './pages/HomePage';
@@ -49,10 +50,12 @@ function StorefrontLayout({ children }) {
 
 function App() {
   const fetchProducts = useProductStore((state) => state.fetchProducts);
+  const fetchSettings = useSettingsStore((state) => state.fetchSettings);
 
   useEffect(() => {
     fetchProducts();
-  }, [fetchProducts]);
+    fetchSettings();
+  }, [fetchProducts, fetchSettings]);
 
   return (
     <Routes>

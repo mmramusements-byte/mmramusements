@@ -57,6 +57,7 @@ export const initializeDatabase = async () => {
         new_arrivals_visible BOOLEAN DEFAULT true,
         popular_visible BOOLEAN DEFAULT true,
         recommended_visible BOOLEAN DEFAULT true,
+        logo_url TEXT,
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       );
     `);
@@ -67,6 +68,7 @@ export const initializeDatabase = async () => {
       ALTER TABLE homepage_settings ADD COLUMN IF NOT EXISTS new_arrivals_visible BOOLEAN DEFAULT true;
       ALTER TABLE homepage_settings ADD COLUMN IF NOT EXISTS popular_visible BOOLEAN DEFAULT true;
       ALTER TABLE homepage_settings ADD COLUMN IF NOT EXISTS recommended_visible BOOLEAN DEFAULT true;
+      ALTER TABLE homepage_settings ADD COLUMN IF NOT EXISTS logo_url TEXT;
     `);
 
     // Seed the homepage_settings if it doesn't exist

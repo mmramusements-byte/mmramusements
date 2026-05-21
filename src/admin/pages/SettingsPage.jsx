@@ -1,8 +1,10 @@
-import { useState } from 'react';
-import { Save } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Save, Upload, Image as ImageIcon } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { useToast } from '../hooks/useToast.jsx';
 import PageHeader from '../components/ui/PageHeader';
+import { useSettingsStore } from '../../store/useSettingsStore';
+import api from '../../lib/api';
 
 function AdminToggle({ checked, onChange, label, description }) {
   return (
@@ -20,6 +22,56 @@ export default function SettingsPage() {
   const toast = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
+  const { settings, updateSettings, fetchSettings } = useSettingsStore();
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef(null);
+  const [localLogoUrl, setLocalLogoUrl] = useState('');
+
+  useEffect(() => {
+    fetchSettings();
+  }, [fetchSettings]);
+
+  useEffect(() => {
+    if (settings?.logo_url) {
+      setLocalLogoUrl(settings.logo_url);
+    }
+  }, [settings?.logo_url]);
+
+  const handleLogoUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    setIsUploading(true);
+    try {
+      const res = await api.post('/upload', formData);
+      if (res.url) {
+        setLocalLogoUrl(res.url);
+        await updateSettings({ logo_url: res.url });
+        toast.success('Logo uploaded and saved successfully');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to upload logo');
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const saveLogoUrl = async () => {
+    try {
+      setIsSubmitting(true);
+      await updateSettings({ logo_url: localLogoUrl });
+      toast.success('Logo URL updated successfully');
+    } catch (error) {
+      toast.error('Failed to save logo URL');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   const { register, handleSubmit, control } = useForm({
     defaultValues: {
       storeName: 'MMR Amusements',
@@ -57,6 +109,62 @@ export default function SettingsPage() {
         {/* Main Settings Form */}
         <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
+                    <div className="adm-form-section">
+            <div className="adm-form-section-title">Branding & Logo</div>
+            <div className="adm-form-section-desc">Upload a company logo or provide an external image URL.</div>
+            
+            <div style={{ display: 'flex', gap: '24px', alignItems: 'flex-start', marginTop: '16px' }}>
+              <div style={{ 
+                width: '120px', height: '120px', 
+                borderRadius: '8px', 
+                border: '1px dashed var(--adm-border)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'rgba(0,0,0,0.2)',
+                overflow: 'hidden'
+              }}>
+                {localLogoUrl ? (
+                  <img src={localLogoUrl} alt="Logo" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                ) : (
+                  <ImageIcon size={32} color="var(--adm-muted)" />
+                )}
+              </div>
+              
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div className="adm-field" style={{ marginBottom: 0 }}>
+                  <label className="adm-label">Logo URL</label>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <input 
+                      className="adm-input" 
+                      value={localLogoUrl}
+                      onChange={(e) => setLocalLogoUrl(e.target.value)}
+                      placeholder="https://example.com/logo.png" 
+                    />
+                    <button type="button" onClick={saveLogoUrl} className="adm-btn adm-btn-secondary">Save URL</button>
+                  </div>
+                </div>
+                
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <span style={{ fontSize: '13px', color: 'var(--adm-muted)' }}>OR</span>
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    onChange={handleLogoUpload}
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                  />
+                  <button 
+                    type="button" 
+                    className="adm-btn adm-btn-primary" 
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploading}
+                  >
+                    <Upload size={16} /> {isUploading ? 'Uploading...' : 'Upload Image'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="adm-form-section">
             <div className="adm-form-section-title">Store Information</div>
             <div className="adm-form-section-desc">Public-facing details about your store.</div>
