@@ -14,15 +14,15 @@ export default function AdminLayout() {
   const {
     sidebarCollapsed,
     setSidebarCollapsed,
-    mobileSidebarOpen,
-    setMobileSidebarOpen,
+    mobileOpen,
+    setMobileOpen,
     confirmDialog,
     handleConfirmAction,
     handleCancelAction,
   } = useAdminUIStore();
 
   const handleCollapse = () => setSidebarCollapsed(!sidebarCollapsed);
-  const handleMobileMenuToggle = () => setMobileSidebarOpen(!mobileSidebarOpen);
+  const handleMobileMenuToggle = () => setMobileOpen(!mobileOpen);
 
   if (!isAuthenticated) {
     return <Navigate to="/admin/login" replace />;
@@ -32,9 +32,9 @@ export default function AdminLayout() {
     <div className="admin-root">
       <div className="adm-layout">
         {/* ── Mobile backdrop ── */}
-        {mobileSidebarOpen && (
+        {mobileOpen && (
           <div
-            onClick={() => setMobileSidebarOpen(false)}
+            onClick={() => setMobileOpen(false)}
             style={{
               position: 'fixed',
               inset: 0,
@@ -46,7 +46,7 @@ export default function AdminLayout() {
         )}
 
         {/* ── Sidebar ── */}
-        <div className={mobileSidebarOpen ? 'adm-sidebar mobile-open' : ''}>
+        <div className={mobileOpen ? 'adm-sidebar mobile-open' : ''}>
           <AdminSidebar
             collapsed={sidebarCollapsed}
             onCollapse={handleCollapse}
