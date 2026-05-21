@@ -3,7 +3,7 @@ import { useState } from 'react';
 import ProductForm from '../components/forms/ProductForm';
 import PageHeader from '../components/ui/PageHeader';
 import { useProductStore } from '../store/useProductStore';
-import { useToast } from '../hooks/useToast';
+import { useToast } from '../hooks/useToast.jsx';
 
 export default function EditProductPage() {
   const { id } = useParams();

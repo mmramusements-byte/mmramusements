@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ProductForm from '../components/forms/ProductForm';
 import PageHeader from '../components/ui/PageHeader';
 import { useProductStore } from '../store/useProductStore';
-import { useToast } from '../hooks/useToast';
+import { useToast } from '../hooks/useToast.jsx';
 
 export default function AddProductPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);

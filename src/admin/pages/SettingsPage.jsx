@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Save } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
-import { useToast } from '../hooks/useToast';
+import { useToast } from '../hooks/useToast.jsx';
 import PageHeader from '../components/ui/PageHeader';
 
 function AdminToggle({ checked, onChange, label, description }) {

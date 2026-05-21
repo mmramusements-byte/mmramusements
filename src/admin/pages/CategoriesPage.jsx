@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Plus, Trash2, Tag } from 'lucide-react';
 import { useProductStore } from '../store/useProductStore';
-import { useToast } from '../hooks/useToast';
-import { useConfirm } from '../hooks/useConfirm';
+import { useToast } from '../hooks/useToast.jsx';
+import { useConfirm } from '../hooks/useConfirm.jsx';
 import PageHeader from '../components/ui/PageHeader';
 import ConfirmDialog from '../components/ui/ConfirmDialog';
 
