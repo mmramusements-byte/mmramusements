@@ -28,8 +28,6 @@ export default function HomePage() {
       {settings?.trending_visible !== false && <TrendingAccounts />}
       {settings?.best_sellers_visible !== false && <BestSellers />}
       {settings?.new_arrivals_visible !== false && <NewArrivals />}
-      {settings?.popular_visible !== false && <PopularProducts />}
-      {settings?.recommended_visible !== false && <RecommendedProducts />}
       {settings?.deals_visible !== false && <AccountDeals />}
       <CategoryExperience />
       {settings?.reviews_visible !== false && <Testimonials />}

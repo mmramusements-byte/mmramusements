@@ -6,6 +6,9 @@ import PageHeader from '../components/ui/PageHeader';
 import { Star, TrendingUp, Zap, MessageSquare, Image as ImageIcon } from 'lucide-react';
 import { truncate } from '../utils/formatters';
 import { useEffect } from 'react';
+import BannersPage from './BannersPage';
+import DealsPage from './DealsPage';
+import ReviewsPage from './ReviewsPage';
 
 function AdminToggle({ checked, onChange, label, description }) {
   return (
@@ -78,14 +81,6 @@ export default function HomepagePage() {
             <Star size={16} /> New Arrivals
           </button>
 
-          <button className={`adm-nav-link ${activeTab === 'popular' ? 'active' : ''}`} onClick={() => setActiveTab('popular')} style={{ width: '100%', border: 'none', background: activeTab === 'popular' ? 'rgba(99,102,241,0.1)' : 'transparent' }}>
-            <Star size={16} /> Popular Products
-          </button>
-
-          <button className={`adm-nav-link ${activeTab === 'recommended' ? 'active' : ''}`} onClick={() => setActiveTab('recommended')} style={{ width: '100%', border: 'none', background: activeTab === 'recommended' ? 'rgba(99,102,241,0.1)' : 'transparent' }}>
-            <Star size={16} /> Recommended
-          </button>
-
           <button className={`adm-nav-link ${activeTab === 'deals' ? 'active' : ''}`} onClick={() => setActiveTab('deals')} style={{ width: '100%', border: 'none', background: activeTab === 'deals' ? 'rgba(99,102,241,0.1)' : 'transparent' }}>
             <Zap size={16} /> Deals Strip
           </button>
@@ -100,11 +95,13 @@ export default function HomepagePage() {
           {activeTab === 'hero' && (
             <div>
               <AdminToggle checked={settings.hero_visible} onChange={(v) => handleToggle('hero_visible', v)} label="Hero Banners Section" description="Show the rotating hero banners at the top of the homepage." />
-              <p style={{ fontSize: '13px', color: 'var(--adm-muted)' }}>To edit the actual banners, go to <b>Content › Banners</b>.</p>
+              <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid var(--adm-border)' }}>
+                <BannersPage />
+              </div>
             </div>
           )}
 
-          {['featured', 'trending', 'bestsellers', 'newarrivals', 'popular', 'recommended'].includes(activeTab) && (
+          {['featured', 'trending', 'bestsellers', 'newarrivals''].includes(activeTab) && (
             <div>
               {activeTab === 'featured' && <AdminToggle checked={settings.featured_visible} onChange={(v) => handleToggle('featured_visible', v)} label="Featured Products Section" description="Display the grid of featured products." />}
               {activeTab === 'trending' && <AdminToggle checked={settings.trending_visible} onChange={(v) => handleToggle('trending_visible', v)} label="Trending Section" description="Display the horizontal scrolling carousel for trending products." />}
@@ -152,14 +149,18 @@ export default function HomepagePage() {
           {activeTab === 'deals' && (
             <div>
               <AdminToggle checked={settings.deals_visible} onChange={(v) => handleToggle('deals_visible', v)} label="Deals Strip" description="Show the promotional deals banner on the homepage." />
-              <p style={{ fontSize: '13px', color: 'var(--adm-muted)' }}>To manage deals, go to <b>Catalog › Deals</b>.</p>
+              <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid var(--adm-border)' }}>
+                <DealsPage />
+              </div>
             </div>
           )}
 
           {activeTab === 'reviews' && (
             <div>
               <AdminToggle checked={settings.reviews_visible} onChange={(v) => handleToggle('reviews_visible', v)} label="Reviews Section" description="Show the customer testimonials on the homepage." />
-              <p style={{ fontSize: '13px', color: 'var(--adm-muted)' }}>To manage reviews, go to <b>Content › Reviews</b>.</p>
+              <div style={{ marginTop: '24px', paddingTop: '24px', borderTop: '1px solid var(--adm-border)' }}>
+                <ReviewsPage />
+              </div>
             </div>
           )}
         </div>
