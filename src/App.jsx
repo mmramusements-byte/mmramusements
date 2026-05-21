@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import HomePage from './pages/HomePage';
@@ -16,30 +16,69 @@ import RefundPolicyPage from './pages/RefundPolicyPage';
 import CustomCursor from './components/common/CustomCursor';
 import Preloader from './components/common/Preloader';
 
-function App() {
+// Admin Imports
+import AdminLayout from './admin/components/layout/AdminLayout';
+import AdminDashboard from './admin/pages/AdminDashboard';
+import ProductsPage from './admin/pages/ProductsPage';
+import AddProductPage from './admin/pages/AddProductPage';
+import EditProductPage from './admin/pages/EditProductPage';
+import DealsAdminPage from './admin/pages/DealsPage';
+import ReviewsAdminPage from './admin/pages/ReviewsPage';
+import BannersPage from './admin/pages/BannersPage';
+import HomepagePage from './admin/pages/HomepagePage';
+import CategoriesPage from './admin/pages/CategoriesPage';
+import SettingsPage from './admin/pages/SettingsPage';
+
+function StorefrontLayout({ children }) {
   return (
     <div className="app-wrapper">
       <Preloader />
       <CustomCursor />
       <Navbar />
-      <main>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/gaming-carts" element={<GamingCartsPage />} />
-          <Route path="/popular" element={<PopularAccountsPage />} />
-          <Route path="/deals" element={<DealsPage />} />
-          <Route path="/reviews" element={<ReviewsPage />} />
-          <Route path="/support" element={<SupportPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/faq" element={<FaqPage />} />
-          <Route path="/terms" element={<TermsPage />} />
-          <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="/security" element={<SecurityPage />} />
-          <Route path="/refund-policy" element={<RefundPolicyPage />} />
-        </Routes>
-      </main>
+      <main>{children}</main>
       <Footer />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Routes>
+      {/* ─── ADMIN ROUTES ─── */}
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="dashboard" element={<AdminDashboard />} />
+        <Route path="products" element={<ProductsPage />} />
+        <Route path="products/add" element={<AddProductPage />} />
+        <Route path="products/edit/:id" element={<EditProductPage />} />
+        <Route path="categories" element={<CategoriesPage />} />
+        <Route path="deals" element={<DealsAdminPage />} />
+        <Route path="reviews" element={<ReviewsAdminPage />} />
+        <Route path="banners" element={<BannersPage />} />
+        <Route path="homepage" element={<HomepagePage />} />
+        <Route path="settings" element={<SettingsPage />} />
+      </Route>
+
+      {/* ─── STOREFRONT ROUTES ─── */}
+      <Route path="/" element={
+        <StorefrontLayout>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/gaming-carts" element={<GamingCartsPage />} />
+            <Route path="/popular" element={<PopularAccountsPage />} />
+            <Route path="/deals" element={<DealsPage />} />
+            <Route path="/reviews" element={<ReviewsPage />} />
+            <Route path="/support" element={<SupportPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/faq" element={<FaqPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/security" element={<SecurityPage />} />
+            <Route path="/refund-policy" element={<RefundPolicyPage />} />
+          </Routes>
+        </StorefrontLayout>
+      } />
+    </Routes>
   );
 }
 
