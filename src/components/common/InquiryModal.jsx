@@ -6,9 +6,9 @@ export default function InquiryModal({ isOpen, onClose, item }) {
   if (!item) return null;
 
   const emailSubject = encodeURIComponent(`B2B Inquiry: ${item.title}`);
-  const emailBody = encodeURIComponent(`Hello MMR Amusements Sales Team,\n\nI am interested in acquiring/inquiring about your commercial equipment:\n\n- Product: ${item.title}\n- Category: ${item.category}\n- Condition: ${item.condition || 'Inspected'}\n- Catalog Price: ₹${item.price}\n\nPlease contact me regarding secure freight dispatch, harness wiring, and available route settings.\n\nThank you.`);
+  const emailBody = encodeURIComponent(`Hello MMR Amusements Sales Team,\n\nI am interested in acquiring/inquiring about your commercial equipment:\n\n- Product: ${item.title}\n- Category: ${item.category}\n- Condition: ${item.condition || 'Inspected'}\n- Catalog Price: $${item.price}\n\nPlease contact me regarding secure freight dispatch, harness wiring, and available route settings.\n\nThank you.`);
   
-  const whatsappText = encodeURIComponent(`Hello MMR Amusements, I'm interested in the "${item.title}" (${item.category}, ₹${item.price}). Please connect me with a commercial routing specialist.`);
+  const whatsappText = encodeURIComponent(`Hello MMR Amusements, I'm interested in the "${item.title}" (${item.category}, $${item.price}). Please connect me with a commercial routing specialist.`);
 
   return (
     <AnimatePresence>
@@ -144,7 +144,7 @@ export default function InquiryModal({ isOpen, onClose, item }) {
                   </p>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '16px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)', padding: '12px 18px', borderRadius: '8px' }}>
                     <span className="font-body" style={{ fontSize: '12px', color: 'var(--muted)' }}>Catalog Reference Valuation:</span>
-                    <span className="font-display" style={{ fontSize: '1.8rem', color: item.accentColor || 'var(--accent)', fontWeight: 'bold' }}>₹{item.price}</span>
+                    <span className="font-display" style={{ fontSize: '1.8rem', color: item.accentColor || 'var(--accent)', fontWeight: 'bold' }}>${item.price}</span>
                   </div>
                 </div>
 

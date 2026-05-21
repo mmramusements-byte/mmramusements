@@ -132,7 +132,7 @@ function EliteEquipmentCard({ item, index, onInquire }) {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-            <span className="font-display" style={{ fontSize: '2.2rem', color: 'var(--accent)' }}>₹{item.price}</span>
+            <span className="font-display" style={{ fontSize: '2.2rem', color: 'var(--accent)' }}>${item.price}</span>
             <button
               onClick={(e) => {
                 e.stopPropagation();

@@ -108,7 +108,7 @@ function TrendingCard({ item, index, onInquire }) {
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto' }}>
           <span className="font-display" style={{ fontSize: '1.6rem', color: hovered ? 'var(--accent)' : '#fff', transition: 'color 0.3s' }}>
-            ₹{item.price}
+            ${item.price}
           </span>
           <motion.button
             whileHover={{ scale: 1.05 }}

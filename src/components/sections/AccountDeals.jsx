@@ -85,9 +85,9 @@ function DealCard({ pkg, i, onInquire }) {
           </h3>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
             <span className="font-display" style={{ fontSize: '3rem', lineHeight: 1, color: i === 1 ? 'var(--accent)' : '#fff' }}>
-              ₹{pkg.price}
+              ${pkg.price}
             </span>
-            <span className="font-body" style={{ fontSize: '13px', color: 'var(--muted)', textDecoration: 'line-through' }}>₹{pkg.originalPrice}</span>
+            <span className="font-body" style={{ fontSize: '13px', color: 'var(--muted)', textDecoration: 'line-through' }}>${pkg.originalPrice}</span>
           </div>
         </div>
 

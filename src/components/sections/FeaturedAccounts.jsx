@@ -83,7 +83,7 @@ function ProductCard({ item, index, onInquire }) {
           <span className="badge" style={{ background: item.badgeColor, color: '#000', fontWeight: 700, fontSize: '11px', letterSpacing: '0.05em' }}>{item.badge}</span>
         ) : <div />}
         <span className="font-mono" style={{ fontSize: '12px', fontWeight: 700, padding: '4px 10px', borderRadius: '5px', background: 'rgba(3,3,3,0.85)', color: 'var(--accent)', border: '1px solid var(--accent)' }}>
-          ₹{item.price}
+          ${item.price}
         </span>
       </div>
 
