@@ -28,6 +28,8 @@ import BannersPage from './admin/pages/BannersPage';
 import HomepagePage from './admin/pages/HomepagePage';
 import CategoriesPage from './admin/pages/CategoriesPage';
 import SettingsPage from './admin/pages/SettingsPage';
+import LoginPage from './admin/pages/LoginPage';
+import SocialsPage from './admin/pages/SocialsPage';
 
 function StorefrontLayout({ children }) {
   return (
@@ -44,6 +46,9 @@ function StorefrontLayout({ children }) {
 function App() {
   return (
     <Routes>
+      {/* ─── ADMIN AUTH ROUTE ─── */}
+      <Route path="/admin/login" element={<LoginPage />} />
+
       {/* ─── ADMIN ROUTES ─── */}
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<Navigate to="/admin/dashboard" replace />} />
@@ -57,10 +62,11 @@ function App() {
         <Route path="banners" element={<BannersPage />} />
         <Route path="homepage" element={<HomepagePage />} />
         <Route path="settings" element={<SettingsPage />} />
+        <Route path="settings/socials" element={<SocialsPage />} />
       </Route>
 
       {/* ─── STOREFRONT ROUTES ─── */}
-      <Route path="/" element={
+      <Route path="/*" element={
         <StorefrontLayout>
           <Routes>
             <Route path="/" element={<HomePage />} />

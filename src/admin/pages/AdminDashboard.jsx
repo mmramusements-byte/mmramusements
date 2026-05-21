@@ -10,10 +10,10 @@ import { formatPrice, formatRelativeTime, truncate } from '../utils/formatters';
 
 export default function AdminDashboard() {
   const products = useProductStore(state => state.products);
-  const featured = useProductStore(state => state.getFeatured());
   const deals = useDealStore(state => state.deals);
   const reviews = useReviewStore(state => state.reviews);
   
+  const featured = products.filter(p => p.featured && p.active);
   const activeDeals = deals.filter(d => d.active);
   const recentProducts = [...products].sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
   const recentActivity = [...products].sort((a,b) => new Date(b.updatedAt) - new Date(a.updatedAt)).slice(0, 5);
@@ -28,16 +28,16 @@ export default function AdminDashboard() {
       {/* Stats Row */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px', marginBottom: '32px' }}>
         <motion.div initial={{opacity:0, y:16}} animate={{opacity:1,y:0}} transition={{delay: 0.05}}>
-          <StatCard title="Total Products" value={products.length} icon={Package} color="#6366f1" trend="+12%" />
+          <StatCard title="Total Products" value={products.length} icon={<Package size={20} />} color="#6366f1" trend="+12%" />
         </motion.div>
         <motion.div initial={{opacity:0, y:16}} animate={{opacity:1,y:0}} transition={{delay: 0.1}}>
-          <StatCard title="Active Deals" value={activeDeals.length} icon={Zap} color="#f59e0b" />
+          <StatCard title="Active Deals" value={activeDeals.length} icon={<Zap size={20} />} color="#f59e0b" />
         </motion.div>
         <motion.div initial={{opacity:0, y:16}} animate={{opacity:1,y:0}} transition={{delay: 0.15}}>
-          <StatCard title="Featured Items" value={featured.length} icon={Star} color="#a855f7" />
+          <StatCard title="Featured Items" value={featured.length} icon={<Star size={20} />} color="#a855f7" />
         </motion.div>
         <motion.div initial={{opacity:0, y:16}} animate={{opacity:1,y:0}} transition={{delay: 0.2}}>
-          <StatCard title="Total Reviews" value={reviews.length} icon={Activity} color="#22c55e" trend="+4%" />
+          <StatCard title="Total Reviews" value={reviews.length} icon={<Activity size={20} />} color="#22c55e" trend="+4%" />
         </motion.div>
       </div>
 

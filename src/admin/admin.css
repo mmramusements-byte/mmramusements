@@ -255,6 +255,11 @@
   padding-right: 36px;
 }
 
+.adm-select option {
+  background-color: var(--adm-surface);
+  color: var(--adm-text);
+}
+
 .adm-textarea { resize: vertical; min-height: 100px; }
 
 .adm-label {

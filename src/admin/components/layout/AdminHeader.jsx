@@ -1,5 +1,7 @@
-import { Search, Bell, Menu, ChevronRight } from 'lucide-react';
+import { Search, Bell, Menu, ChevronRight, LogOut } from 'lucide-react';
 import { useLocation, Link } from 'react-router-dom';
+import { useAuthStore } from '../../store/useAuthStore';
+import { useAdminUIStore } from '../../store/useAdminUIStore';
 
 /**
  * Converts a URL segment to a readable title.
@@ -40,6 +42,13 @@ function buildBreadcrumbs(pathname) {
 export default function AdminHeader({ onMobileMenuToggle }) {
   const location = useLocation();
   const breadcrumbs = buildBreadcrumbs(location.pathname);
+  const logout = useAuthStore((state) => state.logout);
+  const toast = useAdminUIStore((state) => state.toast);
+
+  const handleLogout = () => {
+    logout();
+    toast.success('You have logged out safely.', 'Session Ended');
+  };
 
   return (
     <header className="adm-header">
@@ -191,6 +200,36 @@ export default function AdminHeader({ onMobileMenuToggle }) {
       >
         A
       </div>
+
+      {/* ── Logout Button ── */}
+      <button
+        onClick={handleLogout}
+        title="Logout Securely"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '34px',
+          height: '34px',
+          borderRadius: '8px',
+          background: 'rgba(239, 68, 68, 0.08)',
+          border: '1px solid rgba(239, 68, 68, 0.15)',
+          color: '#ef4444',
+          cursor: 'pointer',
+          transition: 'all 0.2s',
+          marginLeft: '4px',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = 'rgba(239, 68, 68, 0.15)';
+          e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = 'rgba(239, 68, 68, 0.08)';
+          e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.15)';
+        }}
+      >
+        <LogOut size={16} />
+      </button>
 
       {/* Inline style to show mobile button on small screens */}
       <style>{`

@@ -1,13 +1,16 @@
 import '../../admin.css';
 import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router-dom';
 import AdminSidebar from './AdminSidebar';
 import AdminHeader from './AdminHeader';
 import AdminToast from '../ui/AdminToast';
 import ConfirmDialog from '../ui/ConfirmDialog';
 import { useAdminUIStore } from '../../store/useAdminUIStore';
+import { useAuthStore } from '../../store/useAuthStore';
 
 export default function AdminLayout() {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  
   const {
     sidebarCollapsed,
     setSidebarCollapsed,
@@ -20,6 +23,10 @@ export default function AdminLayout() {
 
   const handleCollapse = () => setSidebarCollapsed(!sidebarCollapsed);
   const handleMobileMenuToggle = () => setMobileSidebarOpen(!mobileSidebarOpen);
+
+  if (!isAuthenticated) {
+    return <Navigate to="/admin/login" replace />;
+  }
 
   return (
     <div className="admin-root">

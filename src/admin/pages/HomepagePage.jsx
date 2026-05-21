@@ -20,9 +20,9 @@ function AdminToggle({ checked, onChange, label, description }) {
 export default function HomepagePage() {
   const products = useProductStore(state => state.products);
   const toggleFeatured = useProductStore(state => state.toggleFeatured);
-  const featured = useProductStore(state => state.getFeatured());
-  const trending = useProductStore(state => state.getTrending());
-  const bestSellers = useProductStore(state => state.getBestSellers());
+  const featured = products.filter(p => p.featured && p.active);
+  const trending = products.filter(p => p.trending && p.active);
+  const bestSellers = products.filter(p => p.bestSeller && p.active);
   
   const [activeTab, setActiveTab] = useState('featured');
   const [toggles, setToggles] = useState({

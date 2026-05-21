@@ -1,6 +1,15 @@
 import { useForm, Controller } from 'react-hook-form';
-import { useState } from 'react';
-import ImageUpload from '../ui/ImageUpload';
+import { useState, useRef } from 'react';
+import { 
+  Upload, 
+  X, 
+  ArrowLeft, 
+  ArrowRight, 
+  Star, 
+  Plus, 
+  Link2, 
+  AlertCircle 
+} from 'lucide-react';
 
 function AdminToggle({ checked, onChange, label, description }) {
   return (
@@ -44,35 +53,418 @@ function TagInput({ value = [], onChange }) {
   );
 }
 
-export default function ProductForm({ defaultValues, onSubmit, onCancel, isSubmitting }) {
-  const { register, handleSubmit, control, formState: { errors } } = useForm({
-    defaultValues: defaultValues || {
-      title: '',
-      category: 'Cabinets',
-      condition: 'Brand New',
-      players: 1,
-      price: '',
-      discountPrice: '',
-      discountLabel: '',
-      badge: '',
-      badgeColor: '#ef4444',
-      accentColor: '#f97316',
-      warranty: '1 Year',
-      yield: 'Steady Yield',
-      shipping: 'Freight Shipping',
-      stock: 'In Stock',
-      description: '',
-      tags: [],
-      featured: false,
-      trending: false,
-      bestSeller: false,
-      active: true,
-      image: ''
+function ProductMediaManager({ value = [], onChange }) {
+  const [urlInput, setUrlInput] = useState('');
+  const [urlError, setUrlError] = useState('');
+  const [dragging, setDragging] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w .-]*)*\/?$/i;
+
+  const handleAddUrl = (e) => {
+    e.preventDefault();
+    if (!urlInput.trim()) return;
+
+    if (!urlPattern.test(urlInput.trim())) {
+      setUrlError('Please enter a valid external image URL.');
+      return;
     }
-  });
+
+    setUrlError('');
+    onChange([...value, urlInput.trim()]);
+    setUrlInput('');
+  };
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === 'dragenter' || e.type === 'dragover') {
+      setDragging(true);
+    } else if (e.type === 'dragleave') {
+      setDragging(false);
+    }
+  };
+
+  const processFiles = (files) => {
+    if (!files || files.length === 0) return;
+    if (value.length >= 5) return;
+    
+    const newFiles = Array.from(files).slice(0, 5 - value.length);
+    const promises = newFiles.map(file => {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(file);
+      });
+    });
+
+    Promise.all(promises).then(base64Images => {
+      onChange([...value, ...base64Images]);
+    });
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragging(false);
+    processFiles(e.dataTransfer.files);
+  };
+
+  const handleRemove = (index) => {
+    const newImages = [...value];
+    newImages.splice(index, 1);
+    onChange(newImages);
+  };
+
+  const handleMove = (index, direction) => {
+    if (direction === 'left' && index === 0) return;
+    if (direction === 'right' && index === value.length - 1) return;
+
+    const targetIndex = direction === 'left' ? index - 1 : index + 1;
+    const newImages = [...value];
+    const temp = newImages[index];
+    newImages[index] = newImages[targetIndex];
+    newImages[targetIndex] = temp;
+    onChange(newImages);
+  };
+
+  const handleSetPrimary = (index) => {
+    if (index === 0) return;
+    const newImages = [...value];
+    const [primary] = newImages.splice(index, 1);
+    onChange([primary, ...newImages]);
+  };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      
+      {/* Dual Upload methods wrapper */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
+        
+        {/* Method A: Upload Local Images */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <label className="adm-label">Method A: Upload Local Images</label>
+          {value.length < 5 ? (
+            <div 
+              className={`adm-dropzone ${dragging ? 'dragging' : ''}`}
+              onDragEnter={handleDrag}
+              onDragLeave={handleDrag}
+              onDragOver={handleDrag}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+              style={{ 
+                cursor: 'pointer',
+                border: '1px dashed var(--adm-border)',
+                borderRadius: '8px',
+                padding: '24px',
+                textAlign: 'center',
+                background: dragging ? 'rgba(99,102,241,0.05)' : 'rgba(255,255,255,0.02)',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={(e) => processFiles(e.target.files)} 
+                accept="image/*" 
+                multiple 
+                style={{ display: 'none' }} 
+              />
+              <Upload size={20} style={{ color: dragging ? 'var(--adm-accent)' : 'var(--adm-muted)', margin: '0 auto 8px' }} />
+              <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--adm-text)', marginBottom: '2px' }}>
+                Drag local files or click to browse
+              </div>
+              <div style={{ fontSize: '11px', color: 'var(--adm-muted)' }}>
+                PNG, JPG, WEBP or GIF (max. 5)
+              </div>
+            </div>
+          ) : (
+            <div style={{ 
+              border: '1px dashed var(--adm-border)',
+              borderRadius: '8px',
+              padding: '24px',
+              textAlign: 'center',
+              background: 'rgba(255,255,255,0.02)',
+              fontSize: '13px',
+              color: 'var(--adm-muted)'
+            }}>
+              Max limit of 5 images reached. Remove an image to add more.
+            </div>
+          )}
+        </div>
+
+        {/* Method B: Paste Image URL */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <label className="adm-label">Method B: Paste Image URL</label>
+          <div style={{ 
+            border: '1px solid var(--adm-border)',
+            borderRadius: '8px',
+            padding: '20px',
+            background: 'rgba(255,255,255,0.02)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
+            height: '100%',
+            justifyContent: 'center',
+          }}>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <div style={{ position: 'relative', flex: 1 }}>
+                <span style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--adm-muted)' }}>
+                  <Link2 size={14} />
+                </span>
+                <input
+                  type="text"
+                  placeholder="https://example.com/image.png"
+                  value={urlInput}
+                  onChange={(e) => setUrlInput(e.target.value)}
+                  className={`adm-input ${urlError ? 'adm-input-error' : ''}`}
+                  style={{ paddingLeft: '32px', fontSize: '12.5px' }}
+                />
+              </div>
+              <button 
+                type="button"
+                className="adm-btn adm-btn-secondary" 
+                onClick={handleAddUrl}
+                style={{ padding: '0 16px', display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                <Plus size={14} />
+                <span>Add</span>
+              </button>
+            </div>
+            {urlError ? (
+              <div style={{ color: 'var(--adm-danger)', fontSize: '11px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <AlertCircle size={12} />
+                {urlError}
+              </div>
+            ) : (
+              <div style={{ fontSize: '11px', color: 'var(--adm-muted)' }}>
+                Input external URLs like <code style={{ color: '#fff' }}>https://example.com/product.jpg</code> to link web resources.
+              </div>
+            )}
+          </div>
+        </div>
+
+      </div>
+
+      {/* Preview and Reordering Grid */}
+      {value.length > 0 && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <label className="adm-label">Image Gallery ({value.length} of 5)</label>
+          <div 
+            style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', 
+              gap: '12px',
+              background: 'rgba(255,255,255,0.02)',
+              border: '1px solid var(--adm-border)',
+              borderRadius: '8px',
+              padding: '16px',
+            }}
+          >
+            {value.map((img, i) => {
+              const isPrimary = i === 0;
+              return (
+                <div 
+                  key={i} 
+                  style={{ 
+                    position: 'relative', 
+                    borderRadius: '8px', 
+                    border: isPrimary ? '1px solid var(--adm-accent)' : '1px solid var(--adm-border)',
+                    background: 'var(--adm-surface)',
+                    padding: '6px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    transition: 'all 0.2s ease',
+                    boxShadow: isPrimary ? '0 0 10px rgba(99,102,241,0.15)' : 'none',
+                  }}
+                >
+                  {/* Aspect-ratio image box */}
+                  <div style={{ 
+                    position: 'relative', 
+                    aspectRatio: '1', 
+                    borderRadius: '6px', 
+                    overflow: 'hidden', 
+                    background: '#0d0d0f',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <img 
+                      src={img} 
+                      alt={`Product image ${i + 1}`} 
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      onError={(e) => {
+                        e.target.src = 'https://placehold.co/600x400?text=Broken+Image+Link';
+                        e.target.style.opacity = 0.5;
+                      }}
+                    />
+
+                    {/* Primary Badge Overlay */}
+                    {isPrimary && (
+                      <div style={{ 
+                        position: 'absolute', 
+                        top: '4px', 
+                        left: '4px', 
+                        background: 'var(--adm-accent)', 
+                        color: '#fff', 
+                        fontSize: '9px', 
+                        fontWeight: 600, 
+                        padding: '2px 6px', 
+                        borderRadius: '4px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '2px',
+                        zIndex: 2,
+                      }}>
+                        <Star size={8} fill="currentColor" />
+                        PRIMARY
+                      </div>
+                    )}
+
+                    {/* X Remove Button */}
+                    <button 
+                      type="button"
+                      onClick={() => handleRemove(i)}
+                      style={{ 
+                        position: 'absolute', 
+                        top: '4px', 
+                        right: '4px', 
+                        background: 'rgba(13,13,15,0.75)', 
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        borderRadius: '50%', 
+                        width: '18px', 
+                        height: '18px', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        color: '#fff',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s',
+                        zIndex: 2,
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = 'var(--adm-danger)'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(13,13,15,0.75)'}
+                    >
+                      <X size={10} />
+                    </button>
+
+                  </div>
+
+                  {/* Thumbnail Controls */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '4px' }}>
+                    <div style={{ display: 'flex', gap: '2px' }}>
+                      <button
+                        type="button"
+                        disabled={i === 0}
+                        onClick={() => handleMove(i, 'left')}
+                        style={{
+                          background: 'rgba(255,255,255,0.03)',
+                          border: '1px solid var(--adm-border)',
+                          borderRadius: '4px',
+                          padding: '2px 4px',
+                          color: i === 0 ? 'rgba(255,255,255,0.1)' : 'var(--adm-text)',
+                          cursor: i === 0 ? 'not-allowed' : 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <ArrowLeft size={10} />
+                      </button>
+                      <button
+                        type="button"
+                        disabled={i === value.length - 1}
+                        onClick={() => handleMove(i, 'right')}
+                        style={{
+                          background: 'rgba(255,255,255,0.03)',
+                          border: '1px solid var(--adm-border)',
+                          borderRadius: '4px',
+                          padding: '2px 4px',
+                          color: i === value.length - 1 ? 'rgba(255,255,255,0.1)' : 'var(--adm-text)',
+                          cursor: i === value.length - 1 ? 'not-allowed' : 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <ArrowRight size={10} />
+                      </button>
+                    </div>
+
+                    {!isPrimary && (
+                      <button
+                        type="button"
+                        onClick={() => handleSetPrimary(i)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: 'var(--adm-accent)',
+                          fontSize: '10px',
+                          fontWeight: 500,
+                          cursor: 'pointer',
+                          padding: '2px 4px',
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.textDecoration = 'underline'}
+                        onMouseLeave={(e) => e.currentTarget.style.textDecoration = 'none'}
+                      >
+                        Set Primary
+                      </button>
+                    )}
+                  </div>
+
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+    </div>
+  );
+}
+
+export default function ProductForm({ defaultValues, onSubmit, onCancel, isSubmitting }) {
+  const preppedDefaultValues = defaultValues ? {
+    ...defaultValues,
+    images: defaultValues.images || (defaultValues.image ? [defaultValues.image] : [])
+  } : {
+    title: '',
+    category: 'Cabinets',
+    condition: 'Brand New',
+    players: 1,
+    price: '',
+    discountPrice: '',
+    discountLabel: '',
+    badge: '',
+    badgeColor: '#ef4444',
+    accentColor: '#f97316',
+    warranty: '1 Year',
+    yield: 'Steady Yield',
+    shipping: 'Freight Shipping',
+    stock: 'In Stock',
+    description: '',
+    tags: [],
+    featured: false,
+    trending: false,
+    bestSeller: false,
+    active: true,
+    image: '',
+    images: []
+  };
+
+  const { register, handleSubmit, control, formState: { errors } } = useForm({
+    defaultValues: preppedDefaultValues
+  });
+
+  const handleFormSubmit = (data) => {
+    const enrichedData = {
+      ...data,
+      image: data.images?.[0] || '',
+    };
+    onSubmit(enrichedData);
+  };
+
+  return (
+    <form onSubmit={handleSubmit(handleFormSubmit)}>
       
       {/* 1. Basic Info */}
       <div className="adm-form-section">
@@ -140,15 +532,19 @@ export default function ProductForm({ defaultValues, onSubmit, onCancel, isSubmi
       {/* 3. Media & Branding */}
       <div className="adm-form-section">
         <div className="adm-form-section-title">Media & Branding</div>
-        <div className="adm-form-section-desc">Product image, badges, and colors.</div>
+        <div className="adm-form-section-desc">Manage product visual gallery (local uploads & external URLs), labels, and branding accents.</div>
         
         <div className="adm-field">
-          <label className="adm-label">Image Path/URL</label>
-          <input className="adm-input" {...register('image')} placeholder="/image_1.jpeg" />
-          <div style={{ fontSize: '12px', color: 'var(--adm-muted)', marginTop: '4px' }}>Temporary string input for local images.</div>
+          <Controller
+            name="images"
+            control={control}
+            render={({ field }) => (
+              <ProductMediaManager value={field.value} onChange={field.onChange} />
+            )}
+          />
         </div>
 
-        <div className="adm-form-grid-3">
+        <div className="adm-form-grid-3" style={{ marginTop: '24px' }}>
           <div className="adm-field">
             <label className="adm-label">Badge Text</label>
             <input className="adm-input" {...register('badge')} placeholder="e.g. Top Earner" />

@@ -12,6 +12,7 @@ import {
   ExternalLink,
   ChevronLeft,
   ChevronRight,
+  Share2,
 } from 'lucide-react';
 
 const navItems = [
@@ -41,6 +42,7 @@ const navItems = [
     section: 'SYSTEM',
     items: [
       { icon: Settings, label: 'Settings', to: '/admin/settings' },
+      { icon: Share2, label: 'Socials', to: '/admin/settings/socials' },
     ],
   },
 ];

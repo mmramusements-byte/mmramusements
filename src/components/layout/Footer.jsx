@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
 import { NavLink } from 'react-router-dom';
 import { Phone, MapPin, Mail } from 'lucide-react';
-import { FaInstagram, FaYoutube, FaXTwitter, FaWhatsapp } from 'react-icons/fa6';
+import { FaInstagram, FaYoutube, FaXTwitter, FaWhatsapp, FaFacebook, FaDiscord, FaTelegram } from 'react-icons/fa6';
+import { useSocialStore } from '../../admin/store/useSocialStore';
 
 const footerNav = [
   { label: 'Home', href: '/' },
@@ -19,14 +20,20 @@ const supportNav = [
   { label: 'Refund Policy', href: '/refund-policy' },
 ];
 
-const socials = [
-  { icon: <FaInstagram size={16} />, label: 'Instagram', href: '#' },
-  { icon: <FaYoutube size={16} />, label: 'YouTube', href: '#' },
-  { icon: <FaXTwitter size={16} />, label: 'X / Twitter', href: '#' },
-  { icon: <FaWhatsapp size={16} />, label: 'WhatsApp', href: '#' },
-];
+const iconMap = {
+  instagram: <FaInstagram size={16} />,
+  youtube: <FaYoutube size={16} />,
+  twitter: <FaXTwitter size={16} />,
+  whatsapp: <FaWhatsapp size={16} />,
+  facebook: <FaFacebook size={16} />,
+  discord: <FaDiscord size={16} />,
+  telegram: <FaTelegram size={16} />,
+};
 
 export default function Footer() {
+  const socials = useSocialStore((state) => state.socials);
+  const activeSocials = socials.filter((s) => s.visible && s.url);
+
   return (
     <footer style={{
       background: 'var(--black)',
@@ -109,15 +116,15 @@ export default function Footer() {
           <div>
             <h4 className="font-heading" style={{ fontSize: '12px', color: '#fff', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '24px' }}>Connect</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {socials.map(s => (
-                <motion.a key={s.label} href={s.href} aria-label={s.label}
+              {activeSocials.map(s => (
+                <motion.a key={s.id} href={s.url} aria-label={s.name} target="_blank" rel="noopener noreferrer"
                   whileHover={{ x: 5, color: '#fff' }}
                   style={{ cursor: 'none', display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--muted)', textDecoration: 'none', transition: 'color 0.3s' }}
                 >
                   <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--surface)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent)' }}>
-                    {s.icon}
+                    {iconMap[s.id]}
                   </div>
-                  <span className="font-body" style={{ fontSize: '13px' }}>{s.label}</span>
+                  <span className="font-body" style={{ fontSize: '13px' }}>{s.name}</span>
                 </motion.a>
               ))}
             </div>
