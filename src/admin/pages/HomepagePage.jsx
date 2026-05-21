@@ -101,7 +101,7 @@ export default function HomepagePage() {
             </div>
           )}
 
-          {['featured', 'trending', 'bestsellers', 'newarrivals''].includes(activeTab) && (
+          {['featured', 'trending', 'bestsellers', 'newarrivals'].includes(activeTab) && (
             <div>
               {activeTab === 'featured' && <AdminToggle checked={settings.featured_visible} onChange={(v) => handleToggle('featured_visible', v)} label="Featured Products Section" description="Display the grid of featured products." />}
               {activeTab === 'trending' && <AdminToggle checked={settings.trending_visible} onChange={(v) => handleToggle('trending_visible', v)} label="Trending Section" description="Display the horizontal scrolling carousel for trending products." />}
