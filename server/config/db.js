@@ -124,6 +124,39 @@ export const initializeDatabase = async () => {
       ON CONFLICT (email) DO NOTHING;
     `, [process.env.ADMIN_EMAIL || 'mmramusements@gmail.com']);
 
+    // Careers Applications table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS careers_applications (
+        id SERIAL PRIMARY KEY,
+        full_name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        phone VARCHAR(100),
+        position VARCHAR(255) NOT NULL,
+        experience VARCHAR(100),
+        portfolio_url TEXT,
+        resume_url TEXT,
+        cover_letter TEXT,
+        notes TEXT,
+        status VARCHAR(50) DEFAULT 'pending',
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    // Customer Queries table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS customer_queries (
+        id SERIAL PRIMARY KEY,
+        full_name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        phone VARCHAR(100),
+        company VARCHAR(255),
+        subject VARCHAR(500) NOT NULL,
+        message TEXT NOT NULL,
+        status VARCHAR(50) DEFAULT 'new',
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
     await client.query('COMMIT');
     console.log('Database tables initialized successfully');
   } catch (err) {

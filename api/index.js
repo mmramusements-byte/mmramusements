@@ -6,6 +6,8 @@ import authRoutes from '../server/routes/authRoutes.js';
 import productRoutes from '../server/routes/productRoutes.js';
 import settingsRoutes from '../server/routes/settingsRoutes.js';
 import uploadRoutes from '../server/routes/uploadRoutes.js';
+import careersRoutes from '../server/routes/careersRoutes.js';
+import queriesRoutes from '../server/routes/queriesRoutes.js';
 import { initializeDatabase } from '../server/config/db.js';
 
 dotenv.config();
@@ -37,6 +39,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/careers', careersRoutes);
+app.use('/api/queries', queriesRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'Backend is running successfully.' });

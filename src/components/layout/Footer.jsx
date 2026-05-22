@@ -6,13 +6,16 @@ import { useSocialStore } from '../../admin/store/useSocialStore';
 
 const footerNav = [
   { label: 'Home', href: '/' },
-  { label: 'Amusement Equipment', href: '/gaming-carts' },
-  { label: 'Top Earners', href: '/popular' },
+  { label: 'Shop Equipment', href: '/gaming-carts' },
+  { label: 'Best Sellers', href: '/popular' },
   { label: 'Deals & Clearance', href: '/deals' },
+  { label: 'About Us', href: '/about' },
   { label: 'Reviews', href: '/reviews' },
 ];
 
 const supportNav = [
+  { label: 'Contact / Queries', href: '/contact' },
+  { label: 'Careers', href: '/careers' },
   { label: 'FAQ', href: '/faq' },
   { label: 'Terms', href: '/terms' },
   { label: 'Privacy Policy', href: '/privacy' },
@@ -59,18 +62,22 @@ export default function Footer() {
         >
           {/* Column 1: Brand */}
           <div>
-            <h2 className="font-display" style={{ fontSize: '4rem', color: '#fff', lineHeight: 1, marginBottom: '2px' }}>MMR</h2>
-            <p className="font-heading" style={{ fontSize: '11px', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '24px' }}>
+            <img
+              src="/Logo_NoBackground.png"
+              alt="MMR Amusements"
+              style={{ height: '110px', width: 'auto', objectFit: 'contain', marginBottom: '16px', display: 'block' }}
+            />
+            <p className="font-heading" style={{ fontSize: '11px', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '16px' }}>
               AMUSEMENT MACHINE DISTRIBUTOR
             </p>
             <p className="font-body" style={{ fontSize: '14px', color: 'var(--muted)', lineHeight: 1.8, maxWidth: '320px', marginBottom: '32px' }}>
-              The nation's premium distributor of skill-gaming machines, custom Cherry Master cabinets, 8-liner boards, bill acceptors, and genuine amusement hardware parts.
+              America's premier distributor of skill-gaming machines, Cherry Master cabinets, 8-liner boards, bill acceptors, fish tables, and genuine amusement hardware.
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {[
                 { icon: <Phone size={14} />, text: '+1 (210) 388-8416 (Sales & Support)', href: 'tel:+12103888416' },
-                { icon: <Mail size={14} />, text: 'sales@mmramusements.com', href: 'mailto:sales@mmramusements.com' },
+                { icon: <Mail size={14} />, text: 'info@mmramusements.com', href: 'mailto:info@mmramusements.com' },
                 { icon: <MapPin size={14} />, text: '2543 Boardwalk st, San Antonio, TX 78240', href: 'https://maps.google.com/?q=2543+Boardwalk+st,+San+Antonio,+TX+78240' },
               ].map((c, i) => (
                 <a key={i} href={c.href} target={c.href.startsWith('http') ? '_blank' : undefined} rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined} className="font-body contact-footer-link" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: 'var(--muted)', textDecoration: 'none', cursor: 'none', transition: 'color 0.2s' }}>

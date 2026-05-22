@@ -13,6 +13,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Share2,
+  Briefcase,
+  MessageSquare,
 } from 'lucide-react';
 
 const navItems = [
@@ -36,6 +38,13 @@ const navItems = [
       { icon: Star, label: 'Reviews', to: '/admin/reviews' },
       { icon: Image, label: 'Banners', to: '/admin/banners' },
       { icon: Home, label: 'Homepage', to: '/admin/homepage' },
+    ],
+  },
+  {
+    section: 'CRM',
+    items: [
+      { icon: MessageSquare, label: 'Customer Queries', to: '/admin/queries' },
+      { icon: Briefcase, label: 'Careers', to: '/admin/careers' },
     ],
   },
   {
@@ -63,25 +72,17 @@ export default function AdminSidebar({ collapsed, onCollapse }) {
           minHeight: '60px',
         }}
       >
-        {/* M icon box */}
-        <div
+        {/* Logo */}
+        <img
+          src="/Logo_NoBackground.png"
+          alt="MMR"
           style={{
             width: '32px',
             height: '32px',
-            background: '#6366f1',
-            borderRadius: '8px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontWeight: 700,
-            fontSize: '16px',
-            color: '#fff',
+            objectFit: 'contain',
             flexShrink: 0,
-            letterSpacing: '-0.5px',
           }}
-        >
-          M
-        </div>
+        />
 
         <AnimatePresence initial={false}>
           {!collapsed && (

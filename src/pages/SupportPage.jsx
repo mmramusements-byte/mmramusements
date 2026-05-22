@@ -218,7 +218,7 @@ export default function SupportPage() {
 
               {/* Technical Diagnostics Email */}
               <a
-                href="mailto:support@mmramusements.com?subject=Technical%20Cabinet%20Diagnostics%20Request"
+                href="mailto:info@mmramusements.com?subject=Technical%20Cabinet%20Diagnostics%20Request"
                 onClick={() => playClickSound()}
                 onMouseEnter={() => playHoverSound()}
                 style={{
@@ -240,7 +240,7 @@ export default function SupportPage() {
                 </div>
                 <div>
                   <p className="font-heading" style={{ fontSize: '13px', color: '#fff', margin: 0, fontWeight: 600 }}>Schematics & Manuals</p>
-                  <p className="font-mono" style={{ fontSize: '12px', color: 'var(--muted)', margin: '2px 0 0' }}>support@mmramusements.com</p>
+                  <p className="font-mono" style={{ fontSize: '12px', color: 'var(--muted)', margin: '2px 0 0' }}>info@mmramusements.com</p>
                 </div>
               </a>
 

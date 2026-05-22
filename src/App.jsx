@@ -34,6 +34,10 @@ import CategoriesPage from './admin/pages/CategoriesPage';
 import SettingsPage from './admin/pages/SettingsPage';
 import LoginPage from './admin/pages/LoginPage';
 import SocialsPage from './admin/pages/SocialsPage';
+import AdminCareersPage from './admin/pages/AdminCareersPage';
+import AdminQueriesPage from './admin/pages/AdminQueriesPage';
+import CareersPage from './pages/CareersPage';
+import ContactPage from './pages/ContactPage';
 
 function StorefrontLayout({ children }) {
   return (
@@ -76,6 +80,8 @@ function App() {
         <Route path="homepage" element={<HomepagePage />} />
         <Route path="settings" element={<SettingsPage />} />
         <Route path="settings/socials" element={<SocialsPage />} />
+        <Route path="careers" element={<AdminCareersPage />} />
+        <Route path="queries" element={<AdminQueriesPage />} />
       </Route>
 
       {/* ─── STOREFRONT ROUTES ─── */}
@@ -89,6 +95,8 @@ function App() {
             <Route path="/reviews" element={<ReviewsPage />} />
             <Route path="/support" element={<SupportPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/careers" element={<CareersPage />} />
             <Route path="/faq" element={<FaqPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
