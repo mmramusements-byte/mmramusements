@@ -46,12 +46,12 @@ export default function AdminLayout() {
         )}
 
         {/* ── Sidebar ── */}
-        <div className={mobileOpen ? 'adm-sidebar mobile-open' : ''}>
-          <AdminSidebar
-            collapsed={sidebarCollapsed}
-            onCollapse={handleCollapse}
-          />
-        </div>
+        <AdminSidebar
+          collapsed={sidebarCollapsed}
+          onCollapse={handleCollapse}
+          mobileOpen={mobileOpen}
+          onMobileClose={() => setMobileOpen(false)}
+        />
 
         {/* ── Main area ── */}
         <div className="adm-main">

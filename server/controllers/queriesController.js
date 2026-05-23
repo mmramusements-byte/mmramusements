@@ -17,11 +17,18 @@ export const submitQuery = async (req, res) => {
       return res.status(400).json({ error: 'Name, email, subject, and message are required.' });
     }
 
-    const result = await pool.query(
-      `INSERT INTO customer_queries (full_name, email, phone, company, subject, message)
-       VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`,
-      [full_name, email, phone || null, company || null, subject, message]
-    );
+    // Save to DB — non-blocking: if DB is unavailable we still process the request
+    let savedId = null;
+    try {
+      const result = await pool.query(
+        `INSERT INTO customer_queries (full_name, email, phone, company, subject, message)
+         VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`,
+        [full_name, email, phone || null, company || null, subject, message]
+      );
+      savedId = result.rows[0]?.id;
+    } catch (dbErr) {
+      console.error('submitQuery DB error (non-fatal):', dbErr.message);
+    }
 
     try {
       const transporter = createTransporter();
@@ -63,7 +70,7 @@ export const submitQuery = async (req, res) => {
       console.error('Email send error (queries):', emailErr);
     }
 
-    res.status(201).json({ message: 'Query submitted successfully', id: result.rows[0].id });
+    res.status(201).json({ message: 'Query submitted successfully', id: savedId });
   } catch (error) {
     console.error('submitQuery error:', error);
     res.status(500).json({ error: 'Failed to submit query' });

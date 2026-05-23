@@ -244,42 +244,13 @@ export default function SupportPage() {
                 </div>
               </a>
 
-              {/* Manual Downloads Info */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '16px',
-                  padding: '16px 20px',
-                  background: 'var(--card)',
-                  border: '1px solid var(--border)',
-                  borderRadius: '12px',
-                }}
-              >
-                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent)' }}>
-                  <FileText size={18} />
-                </div>
-                <div>
-                  <p className="font-heading" style={{ fontSize: '13px', color: '#fff', margin: 0, fontWeight: 600 }}>DIP Switch manual vault</p>
-                  <p className="font-body" style={{ fontSize: '11px', color: 'var(--muted)', margin: '2px 0 0' }}>Supplied upon secure buyer verification</p>
-                </div>
-              </div>
-
-            </div>
-
-            <div className="rule" />
-
-            {/* Warehouse Logistics & Hours */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              
               {/* Working Hours */}
               <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                 <Clock size={16} style={{ color: 'var(--accent)', marginTop: '2px', flexShrink: 0 }} />
                 <div>
                   <p className="font-heading" style={{ fontSize: '11px', color: '#fff', margin: 0, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Operational Hours</p>
                   <p className="font-body" style={{ fontSize: '12px', color: 'var(--muted)', margin: '4px 0 0', lineHeight: 1.5 }}>
-                    Monday - Friday: 8:00 AM - 6:00 PM EST<br />
-                    Saturday: 9:00 AM - 2:00 PM EST<br />
+                    Monday - Saturday: 10:00 AM - 5:00 PM CST<br />
                     <span style={{ color: '#ef4444' }}>Sunday & Holidays: Closed</span>
                   </p>
                 </div>

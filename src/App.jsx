@@ -20,6 +20,7 @@ import CustomQuotePage from './pages/CustomQuotePage';
 import { Toaster } from 'react-hot-toast';
 import Preloader from './components/common/Preloader';
 import ScrollToTop from './components/common/ScrollToTop';
+import CartDrawer from './components/cart/CartDrawer';
 
 // Admin Imports
 import AdminLayout from './admin/components/layout/AdminLayout';
@@ -53,6 +54,7 @@ function StorefrontLayout({ children }) {
       <Preloader />
       <Toaster position="bottom-right" toastOptions={{ style: { background: '#1a1a1a', color: '#fff', border: '1px solid #333' } }} />
       <Navbar />
+      <CartDrawer />
       <main>{children}</main>
       <Footer />
     </div>

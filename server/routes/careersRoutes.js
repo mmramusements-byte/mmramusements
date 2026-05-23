@@ -6,15 +6,16 @@ import { protectAdminRoute, protectAdminRoute as authMiddleware } from '../middl
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 
+// Career Applications Routes
 router.post('/', upload.single('resume'), submitApplication);
-router.get('/', protectAdminRoute, getApplications);
-router.patch('/:id/status', protectAdminRoute, updateApplicationStatus);
-router.delete('/:id', protectAdminRoute, deleteApplication);
+router.get('/applications', protectAdminRoute, getApplications);
+router.put('/applications/:id/status', protectAdminRoute, updateApplicationStatus);
+router.delete('/applications/:id', protectAdminRoute, deleteApplication);
 
 // Career Jobs Routes
-router.get('/careers/jobs', getJobs);
-router.post('/careers/jobs', authMiddleware, addJob);
-router.put('/careers/jobs/:id', authMiddleware, updateJob);
-router.delete('/careers/jobs/:id', authMiddleware, deleteJob);
+router.get('/jobs', getJobs);
+router.post('/jobs', authMiddleware, addJob);
+router.put('/jobs/:id', authMiddleware, updateJob);
+router.delete('/jobs/:id', authMiddleware, deleteJob);
 
 export default router;

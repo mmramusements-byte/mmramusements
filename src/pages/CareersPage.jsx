@@ -24,7 +24,7 @@ export default function CareersPage() {
     const fetchJobs = async () => {
       try {
         const res = await api.get('/careers/jobs');
-        setOpenPositions(res.data);
+        setOpenPositions(res || []);
       } catch (err) {
         console.error('Failed to load jobs', err);
       }

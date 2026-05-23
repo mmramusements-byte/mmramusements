@@ -58,9 +58,9 @@ const navItems = [
   },
 ];
 
-export default function AdminSidebar({ collapsed, onCollapse }) {
+export default function AdminSidebar({ collapsed, onCollapse, mobileOpen, onMobileClose }) {
   return (
-    <aside className={`adm-sidebar${collapsed ? ' collapsed' : ''}`}>
+    <aside className={`adm-sidebar${collapsed ? ' collapsed' : ''}${mobileOpen ? ' mobile-open' : ''}`}>
       {/* ── Logo Area ── */}
       <div
         style={{
@@ -146,6 +146,7 @@ export default function AdminSidebar({ collapsed, onCollapse }) {
                 key={to}
                 to={to}
                 title={collapsed ? label : undefined}
+                onClick={() => { if (onMobileClose) onMobileClose(); }}
                 className={({ isActive }) =>
                   `adm-nav-link${isActive ? ' active' : ''}`
                 }

@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, PhoneCall, ChevronDown } from 'lucide-react';
+import { Menu, X, PhoneCall, ChevronDown, ShoppingCart } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { playClickSound, playHoverSound } from '../../utils/audio';
 import { useSettingsStore } from '../../store/useSettingsStore';
+import { useCartStore } from '../../store/useCartStore';
 
 // ── Mega-menu data ──────────────────────────────────────────────────────────
 const megaMenuData = {
@@ -89,10 +90,15 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [shopOpen, setShopOpen] = useState(false);
+  const [mobileShopOpen, setMobileShopOpen] = useState(false);
+  const [expandedCol, setExpandedCol] = useState(null);
   const location = useLocation();
   const settings = useSettingsStore((state) => state.settings);
   const shopRef = useRef(null);
   const closeTimer = useRef(null);
+
+  const { toggleCart, getTotalItems } = useCartStore();
+  const cartItemCount = getTotalItems();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -103,6 +109,8 @@ export default function Navbar() {
   useEffect(() => {
     setMobileMenuOpen(false);
     setShopOpen(false);
+    setMobileShopOpen(false);
+    setExpandedCol(null);
   }, [location.pathname]);
 
   const openShop = () => {
@@ -134,7 +142,7 @@ export default function Navbar() {
           {/* LOGO */}
           <Link
             to="/"
-            style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'none', textDecoration: 'none', flexShrink: 0 }}
+            style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', textDecoration: 'none', flexShrink: 0 }}
             onMouseEnter={() => playHoverSound()}
             onClick={() => playClickSound()}
           >
@@ -165,7 +173,7 @@ export default function Navbar() {
                   display: 'flex', alignItems: 'center', gap: '5px',
                   background: 'transparent', border: 'none', color: shopOpen ? 'var(--accent)' : 'rgba(255,255,255,0.82)',
                   fontSize: '13px', fontFamily: "'Oswald',sans-serif", fontWeight: 500,
-                  letterSpacing: '0.09em', textTransform: 'uppercase', cursor: 'none',
+                  letterSpacing: '0.09em', textTransform: 'uppercase', cursor: 'pointer',
                   padding: '10px 14px', borderRadius: '6px', transition: 'all 0.2s',
                 }}
                 onMouseEnter={(e) => { playHoverSound(); e.currentTarget.style.color = '#fff'; e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
@@ -213,7 +221,7 @@ export default function Navbar() {
                                   key={link.label}
                                   to={link.to}
                                   onClick={() => { playClickSound(); setShopOpen(false); }}
-                                  style={{ fontSize: '13px', color: 'rgba(240,240,255,0.6)', textDecoration: 'none', padding: '5px 0', transition: 'color 0.15s', fontFamily: "'Inter',sans-serif", cursor: 'none' }}
+                                  style={{ fontSize: '13px', color: 'rgba(240,240,255,0.6)', textDecoration: 'none', padding: '5px 0', transition: 'color 0.15s', fontFamily: "'Inter',sans-serif", cursor: 'pointer' }}
                                   onMouseEnter={(e) => { playHoverSound(); e.currentTarget.style.color = '#fff'; e.currentTarget.style.paddingLeft = '6px'; }}
                                   onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(240,240,255,0.6)'; e.currentTarget.style.paddingLeft = '0'; }}
                                 >
@@ -238,7 +246,7 @@ export default function Navbar() {
                               color: ql.accent ? 'var(--accent)' : 'rgba(255,255,255,0.6)',
                               textDecoration: 'none', padding: '6px 14px', borderRadius: '4px',
                               border: `1px solid ${ql.accent ? 'rgba(239,68,68,0.3)' : 'rgba(255,255,255,0.08)'}`,
-                              cursor: 'none', transition: 'all 0.2s',
+                              cursor: 'pointer', transition: 'all 0.2s',
                             }}
                             onMouseEnter={(e) => { playHoverSound(); e.currentTarget.style.background = ql.accent ? 'rgba(239,68,68,0.12)' : 'rgba(255,255,255,0.06)'; }}
                             onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
@@ -268,7 +276,7 @@ export default function Navbar() {
                     fontSize: '13px', letterSpacing: '0.09em', textTransform: 'uppercase',
                     color: isActive ? 'var(--accent)' : 'rgba(255,255,255,0.82)',
                     fontWeight: isActive ? 600 : 500, transition: 'all 0.2s',
-                    cursor: 'none', textDecoration: 'none', padding: '10px 14px', borderRadius: '6px',
+                    cursor: 'pointer', textDecoration: 'none', padding: '10px 14px', borderRadius: '6px',
                   }}
                 >
                   {link.label}
@@ -296,11 +304,70 @@ export default function Navbar() {
               <PhoneCall size={14} /> +1 (210) 388-8416
             </a>
 
+            {/* ── Premium Cart Trigger Button ── */}
+            <button
+              onClick={() => { toggleCart(); playClickSound(); }}
+              style={{
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                color: '#fff',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '9px 12px',
+                borderRadius: '6px',
+                position: 'relative',
+                transition: 'all 0.2s',
+                outline: 'none',
+              }}
+              onMouseEnter={(e) => {
+                playHoverSound();
+                e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                e.currentTarget.style.borderColor = 'var(--accent)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+              }}
+            >
+              <ShoppingCart size={17} />
+              
+              <AnimatePresence>
+                {cartItemCount > 0 && (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    style={{
+                      position: 'absolute',
+                      top: '-6px',
+                      right: '-6px',
+                      background: 'var(--accent)',
+                      color: '#fff',
+                      fontSize: '10px',
+                      fontWeight: 'bold',
+                      borderRadius: '50%',
+                      width: '18px',
+                      height: '18px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontFamily: "'JetBrains Mono', monospace",
+                      boxShadow: '0 0 8px var(--accent)',
+                    }}
+                  >
+                    {cartItemCount}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </button>
+
             <button
               className="mobile-only"
               onClick={() => { setMobileMenuOpen(!mobileMenuOpen); playClickSound(); }}
               onMouseEnter={() => playHoverSound()}
-              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', cursor: 'none', display: 'flex', alignItems: 'center', padding: '8px', borderRadius: '6px' }}
+              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '8px', borderRadius: '6px' }}
             >
               {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
@@ -323,13 +390,121 @@ export default function Navbar() {
             }}
           >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-              <Link to="/gaming-carts" onClick={() => playClickSound()} className="font-heading" style={{ fontSize: '16px', textTransform: 'uppercase', color: '#fff', textDecoration: 'none', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', letterSpacing: '0.08em' }}>Shop All Equipment</Link>
+              
+              {/* SHOP ACCORDION FOR MOBILE */}
+              <div>
+                <button
+                  onClick={() => { setMobileShopOpen(!mobileShopOpen); playClickSound(); }}
+                  className="font-heading"
+                  style={{
+                    width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    fontSize: '16px', textTransform: 'uppercase', color: '#fff', background: 'transparent',
+                    border: 'none', borderBottom: '1px solid rgba(255,255,255,0.06)', padding: '14px 0',
+                    letterSpacing: '0.08em', cursor: 'pointer', textAlign: 'left'
+                  }}
+                >
+                  <span>Shop Equipment</span>
+                  <motion.span animate={{ rotate: mobileShopOpen ? 180 : 0 }}>
+                    <ChevronDown size={16} />
+                  </motion.span>
+                </button>
+
+                <AnimatePresence>
+                  {mobileShopOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      style={{ overflow: 'hidden', paddingLeft: '12px', background: 'rgba(255,255,255,0.01)' }}
+                    >
+                      {megaMenuData.columns.map((col, idx) => {
+                        const isColExpanded = expandedCol === idx;
+                        return (
+                          <div key={col.heading} style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+                            <button
+                              onClick={() => { setExpandedCol(isColExpanded ? null : idx); playClickSound(); }}
+                              className="font-heading"
+                              style={{
+                                width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                                fontSize: '14px', textTransform: 'uppercase', color: 'rgba(255,255,255,0.85)',
+                                background: 'transparent', border: 'none', padding: '12px 0',
+                                letterSpacing: '0.06em', cursor: 'pointer'
+                              }}
+                            >
+                              <span>{col.heading}</span>
+                              <motion.span animate={{ rotate: isColExpanded ? 180 : 0 }}>
+                                <ChevronDown size={14} style={{ color: 'var(--accent)' }} />
+                              </motion.span>
+                            </button>
+
+                            {isColExpanded && (
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', paddingBottom: '10px', paddingLeft: '10px' }}>
+                                {col.links.map((link) => (
+                                  <Link
+                                    key={link.label}
+                                    to={link.to}
+                                    onClick={() => { playClickSound(); setMobileMenuOpen(false); }}
+                                    style={{
+                                      fontSize: '13px', color: 'rgba(240,240,255,0.6)', textDecoration: 'none',
+                                      padding: '8px 0', fontFamily: "'Inter',sans-serif", display: 'block'
+                                    }}
+                                  >
+                                    {link.label}
+                                  </Link>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                      
+                      {/* Mobile Mega Quick Links */}
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', padding: '16px 0' }}>
+                        {megaMenuData.quickLinks.map((ql) => (
+                          <Link
+                            key={ql.label}
+                            to={ql.to}
+                            onClick={() => { playClickSound(); setMobileMenuOpen(false); }}
+                            style={{
+                              fontSize: '11px', fontFamily: "'Oswald',sans-serif", fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
+                              color: ql.accent ? 'var(--accent)' : 'rgba(255,255,255,0.6)',
+                              textDecoration: 'none', padding: '6px 12px', borderRadius: '4px',
+                              border: `1px solid ${ql.accent ? 'rgba(239,68,68,0.3)' : 'rgba(255,255,255,0.08)'}`,
+                              background: 'transparent'
+                            }}
+                          >
+                            {ql.label}
+                          </Link>
+                        ))}
+                      </div>
+
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
               <Link to="/custom-quote" onClick={() => playClickSound()} className="font-heading" style={{ fontSize: '16px', textTransform: 'uppercase', color: 'var(--accent)', textDecoration: 'none', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', letterSpacing: '0.08em' }}>Request Quote</Link>
               <Link to="/popular" onClick={() => playClickSound()} className="font-heading" style={{ fontSize: '16px', textTransform: 'uppercase', color: '#fff', textDecoration: 'none', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', letterSpacing: '0.08em' }}>Best Sellers</Link>
               <Link to="/deals" onClick={() => playClickSound()} className="font-heading" style={{ fontSize: '16px', textTransform: 'uppercase', color: 'var(--accent)', textDecoration: 'none', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', letterSpacing: '0.08em' }}>Deals & Clearance</Link>
               <Link to="/about" onClick={() => playClickSound()} className="font-heading" style={{ fontSize: '16px', textTransform: 'uppercase', color: '#fff', textDecoration: 'none', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', letterSpacing: '0.08em' }}>About Us</Link>
               <Link to="/contact" onClick={() => playClickSound()} className="font-heading" style={{ fontSize: '16px', textTransform: 'uppercase', color: '#fff', textDecoration: 'none', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', letterSpacing: '0.08em' }}>Contact / Queries</Link>
               <Link to="/careers" onClick={() => playClickSound()} className="font-heading" style={{ fontSize: '16px', textTransform: 'uppercase', color: '#fff', textDecoration: 'none', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', letterSpacing: '0.08em' }}>Careers</Link>
+              
+              {/* Call Us Link for Mobile */}
+              <a
+                href="tel:+12103888416"
+                onClick={() => playClickSound()}
+                className="font-heading"
+                style={{
+                  fontSize: '16px', textTransform: 'uppercase', color: '#fff', textDecoration: 'none',
+                  padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', letterSpacing: '0.08em',
+                  display: 'flex', alignItems: 'center', gap: '8px'
+                }}
+              >
+                <PhoneCall size={16} style={{ color: 'var(--accent)' }} /> Call +1 (210) 388-8416
+              </a>
+
               <Link to="/support" onClick={() => playClickSound()} style={{ marginTop: '16px', background: 'var(--accent)', color: '#fff', border: 'none', padding: '16px', borderRadius: '8px', fontWeight: 700, fontSize: '15px', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', textAlign: 'center', textDecoration: 'none', fontFamily: "'Oswald',sans-serif" }}>
                 Get a Quote / B2B Support
               </Link>

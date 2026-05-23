@@ -34,7 +34,7 @@ export const createOrder = async (req, res) => {
         paypal_transaction_id, subtotal, total
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16) RETURNING id`,
       [
-        order_number, customer_name, email, phone, company_name, business_type,
+        order_number, customer_name, email, phone, company_name || null, business_type || null,
         shipping_address, city, state, zip_code, country, notes, preferred_contact_method,
         paypal_transaction_id, subtotal, total
       ]
