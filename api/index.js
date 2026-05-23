@@ -8,6 +8,8 @@ import settingsRoutes from '../server/routes/settingsRoutes.js';
 import uploadRoutes from '../server/routes/uploadRoutes.js';
 import careersRoutes from '../server/routes/careersRoutes.js';
 import queriesRoutes from '../server/routes/queriesRoutes.js';
+import categoryRoutes from '../server/routes/categoryRoutes.js';
+import orderRoutes from '../server/routes/orderRoutes.js';
 import { initializeDatabase } from '../server/config/db.js';
 
 dotenv.config();
@@ -20,15 +22,24 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
 
 // Initialize database on startup
-// Note: In serverless, this might be called per cold start. Our db init logic should use IF NOT EXISTS.
 let dbInitialized = false;
+let dbInitPromise = null;
+
 app.use(async (req, res, next) => {
   if (!dbInitialized) {
+    if (!dbInitPromise) {
+      dbInitPromise = initializeDatabase()
+        .then(() => { dbInitialized = true; })
+        .catch(err => {
+          console.error('Database initialization failed:', err);
+          dbInitPromise = null; // allow retry on next request
+        });
+    }
     try {
-      await initializeDatabase();
-      dbInitialized = true;
+      await dbInitPromise;
     } catch (err) {
-      console.error('Database initialization failed:', err);
+      // DB init failed — still allow request through but log it
+      console.error('DB init error on request:', err);
     }
   }
   next();
@@ -41,9 +52,17 @@ app.use('/api/settings', settingsRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/careers', careersRoutes);
 app.use('/api/queries', queriesRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/orders', orderRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'Backend is running successfully.' });
+});
+
+// Global error handler — catches unhandled errors from all routes
+app.use((err, req, res, next) => {
+  console.error('Unhandled server error:', err);
+  res.status(500).json({ error: 'Internal server error', message: err.message || 'Something went wrong' });
 });
 
 export default app;

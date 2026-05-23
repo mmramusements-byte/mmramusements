@@ -1,16 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProductForm from '../components/forms/ProductForm';
 import PageHeader from '../components/ui/PageHeader';
 import { useProductStore } from '../store/useProductStore';
-import { useToast } from '../hooks/useToast.jsx';
+import { useAdminUIStore } from '../store/useAdminUIStore';
+import api from '../../lib/api';
 
 export default function AddProductPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [categories, setCategories] = useState([]);
   const addProduct = useProductStore(state => state.addProduct);
-  const toast = useToast();
+  const toast = useAdminUIStore(state => state.toast);
   const navigate = useNavigate();
   
+  useEffect(() => {
+    api.get('/categories')
+      .then(setCategories)
+      .catch(() => toast.error('Failed to load categories'));
+  }, [toast]);
+
   const handleSubmit = async (data) => {
     setIsSubmitting(true);
     try {
@@ -41,6 +49,7 @@ export default function AddProductPage() {
       
       <div style={{ maxWidth: '900px' }}>
         <ProductForm 
+          categories={categories}
           onSubmit={handleSubmit} 
           onCancel={() => navigate('/admin/products')} 
           isSubmitting={isSubmitting} 

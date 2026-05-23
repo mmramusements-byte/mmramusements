@@ -11,70 +11,74 @@ const megaMenuData = {
     {
       heading: 'Game Boards',
       links: [
-        { label: 'All Game Boards', to: '/gaming-carts?cat=Game+Boards' },
-        { label: 'Amcoe Boards', to: '/gaming-carts?cat=Game+Boards&brand=Amcoe' },
-        { label: 'Astro Boards', to: '/gaming-carts?cat=Game+Boards&brand=Astro' },
-        { label: 'Banilla Boards', to: '/gaming-carts?cat=Game+Boards&brand=Banilla' },
-        { label: 'Big Daddy Boards', to: '/gaming-carts?cat=Game+Boards&brand=Big+Daddy' },
-        { label: 'Black Clover', to: '/gaming-carts?cat=Game+Boards&brand=Black+Clover' },
-        { label: 'Borden Boards', to: '/gaming-carts?cat=Game+Boards&brand=Borden' },
-        { label: 'Dyna Boards', to: '/gaming-carts?cat=Game+Boards&brand=Dyna' },
-        { label: 'IGS Boards', to: '/gaming-carts?cat=Game+Boards&brand=IGS' },
-        { label: 'Jenka Lab', to: '/gaming-carts?cat=Game+Boards&brand=Jenka+Lab' },
-        { label: 'Master Panda', to: '/gaming-carts?cat=Game+Boards&brand=Master+Panda' },
-        { label: 'Ocean King', to: '/gaming-carts?cat=Game+Boards&brand=Ocean+King' },
-        { label: 'Primero Boards', to: '/gaming-carts?cat=Game+Boards&brand=Primero' },
-        { label: 'Subsino Boards', to: '/gaming-carts?cat=Game+Boards&brand=Subsino' },
-        { label: 'Trestle Boards', to: '/gaming-carts?cat=Game+Boards&brand=Trestle' },
-        { label: 'Zydexo Boards', to: '/gaming-carts?cat=Game+Boards&brand=Zydexo' },
+        { label: 'All Game Boards', to: '/categories/game-boards' },
+        { label: 'Amigo Boards', to: '/categories/game-boards/amigo-game-boards' },
+        { label: 'Amcoe Boards', to: '/categories/game-boards/amcoe-game-boards' },
+        { label: 'Astro Boards', to: '/categories/game-boards/astro-game-boards' },
+        { label: 'Banilla Boards', to: '/categories/game-boards/banilla-game-boards' },
+        { label: 'Big Daddy Boards', to: '/categories/game-boards/big-daddy-game-boards' },
+        { label: 'Black Clover', to: '/categories/game-boards/black-clover-game-boards' },
+        { label: 'Borden Boards', to: '/categories/game-boards/borden-game-boards' },
+        { label: 'Dyna Boards', to: '/categories/game-boards/dyna-game-boards' },
+        { label: 'IGS Boards', to: '/categories/game-boards/igs-game-boards' },
+        { label: 'Jenka Lab', to: '/categories/game-boards/jenka-lab-game-boards' },
+        { label: 'Master Panda', to: '/categories/game-boards/master-panda-game-boards' },
+        { label: 'Ocean King', to: '/categories/game-boards/ocean-king-game-boards' },
+        { label: 'Primero Boards', to: '/categories/game-boards/primero-game-boards' },
+        { label: 'Subsino Boards', to: '/categories/game-boards/subsino-game-boards' },
+        { label: 'Trestle Boards', to: '/categories/game-boards/trestle-game-boards' },
+        { label: 'Zydexo Boards', to: '/categories/game-boards/zydexo-game-boards' },
       ],
     },
     {
       heading: 'Gaming Systems',
       links: [
-        { label: 'Arcade Games', to: '/gaming-carts?cat=Arcade+Games' },
-        { label: 'Fish Games', to: '/gaming-carts?cat=Fish+Games' },
-        { label: 'Coin Pushers', to: '/gaming-carts?cat=Coin+Pushers' },
-        { label: 'Skill Games', to: '/gaming-carts?cat=Skill+Games' },
-        { label: 'Preview / No Chance', to: '/gaming-carts?cat=Preview+Games' },
-        { label: 'Multi-Game Systems', to: '/gaming-carts?cat=Multi-Game+Systems' },
-        { label: 'Progressive Linking', to: '/gaming-carts?cat=Progressive+Systems' },
-        { label: 'Redemption Kiosks', to: '/gaming-carts?cat=Redemption+Kiosks' },
+        { label: 'All Gaming Systems', to: '/categories/game-systems' },
+        { label: 'Arcade Games', to: '/categories/game-systems/arcade-games' },
+        { label: 'Fish Games', to: '/categories/game-systems/fish-games' },
+        { label: 'Coin Pushers', to: '/categories/game-systems/coin-quarter-pushers' },
+        { label: 'Skill Games', to: '/categories/game-systems/nudge-skill-games' },
+        { label: 'Preview / No Chance', to: '/categories/game-systems/preview-no-chance-games' },
+        { label: 'Multi-Game Systems', to: '/categories/game-systems/multi-game-systems' },
+        { label: 'Progressive Linking', to: '/categories/game-systems/progressive-linking-systems' },
+        { label: 'Redemption Kiosks', to: '/categories/game-systems/redemption-kiosk' },
       ],
     },
     {
       heading: 'Cabinets & Hardware',
       links: [
-        { label: 'Board Ready Cabinets', to: '/gaming-carts?cat=Board+Ready+Cabinets' },
-        { label: 'Mobile Game Kiosks', to: '/gaming-carts?cat=Mobile+Kiosks' },
-        { label: 'Upright LED Cabinets', to: '/gaming-carts?cat=Cabinets' },
-        { label: 'Countertop Terminals', to: '/gaming-carts?cat=Cabinets' },
-        { label: 'Gaming Stools', to: '/gaming-carts?cat=Cabinets' },
+        { label: 'All Cabinets', to: '/categories/cabinets-hardware' },
+        { label: 'Board Ready Cabinets', to: '/categories/cabinets-hardware/board-ready-cabinets' },
+        { label: 'Mobile Game Kiosks', to: '/categories/cabinets-hardware/mobile-game-kiosk' },
+        { label: 'Upright Cabinets', to: '/categories/cabinets-hardware/upright-cabinets' },
+        { label: 'Countertop Terminals', to: '/categories/cabinets-hardware/countertop-cabinets' },
+        { label: 'Touchscreen Cabinets', to: '/categories/cabinets-hardware/touchscreen-cabinets' },
+        { label: 'Gaming Stools', to: '/categories/cabinets-hardware/gaming-stools' },
       ],
     },
     {
       heading: 'Parts & Supplies',
       links: [
-        { label: 'All Parts & Supplies', to: '/gaming-carts?cat=Parts+%26+Supplies' },
-        { label: 'Bill Acceptors', to: '/gaming-carts?cat=Parts+%26+Supplies&sub=Bill+Acceptors' },
-        { label: 'LCD Monitors', to: '/gaming-carts?cat=Parts+%26+Supplies&sub=LCD+Monitors' },
-        { label: 'Power Supplies', to: '/gaming-carts?cat=Parts+%26+Supplies&sub=Power+Supplies' },
-        { label: 'Harnesses & Cables', to: '/gaming-carts?cat=Parts+%26+Supplies&sub=Harnesses' },
-        { label: 'Pushbuttons', to: '/gaming-carts?cat=Parts+%26+Supplies&sub=Pushbuttons' },
-        { label: 'Card Readers', to: '/gaming-carts?cat=Parts+%26+Supplies&sub=Card+Readers' },
-        { label: 'Cabinet Parts', to: '/gaming-carts?cat=Parts+%26+Supplies&sub=Cabinet+Parts' },
+        { label: 'All Parts & Supplies', to: '/categories/parts-supplies' },
+        { label: 'Bill Acceptors', to: '/categories/parts-supplies/bill-acceptors-accessories' },
+        { label: 'LCD Monitors', to: '/categories/parts-supplies/lcd-monitors' },
+        { label: 'Power Supplies', to: '/categories/parts-supplies/power-supplies' },
+        { label: 'Harnesses & Cables', to: '/categories/parts-supplies/harnesses' },
+        { label: 'Pushbuttons', to: '/categories/parts-supplies/pushbuttons' },
+        { label: 'Card Readers', to: '/categories/parts-supplies/card-reader-solutions' },
+        { label: 'Cabinet Parts', to: '/categories/parts-supplies/cabinet-parts-supplies' },
       ],
     },
   ],
   quickLinks: [
-    { label: '🔥 Best Sellers', to: '/popular', accent: true },
-    { label: '⚡ Deals & Clearance', to: '/deals', accent: true },
-    { label: '🆕 New Arrivals', to: '/gaming-carts?cat=New+Arrivals' },
-    { label: '♻️ Clearance Items', to: '/deals' },
+    { label: 'Weekly Deals', to: '/deals', accent: true },
+    { label: 'Full Catalog', to: '/gaming-carts' },
+    { label: 'Popular Products', to: '/popular' },
   ],
 };
 
 const topLinks = [
+  { label: 'Request Quote', to: '/custom-quote' },
   { label: 'Best Sellers', to: '/popular' },
   { label: 'Deals & Clearance', to: '/deals' },
   { label: 'About Us', to: '/about' },
@@ -123,13 +127,7 @@ export default function Navbar() {
           transition: 'all 0.3s ease',
         }}
       >
-        {/* Top utility bar */}
-        <div style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', padding: '6px 0', display: 'none' }} className="utility-bar">
-          <div className="mmr-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)' }}>The Nation's Premier Arcade Equipment Distributor</span>
-            <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)' }}>+1 (210) 388-8416 &nbsp;|&nbsp; info@mmramusements.com</span>
-          </div>
-        </div>
+        {/* Top utility bar removed as requested */}
 
         <div className="mmr-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px clamp(1.25rem, 4vw, 5rem)' }}>
 
@@ -144,18 +142,15 @@ export default function Navbar() {
               <img
                 src={settings.logo_url}
                 alt="MMR Amusements"
-                style={{ height: '52px', width: 'auto', objectFit: 'contain' }}
+                style={{ height: '80px', width: 'auto', objectFit: 'contain' }}
               />
             ) : (
               <img
                 src="/Logo_NoBackground.png"
                 alt="MMR Amusements"
-                style={{ height: '52px', width: 'auto', objectFit: 'contain' }}
+                style={{ height: '80px', width: 'auto', objectFit: 'contain' }}
               />
             )}
-            <span className="font-display" style={{ fontSize: '1.5rem', color: '#fff', letterSpacing: '0.06em', lineHeight: 1 }} >
-              MMR <span style={{ color: 'var(--accent)' }}>AMUSEMENTS</span>
-            </span>
           </Link>
 
           {/* DESKTOP NAV */}
@@ -284,22 +279,22 @@ export default function Navbar() {
 
           {/* CTA + Mobile Toggle */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <Link
-              to="/support"
+            <a
+              href="tel:+12103888416"
               className="desktop-only"
               style={{
-                background: 'var(--accent)', border: 'none', color: '#fff',
-                cursor: 'none', display: 'flex', alignItems: 'center', gap: '8px',
+                background: 'var(--accent)', border: 'none', color: '#000',
+                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px',
                 padding: '10px 22px', borderRadius: '6px', fontWeight: 700,
                 fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.07em',
                 textDecoration: 'none', fontFamily: "'Oswald',sans-serif", transition: 'all 0.2s',
               }}
-              onMouseEnter={(e) => { playHoverSound(); e.currentTarget.style.background = '#dc2626'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--accent)'; }}
+              onMouseEnter={(e) => { playHoverSound(); e.currentTarget.style.background = '#dc2626'; e.currentTarget.style.color = '#fff'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--accent)'; e.currentTarget.style.color = '#000'; }}
               onClick={() => playClickSound()}
             >
-              <PhoneCall size={14} /> Get a Quote
-            </Link>
+              <PhoneCall size={14} /> +1 (210) 388-8416
+            </a>
 
             <button
               className="mobile-only"
@@ -329,6 +324,7 @@ export default function Navbar() {
           >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
               <Link to="/gaming-carts" onClick={() => playClickSound()} className="font-heading" style={{ fontSize: '16px', textTransform: 'uppercase', color: '#fff', textDecoration: 'none', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', letterSpacing: '0.08em' }}>Shop All Equipment</Link>
+              <Link to="/custom-quote" onClick={() => playClickSound()} className="font-heading" style={{ fontSize: '16px', textTransform: 'uppercase', color: 'var(--accent)', textDecoration: 'none', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', letterSpacing: '0.08em' }}>Request Quote</Link>
               <Link to="/popular" onClick={() => playClickSound()} className="font-heading" style={{ fontSize: '16px', textTransform: 'uppercase', color: '#fff', textDecoration: 'none', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', letterSpacing: '0.08em' }}>Best Sellers</Link>
               <Link to="/deals" onClick={() => playClickSound()} className="font-heading" style={{ fontSize: '16px', textTransform: 'uppercase', color: 'var(--accent)', textDecoration: 'none', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', letterSpacing: '0.08em' }}>Deals & Clearance</Link>
               <Link to="/about" onClick={() => playClickSound()} className="font-heading" style={{ fontSize: '16px', textTransform: 'uppercase', color: '#fff', textDecoration: 'none', padding: '14px 0', borderBottom: '1px solid rgba(255,255,255,0.06)', letterSpacing: '0.08em' }}>About Us</Link>

@@ -13,7 +13,7 @@ function ProductCard({ product, game, index }) {
       transition={{ delay: index * 0.06, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       whileHover={{ y: -6, scale: 1.01 }}
       className="group relative rounded-2xl overflow-hidden"
-      style={{ cursor: 'none' }}
+      style={{ cursor: 'pointer' }}
     >
       {/* Hover glow border */}
       <div
@@ -96,7 +96,7 @@ function ProductCard({ product, game, index }) {
               whileTap={{ scale: 0.94 }}
               className="ml-auto flex items-center gap-1.5 px-3 py-2 rounded-lg font-display font-semibold text-xs text-white transition-all"
               style={{
-                cursor: 'none',
+                cursor: 'pointer',
                 background: `linear-gradient(135deg, ${game.gradientFrom}, ${game.gradientTo})`,
                 boxShadow: `0 3px 15px ${game.accentColor}40`,
               }}
@@ -210,7 +210,7 @@ export default function ProductDisplay() {
             whileHover={{ scale: 1.04, y: -2 }}
             whileTap={{ scale: 0.97 }}
             className="btn-ghost px-10 py-3.5 text-sm"
-            style={{ cursor: 'none' }}
+            style={{ cursor: 'pointer' }}
           >
             Load More Packages
             <ShoppingCart size={14} />

@@ -39,7 +39,7 @@ function Accordion({ q, a }) {
           setOpen(!open);
           playClickSound();
         }}
-        style={{ cursor: 'none', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'none', border: 'none', color: '#fff', textAlign: 'left' }}
+        style={{ cursor: 'pointer', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'none', border: 'none', color: '#fff', textAlign: 'left' }}
       >
         <span className="font-body" style={{ fontSize: '16px', fontWeight: 500 }}>{q}</span>
         <motion.div

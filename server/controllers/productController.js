@@ -3,7 +3,31 @@ import { processAndUploadImage } from '../services/uploadService.js';
 
 export const getProducts = async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM products ORDER BY created_at DESC');
+    const { category, subcategory, brand, clearance } = req.query;
+    let query = 'SELECT * FROM products WHERE 1=1';
+    let params = [];
+    let idx = 1;
+
+    if (category) {
+      query += ` AND category = $${idx++}`;
+      params.push(category);
+    }
+    if (subcategory) {
+      query += ` AND subcategory = $${idx++}`;
+      params.push(subcategory);
+    }
+    if (brand) {
+      query += ` AND brand = $${idx++}`;
+      params.push(brand);
+    }
+    if (clearance !== undefined) {
+      query += ` AND clearance = $${idx++}`;
+      params.push(clearance === 'true');
+    }
+
+    query += ' ORDER BY created_at DESC';
+
+    const result = await pool.query(query, params);
     res.status(200).json(result.rows);
   } catch (error) {
     console.error('Error fetching products:', error);
@@ -16,7 +40,8 @@ export const createProduct = async (req, res) => {
     const {
       title, price, discount_price, category, condition, players, yield: yieldValue,
       warranty, description, tags, features,
-      active, featured, trending, stock
+      active, featured, trending, stock,
+      subcategory, brand, clearance
     } = req.body;
     
     // Support both snake_case (direct API) and camelCase (frontend form)
@@ -38,16 +63,19 @@ export const createProduct = async (req, res) => {
       `INSERT INTO products (
         title, price, discount_price, category, condition, players, yield, 
         warranty, description, image_url, tags, features, 
-        active, featured, trending, best_seller, new_arrival, popular, recommended, stock
+        active, featured, trending, best_seller, new_arrival, popular, recommended, stock,
+        subcategory, brand, clearance
       ) VALUES (
         $1, $2, $3, $4, $5, $6, $7, 
         $8, $9, $10, $11, $12,
-        $13, $14, $15, $16, $17, $18, $19, $20
+        $13, $14, $15, $16, $17, $18, $19, $20,
+        $21, $22, $23
       ) RETURNING *`,
       [
         title, price, discount_price || null, category, condition, players || 0, yieldValue,
         warranty, description, image_url, tags ? JSON.stringify(tags) : '[]', features ? JSON.stringify(features) : '[]',
-        active ?? true, featured ?? false, trending ?? false, best_seller, new_arrival, popular, recommended, stock || 'In Stock'
+        active ?? true, featured ?? false, trending ?? false, best_seller, new_arrival, popular, recommended, stock || 'In Stock',
+        subcategory || null, brand || null, clearance ?? false
       ]
     );
 
@@ -64,7 +92,8 @@ export const updateProduct = async (req, res) => {
     const {
       title, price, discount_price, category, condition, players, yield: yieldValue,
       warranty, description, tags, features,
-      active, featured, trending, stock
+      active, featured, trending, stock,
+      subcategory, brand, clearance
     } = req.body;
     
     // Support both snake_case (direct API) and camelCase (frontend form)
@@ -104,13 +133,17 @@ export const updateProduct = async (req, res) => {
         popular = COALESCE($18, popular),
         recommended = COALESCE($19, recommended),
         stock = COALESCE($20, stock),
+        subcategory = COALESCE($21, subcategory),
+        brand = COALESCE($22, brand),
+        clearance = COALESCE($23, clearance),
         updated_at = CURRENT_TIMESTAMP
-      WHERE id = $21
+      WHERE id = $24
       RETURNING *`,
       [
         title, price, discount_price, category, condition, players, yieldValue,
         warranty, description, image_url, tags ? JSON.stringify(tags) : null, features ? JSON.stringify(features) : null,
         active, featured, trending, best_seller, new_arrival, popular, recommended, stock,
+        subcategory, brand, clearance,
         id
       ]
     );

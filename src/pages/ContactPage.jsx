@@ -85,7 +85,7 @@ export default function ContactPage() {
                     <div className="font-heading" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>{c.title}</div>
                     {c.href ? (
                       <a href={c.href} target={c.href.startsWith('http') ? '_blank' : undefined} rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                        style={{ fontSize: '14px', color: '#fff', textDecoration: 'none', cursor: 'none', fontFamily: "'Inter',sans-serif", transition: 'color 0.2s' }}
+                        style={{ fontSize: '14px', color: '#fff', textDecoration: 'none', cursor: 'pointer', fontFamily: "'Inter',sans-serif", transition: 'color 0.2s' }}
                         onMouseEnter={e => e.currentTarget.style.color = c.color}
                         onMouseLeave={e => e.currentTarget.style.color = '#fff'}
                       >{c.value}</a>
@@ -141,7 +141,7 @@ export default function ContactPage() {
                     <div key={f.name}>
                       <label className="font-heading" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.55)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: '7px' }}>{f.label}</label>
                       <input name={f.name} type={f.type} placeholder={f.placeholder} value={form[f.name]} onChange={handleChange}
-                        style={{ width: '100%', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '11px 14px', color: '#fff', fontSize: '14px', fontFamily: "'Inter',sans-serif", outline: 'none', cursor: 'none' }}
+                        style={{ width: '100%', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '11px 14px', color: '#fff', fontSize: '14px', fontFamily: "'Inter',sans-serif", outline: 'none', cursor: 'pointer' }}
                         onFocus={e => e.target.style.borderColor = 'var(--accent)'}
                         onBlur={e => e.target.style.borderColor = 'var(--border)'}
                       />
@@ -152,7 +152,7 @@ export default function ContactPage() {
                 <div style={{ marginBottom: '18px' }}>
                   <label className="font-heading" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.55)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: '7px' }}>Query Type / Subject *</label>
                   <select name="subject" value={form.subject} onChange={handleChange}
-                    style={{ width: '100%', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '11px 14px', color: form.subject ? '#fff' : 'rgba(255,255,255,0.35)', fontSize: '14px', fontFamily: "'Inter',sans-serif", outline: 'none', cursor: 'none' }}
+                    style={{ width: '100%', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '11px 14px', color: form.subject ? '#fff' : 'rgba(255,255,255,0.35)', fontSize: '14px', fontFamily: "'Inter',sans-serif", outline: 'none', cursor: 'pointer' }}
                     onFocus={e => e.target.style.borderColor = 'var(--accent)'}
                     onBlur={e => e.target.style.borderColor = 'var(--border)'}
                   >
@@ -164,7 +164,7 @@ export default function ContactPage() {
                 <div style={{ marginBottom: '24px' }}>
                   <label className="font-heading" style={{ fontSize: '11px', color: 'rgba(255,255,255,0.55)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: '7px' }}>Your Message *</label>
                   <textarea name="message" rows={6} placeholder="Describe your query in detail — product names, quantities, or technical issues..." value={form.message} onChange={handleChange}
-                    style={{ width: '100%', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '11px 14px', color: '#fff', fontSize: '14px', fontFamily: "'Inter',sans-serif", outline: 'none', resize: 'vertical', cursor: 'none', lineHeight: 1.6 }}
+                    style={{ width: '100%', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '11px 14px', color: '#fff', fontSize: '14px', fontFamily: "'Inter',sans-serif", outline: 'none', resize: 'vertical', cursor: 'pointer', lineHeight: 1.6 }}
                     onFocus={e => e.target.style.borderColor = 'var(--accent)'}
                     onBlur={e => e.target.style.borderColor = 'var(--border)'}
                   />
@@ -178,7 +178,7 @@ export default function ContactPage() {
                 )}
 
                 <button type="submit" disabled={submitting}
-                  style={{ width: '100%', background: submitting ? 'rgba(239,68,68,0.5)' : 'var(--accent)', border: 'none', color: '#fff', padding: '15px', borderRadius: '10px', cursor: 'none', fontFamily: "'Oswald',sans-serif", fontWeight: 700, fontSize: '15px', textTransform: 'uppercase', letterSpacing: '0.1em', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                  style={{ width: '100%', background: submitting ? 'rgba(239,68,68,0.5)' : 'var(--accent)', border: 'none', color: '#fff', padding: '15px', borderRadius: '10px', cursor: 'pointer', fontFamily: "'Oswald',sans-serif", fontWeight: 700, fontSize: '15px', textTransform: 'uppercase', letterSpacing: '0.1em', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                   onMouseEnter={e => { if (!submitting) e.currentTarget.style.background = '#dc2626'; }}
                   onMouseLeave={e => { if (!submitting) e.currentTarget.style.background = 'var(--accent)'; }}
                 >

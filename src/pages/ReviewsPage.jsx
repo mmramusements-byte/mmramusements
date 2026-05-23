@@ -70,7 +70,7 @@ export default function ReviewsPage() {
                   playClickSound();
                 }}
                 style={{
-                  cursor: 'none', padding: '8px 20px', borderRadius: '99px',
+                  cursor: 'pointer', padding: '8px 20px', borderRadius: '99px',
                   fontFamily: 'Oswald, sans-serif', fontSize: '13px', letterSpacing: '0.08em', textTransform: 'uppercase',
                   border: `1px solid ${activeFilter === f ? 'var(--accent)' : 'var(--border)'}`,
                   background: activeFilter === f ? 'var(--accent)' : 'transparent',
@@ -151,7 +151,7 @@ export default function ReviewsPage() {
           </div>
           <button 
             onClick={() => playClickSound()}
-            style={{ cursor: 'none', display: 'flex', alignItems: 'center', gap: '8px', padding: '16px 32px', background: '#000', color: '#fff', borderRadius: '8px', fontFamily: 'Oswald, sans-serif', fontSize: '14px', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 600, border: 'none' }}
+            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', padding: '16px 32px', background: '#000', color: '#fff', borderRadius: '8px', fontFamily: 'Oswald, sans-serif', fontSize: '14px', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 600, border: 'none' }}
           >
             <MessageSquare size={16} /> Submit Equipment Review
           </button>

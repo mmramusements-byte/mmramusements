@@ -21,7 +21,7 @@ function ReviewCard({ review }) {
       </div>
 
       {/* Comment */}
-      <p className="font-body" style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.65, flex: 1 }}>
+      <p className="font-body" style={{ fontSize: '13px', color: '#e5e7eb', lineHeight: 1.65, flex: 1 }}>
         "{review.comment}"
       </p>
 
@@ -41,10 +41,10 @@ function ReviewCard({ review }) {
               <p className="font-heading" style={{ fontSize: '12px', fontWeight: 600, color: '#fff' }}>{review.name}</p>
               {review.verified && <BadgeCheck size={10} style={{ color: 'var(--accent)' }} />}
             </div>
-            <p className="font-body" style={{ fontSize: '10px', color: 'var(--muted)' }}>{review.handle}</p>
+            <p className="font-body" style={{ fontSize: '10px', color: '#e5e7eb' }}>{review.handle}</p>
           </div>
         </div>
-        <div className="font-body" style={{ fontSize: '10px', color: 'var(--muted)' }}>
+        <div className="font-body" style={{ fontSize: '10px', color: '#e5e7eb' }}>
           {review.icon}
         </div>
       </div>
@@ -97,7 +97,7 @@ export default function Testimonials() {
               ))}
             </div>
             <span className="font-display" style={{ color: '#fff', fontSize: '1.2rem' }}>4.9</span>
-            <span className="font-body" style={{ fontSize: '11px', color: 'var(--muted)' }}>from 8,000+ reviews</span>
+            <span className="font-body" style={{ fontSize: '11px', color: '#e5e7eb' }}>from 8,000+ reviews</span>
           </motion.div>
         </div>
       </div>
@@ -124,3 +124,4 @@ export default function Testimonials() {
     </section>
   );
 }
+

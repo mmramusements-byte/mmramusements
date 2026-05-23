@@ -1,13 +1,14 @@
 import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { ArrowRight, ShieldCheck, Zap, Layers, Award } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ArrowRight, ShieldCheck, Zap, Layers, Award, ShoppingCart } from 'lucide-react';
+import {Link, useNavigate } from 'react-router-dom';
 import { useProductStore } from '../../admin/store/useProductStore';
 import { playHoverSound, playClickSound, playSuccessSound } from '../../utils/audio';
 import InquiryModal from '../common/InquiryModal';
 
 function ProductCard({ item, index, onInquire }) {
   const [hovered, setHovered] = useState(false);
+  const navigate = useNavigate();
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e) => {
@@ -51,7 +52,7 @@ function ProductCard({ item, index, onInquire }) {
       className="store-card"
       style={{
         position: 'relative',
-        cursor: 'none',
+        cursor: 'pointer',
         height: '480px',
         width: '100%',
         borderRadius: '16px',
@@ -74,7 +75,7 @@ function ProductCard({ item, index, onInquire }) {
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         />
         {/* Gradient overlay to ensure text legibility */}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(3,3,3,0.7) 0%, rgba(3,3,3,0.35) 50%, transparent 100%)' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.3) 100%)', transition: 'opacity 0.3s', opacity: hovered ? 1 : 0.7 }} />
       </div>
 
       {/* Badges & Tags */}
@@ -107,12 +108,12 @@ function ProductCard({ item, index, onInquire }) {
           <div style={{ display: 'flex', gap: '12px', marginBottom: '14px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               <Award size={13} style={{ color: 'var(--accent)' }} />
-              <span className="font-heading" style={{ fontSize: '11px', color: 'var(--text)' }}>{item.warranty} Warranty</span>
+              <span className="font-heading" style={{ fontSize: '11px', color: '#ffffff' }}>{item.warranty} Warranty</span>
             </div>
             {item.players > 0 && (
               <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <Layers size={13} style={{ color: 'var(--accent)' }} />
-                <span className="font-heading" style={{ fontSize: '11px', color: 'var(--text)' }}>{item.players}-Player Setup</span>
+                <span className="font-heading" style={{ fontSize: '11px', color: '#ffffff' }}>{item.players}-Player Setup</span>
               </div>
             )}
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
@@ -120,29 +121,26 @@ function ProductCard({ item, index, onInquire }) {
             </div>
           </div>
 
-          <p className="font-body" style={{ fontSize: '12px', color: 'var(--muted)', lineHeight: 1.6, marginBottom: '16px' }}>
+          <p className="font-body" style={{ fontSize: '12px', color: '#e5e7eb', lineHeight: 1.6, marginBottom: '16px' }}>
             {item.description}
           </p>
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span className="font-body" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: 'var(--text)' }}>
-              <ShieldCheck size={12} style={{ color: item.accentColor }} /> Quality Inspected
-            </span>
+          </motion.div>
+<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '16px' }}>
+            <span className="font-display" style={{ fontSize: '1.6rem', color: hovered ? 'var(--accent)' : '#fff', transition: 'color 0.3s' }}>
+                ${item.price}
+              </span>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                playSuccessSound();
-                onInquire(item);
-              }}
-              style={{ cursor: 'none', background: item.accentColor, color: '#000', padding: '8px 16px', borderRadius: '6px', fontSize: '12px', fontWeight: 600, border: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
+              onClick={(e) => { e.stopPropagation(); navigate(`/product/${item.id}`); }}
+              style={{ opacity: hovered ? 1 : 0, transition: 'opacity 0.3s', cursor: 'pointer', background: item.accentColor || 'var(--accent)', color: '#000', padding: '8px 16px', borderRadius: '6px', fontSize: '12px', fontWeight: 600, border: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
               data-cursor="buy"
             >
-              Order Cabinet <ArrowRight size={12} />
+              ORDER NOW <ShoppingCart size={14} />
             </motion.button>
           </div>
-        </motion.div>
+        
       </div>
 
       {/* Hover border glow */}
@@ -206,7 +204,7 @@ export default function BestSellers() {
             animate={inView ? { opacity: 1 } : {}}
             transition={{ duration: 0.7, delay: 0.2 }}
             className="font-body"
-            style={{ fontSize: '14px', color: 'var(--muted)', maxWidth: '340px', lineHeight: 1.75 }}
+            style={{ fontSize: '14px', color: '#e5e7eb', maxWidth: '340px', lineHeight: 1.75 }}
           >
             The most popular and proven equipment currently generating top revenue on locations nationwide.
           </motion.p>
@@ -231,7 +229,7 @@ export default function BestSellers() {
             to="/gaming-carts" 
             onMouseEnter={() => playHoverSound()}
             onClick={() => playClickSound()}
-            style={{ cursor: 'none', padding: '16px 36px', fontSize: '14px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }} 
+            style={{ cursor: 'pointer', padding: '16px 36px', fontSize: '14px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }} 
             className="btn btn-outline"
           >
             Browse Full Equipment Catalog <ArrowRight size={14} style={{ marginLeft: '6px' }} />
@@ -239,7 +237,7 @@ export default function BestSellers() {
         </motion.div>
       </div>
 
-      {/* Reusable B2B Inquiry Modal */}
+      {/* Reusable ORDER NOW Modal */}
       <InquiryModal
         isOpen={isInquiryOpen}
         onClose={() => setIsInquiryOpen(false)}
@@ -255,3 +253,5 @@ export default function BestSellers() {
     </section>
   );
 }
+
+

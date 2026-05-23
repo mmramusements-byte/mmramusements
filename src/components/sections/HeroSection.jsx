@@ -1,9 +1,24 @@
-import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef, useState, useEffect } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { ShoppingCart, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+const backgroundImages = [
+  '/images/hero/1.png',
+  '/images/hero/2.png',
+  '/images/hero/3.png',
+  '/images/hero/4.png'
+];
+
 export default function HeroSection() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % backgroundImages.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -23,15 +38,22 @@ export default function HeroSection() {
       <motion.div
         style={{ position: 'absolute', inset: 0, y, opacity, pointerEvents: 'none' }}
       >
-        <img 
-          src="/hero.png" 
-          alt="MMR Amusements Showroom" 
-          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', opacity: 0.9, filter: 'brightness(1.1) contrast(1.05)' }} 
-        />
+        <AnimatePresence mode="popLayout">
+          <motion.img 
+            key={currentImageIndex}
+            src={backgroundImages[currentImageIndex]} 
+            alt="MMR Amusements Showroom" 
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 0.9, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: 'brightness(1.1) contrast(1.05)' }} 
+          />
+        </AnimatePresence>
         {/* Grounding overlays: lightened to show the beautiful glowing showroom */}
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 70% 30%, transparent 15%, rgba(3,3,3,0.45) 80%)' }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg, rgba(3,3,3,0.85) 0%, rgba(3,3,3,0.4) 50%, transparent 100%)' }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(0deg, var(--black) 0%, transparent 25%)' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 70% 30%, transparent 15%, rgba(3,3,3,0.45) 80%)', zIndex: 1 }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg, rgba(3,3,3,0.85) 0%, rgba(3,3,3,0.4) 50%, transparent 100%)', zIndex: 1 }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(0deg, var(--black) 0%, transparent 25%)', zIndex: 1 }} />
       </motion.div>
 
       {/* ── CONTENT LAYER ── */}
@@ -81,7 +103,7 @@ export default function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.88, duration: 0.65 }}
             className="font-body"
-            style={{ fontSize: '16px', lineHeight: 1.8, color: 'var(--muted)', maxWidth: '540px', marginBottom: '2.5rem' }}
+            style={{ fontSize: '16px', lineHeight: 1.8, color: '#e5e7eb', maxWidth: '540px', marginBottom: '2.5rem' }}
           >
             Industrial-grade multi-player fish tables, countertop terminals, Cherry Master 8-liner cabinets, multi-game PCBs, and secure bill validators. Engineered for high earnings, route reliability, and premium tavern/convenience store setups.
           </motion.p>
@@ -111,12 +133,12 @@ export default function HeroSection() {
             style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}
           >
             <motion.div whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.97 }} style={{ display: 'inline-block' }}>
-              <Link to="/gaming-carts" className="btn btn-accent" style={{ cursor: 'none', fontSize: '15px', padding: '16px 36px', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+              <Link to="/gaming-carts" className="btn btn-accent" style={{ cursor: 'pointer', fontSize: '15px', padding: '16px 36px', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
                 <ShoppingCart size={18} style={{ marginRight: '6px' }} /> Shop Cabinets & Parts
               </Link>
             </motion.div>
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} style={{ display: 'inline-block' }}>
-              <Link to="/deals" className="btn btn-outline" style={{ cursor: 'none', fontSize: '15px', padding: '16px 36px', background: 'rgba(255,255,255,0.03)', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
+              <Link to="/deals" className="btn btn-outline" style={{ cursor: 'pointer', fontSize: '15px', padding: '16px 36px', background: 'rgba(255,255,255,0.03)', textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
                 View Clearance Specials <ArrowRight size={16} style={{ marginLeft: '6px' }} />
               </Link>
             </motion.div>
@@ -127,3 +149,4 @@ export default function HeroSection() {
     </section>
   );
 }
+

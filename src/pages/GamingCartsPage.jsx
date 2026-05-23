@@ -1,25 +1,38 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, ShieldCheck, Zap, Award, Layers, Sparkles, Truck, MessageSquare } from 'lucide-react';
+import { Search, ShieldCheck, Zap, Award, Layers, Sparkles, Truck, MessageSquare, ShoppingCart } from 'lucide-react';
+import {useSearchParams, useNavigate } from 'react-router-dom';
 import { useProductStore } from '../admin/store/useProductStore';
 import { playHoverSound, playClickSound, playSuccessSound } from '../utils/audio';
 import InquiryModal from '../components/common/InquiryModal';
-
-const categoriesList = ['All', 'Cabinets', 'Boards', 'Validators', 'Parts'];
+import { useCartStore } from '../store/useCartStore';
 
 export default function GamingCartsPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  
+  // Initialize from URL or default to 'All'
+  const urlCat = searchParams.get('cat');
+  const [selectedCategory, setSelectedCategory] = useState(urlCat || 'All');
+
   const [selectedItem, setSelectedItem] = useState(null);
   const [isInquiryOpen, setIsInquiryOpen] = useState(false);
+
+  // Sync state if URL changes externally
+  useEffect(() => {
+    setSelectedCategory(searchParams.get('cat') || 'All');
+  }, [searchParams]);
+
+  // Dynamically derive categories from active products
+  const products = useProductStore(state => state.products);
+  const activeProducts = products.filter(prod => prod.active);
+
+  const categoriesList = ['All', ...new Set(activeProducts.map(p => p.category).filter(Boolean))].sort();
 
   const handleInquire = (item) => {
     setSelectedItem(item);
     setIsInquiryOpen(true);
   };
-
-  const products = useProductStore(state => state.products);
-  const activeProducts = products.filter(prod => prod.active);
 
   // Filter products based on search and category selection
   const filteredProducts = activeProducts.filter(prod => {
@@ -90,10 +103,16 @@ export default function GamingCartsPage() {
                 key={cat}
                 onClick={() => {
                   setSelectedCategory(cat);
+                  if (cat === 'All') {
+                    searchParams.delete('cat');
+                  } else {
+                    searchParams.set('cat', cat);
+                  }
+                  setSearchParams(searchParams);
                   playClickSound();
                 }}
                 style={{
-                  cursor: 'none',
+                  cursor: 'pointer',
                   padding: '8px 18px',
                   borderRadius: '6px',
                   fontFamily: 'Oswald, sans-serif',
@@ -158,7 +177,7 @@ export default function GamingCartsPage() {
 
       </div>
 
-      {/* Reusable B2B Inquiry Modal */}
+      {/* Reusable ORDER NOW Modal */}
       <InquiryModal
         isOpen={isInquiryOpen}
         onClose={() => setIsInquiryOpen(false)}
@@ -175,7 +194,9 @@ export default function GamingCartsPage() {
 
 function ProductCatalogCard({ item, index, onInquire }) {
   const [hovered, setHovered] = useState(false);
+  const navigate = useNavigate();
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const addItem = useCartStore(state => state.addItem);
 
   const handleMouseMove = (e) => {
     const card = e.currentTarget;
@@ -198,11 +219,6 @@ function ProductCatalogCard({ item, index, onInquire }) {
     playHoverSound();
   };
 
-  const handleMouseLeave = () => {
-    setHovered(false);
-    setTilt({ x: 0, y: 0 });
-  };
-
   return (
     <motion.div
       layout
@@ -210,11 +226,12 @@ function ProductCatalogCard({ item, index, onInquire }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={() => { setHovered(true); playHoverSound(); }}
+      onMouseLeave={() => { setHovered(false); setTilt({ x: 0, y: 0 }); }}
+      onClick={() => { playClickSound(); onInquire(item); }}
       style={{
         position: 'relative',
-        cursor: 'none',
+        cursor: 'pointer',
         height: '440px',
         borderRadius: '16px',
         overflow: 'hidden',
@@ -222,19 +239,18 @@ function ProductCatalogCard({ item, index, onInquire }) {
         background: 'var(--card)',
         transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
         transition: 'transform 0.15s ease-out, border-color 0.3s, box-shadow 0.3s',
-        boxShadow: hovered ? `0 14px 40px rgba(0,0,0,0.5), 0 0 25px ${item.accentColor}25` : '0 4px 20px rgba(0,0,0,0.3)',
+        boxShadow: hovered ? `0 14px 40px rgba(0,0,0,0.6), 0 0 25px rgba(34,197,94,0.15)` : '0 4px 20px rgba(0,0,0,0.3)',
       }}
-      data-cursor="view"
     >
       <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
         <motion.img
-          src={item.image}
+          src={item.image_url}
           alt={item.title}
-          animate={{ scale: hovered ? 1.08 : 1, filter: hovered ? 'brightness(1.2)' : 'brightness(1.05)' }}
+          animate={{ scale: hovered ? 1.08 : 1, filter: hovered ? 'brightness(1.1)' : 'brightness(1)' }}
           transition={{ duration: 0.6 }}
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(3,3,3,0.7) 0%, rgba(3,3,3,0.35) 50%, transparent 100%)' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 40%, rgba(0,0,0,0.3) 100%)', transition: 'opacity 0.3s', opacity: hovered ? 1 : 0.7, transition: 'opacity 0.3s', opacity: hovered ? 1 : 0.8 }} />
       </div>
 
       {/* Badges */}
@@ -262,47 +278,25 @@ function ProductCatalogCard({ item, index, onInquire }) {
           transition={{ duration: 0.3 }}
           style={{ overflow: 'hidden' }}
         >
-          {/* Key Stats Row */}
-          <div style={{ display: 'flex', gap: '12px', marginBottom: '14px', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <Award size={13} style={{ color: 'var(--accent)' }} />
-              <span className="font-heading" style={{ fontSize: '11px', color: 'var(--text)' }}>{item.warranty} Warranty</span>
-            </div>
-            {item.players > 0 && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <Layers size={13} style={{ color: 'var(--accent)' }} />
-                <span className="font-heading" style={{ fontSize: '11px', color: 'var(--text)' }}>{item.players}-Player</span>
-              </div>
-            )}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-              <Truck size={13} style={{ color: 'var(--accent)' }} />
-              <span className="font-heading" style={{ fontSize: '11px', color: 'var(--text)' }}>{item.shipping}</span>
-            </div>
-          </div>
-
-          <p className="font-body" style={{ fontSize: '12px', color: 'var(--muted)', lineHeight: 1.6, marginBottom: '16px' }}>
+          <p className="font-body" style={{ fontSize: '13px', color: '#e5e7eb', lineHeight: 1.6, marginBottom: '16px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
             {item.description}
           </p>
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span className="font-body" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: 'var(--text)' }}>
-              <ShieldCheck size={12} style={{ color: item.accentColor }} /> Inspected & Certified
+          </motion.div>
+<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '16px' }}>
+            <span className="font-body" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '12px', color: '#fff', fontWeight: 500 }}>
+              <ShieldCheck size={14} style={{ color: 'var(--accent)' }} /> Verified
             </span>
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={(e) => {
-                e.stopPropagation();
-                playSuccessSound();
-                onInquire(item);
-              }}
-              style={{ cursor: 'none', background: item.accentColor, color: '#000', padding: '8px 16px', borderRadius: '6px', fontSize: '12px', fontWeight: 700, border: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
-              data-cursor="buy"
+              onClick={(e) => { e.stopPropagation(); navigate(`/product/${item.id}`); }}
+              style={{ opacity: hovered ? 1 : 0, transition: 'opacity 0.3s', cursor: 'pointer', background: 'var(--accent)', color: '#000', padding: '10px 20px', borderRadius: '8px', fontSize: '13px', fontWeight: 700, border: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
             >
-              Order Now <MessageSquare size={10} />
+              ORDER NOW <ShoppingCart size={14} />
             </motion.button>
           </div>
-        </motion.div>
+        
       </div>
 
       <motion.div
@@ -317,3 +311,4 @@ function ProductCatalogCard({ item, index, onInquire }) {
     </motion.div>
   );
 }
+

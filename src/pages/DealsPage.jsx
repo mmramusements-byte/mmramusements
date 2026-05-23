@@ -151,7 +151,7 @@ export default function DealsPage() {
                     });
                   }}
                   style={{
-                    cursor: 'none', width: '100%',
+                    cursor: 'pointer', width: '100%',
                     padding: '14px', borderRadius: '8px',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
                     fontFamily: 'Oswald, sans-serif', fontWeight: 600, fontSize: '13px',
@@ -189,7 +189,7 @@ export default function DealsPage() {
             </p>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <Link to="/support" className="btn btn-accent" style={{ cursor: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
+            <Link to="/support" className="btn btn-accent" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}>
               <HelpCircle size={16} /> Request Route Valuation <ArrowRight size={14} />
             </Link>
           </div>
@@ -197,7 +197,7 @@ export default function DealsPage() {
 
       </div>
 
-      {/* B2B Inquiry Modal */}
+      {/* ORDER NOW Modal */}
       <InquiryModal
         isOpen={isInquiryOpen}
         onClose={() => setIsInquiryOpen(false)}
@@ -214,3 +214,4 @@ export default function DealsPage() {
     </div>
   );
 }
+

@@ -134,7 +134,7 @@ export default function AboutPage() {
               transition={{ duration: 0.6 }}
               src={img} 
               alt="MMR Cabinets & Assembly Floor" 
-              style={{ width: '100%', height: '100%', objectFit: 'cover', cursor: 'none' }} 
+              style={{ width: '100%', height: '100%', objectFit: 'cover', cursor: 'pointer' }} 
             />
           </div>
         ))}

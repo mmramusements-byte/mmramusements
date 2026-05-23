@@ -131,7 +131,7 @@ export default function AdminQueriesPage() {
                   </select>
                   {/* Reply */}
                   <a href={`mailto:${q.email}?subject=Re: ${encodeURIComponent(q.subject)}`}
-                    style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.2)', borderRadius: '6px', padding: '7px 12px', cursor: 'none', color: '#3b82f6', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', textDecoration: 'none', fontWeight: 600, transition: 'all 0.2s' }}
+                    style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.2)', borderRadius: '6px', padding: '7px 12px', cursor: 'pointer', color: '#3b82f6', display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', textDecoration: 'none', fontWeight: 600, transition: 'all 0.2s' }}
                     onMouseEnter={e => e.currentTarget.style.background = 'rgba(59,130,246,0.15)'}
                     onMouseLeave={e => e.currentTarget.style.background = 'rgba(59,130,246,0.08)'}>
                     <Mail size={13} /> Reply

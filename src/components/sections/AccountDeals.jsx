@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Check, ArrowRight, Tag, MessageSquare } from 'lucide-react';
+import { Check, ArrowRight, Tag, MessageSquare, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useDealStore } from '../../admin/store/useDealStore';
 import { playHoverSound, playClickSound, playSuccessSound } from '../../utils/audio';
@@ -59,7 +59,7 @@ function DealCard({ pkg, i, onInquire }) {
         transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
         transition: 'transform 0.15s ease-out, border-color 0.3s, box-shadow 0.3s',
         boxShadow: hovered ? `0 14px 40px rgba(0,0,0,0.5), 0 0 25px var(--accent)25` : '0 4px 20px rgba(0,0,0,0.3)',
-        cursor: 'none'
+        cursor: 'pointer'
       }}
       data-cursor="view"
     >
@@ -77,7 +77,7 @@ function DealCard({ pkg, i, onInquire }) {
       <div style={{ padding: '28px', display: 'flex', flexDirection: 'column', flex: 1 }}>
         {/* Name + Price */}
         <div style={{ marginBottom: '22px' }}>
-          <p className="font-heading" style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--muted)', marginBottom: '8px' }}>
+          <p className="font-heading" style={{ fontSize: '11px', fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#e5e7eb', marginBottom: '8px' }}>
             {pkg.category}
           </p>
           <h3 className="font-display" style={{ fontSize: '1.6rem', color: '#fff', marginBottom: '12px', minHeight: '44px', lineHeight: 1.2 }}>
@@ -87,7 +87,7 @@ function DealCard({ pkg, i, onInquire }) {
             <span className="font-display" style={{ fontSize: '3rem', lineHeight: 1, color: i === 1 ? 'var(--accent)' : '#fff' }}>
               ${pkg.price}
             </span>
-            <span className="font-body" style={{ fontSize: '13px', color: 'var(--muted)', textDecoration: 'line-through' }}>${pkg.originalPrice}</span>
+            <span className="font-body" style={{ fontSize: '13px', color: '#e5e7eb', textDecoration: 'line-through' }}>${pkg.originalPrice}</span>
           </div>
         </div>
 
@@ -111,7 +111,7 @@ function DealCard({ pkg, i, onInquire }) {
               }}>
                 <Check size={9} style={{ color: 'var(--accent)' }} strokeWidth={3} />
               </span>
-              <span className="font-body" style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.6 }}>{f}</span>
+              <span className="font-body" style={{ fontSize: '13px', color: '#e5e7eb', lineHeight: 1.6 }}>{f}</span>
             </motion.li>
           ))}
         </ul>
@@ -136,7 +136,7 @@ function DealCard({ pkg, i, onInquire }) {
             });
           }}
           style={{
-            cursor: 'none', width: '100%',
+            cursor: 'pointer', width: '100%',
             padding: '13px', borderRadius: '8px',
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
             fontFamily: 'Oswald, sans-serif', fontWeight: 600, fontSize: '13px',
@@ -147,7 +147,7 @@ function DealCard({ pkg, i, onInquire }) {
           }}
           data-cursor="buy"
         >
-          <MessageSquare size={13} /> Inquire Bundle
+          ORDER NOW <ShoppingCart size={14} />
         </motion.button>
       </div>
     </motion.div>
@@ -195,7 +195,7 @@ export default function AccountDeals() {
             animate={inView ? { opacity: 1 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="font-body"
-            style={{ fontSize: '14px', color: 'var(--muted)', maxWidth: '400px', margin: '0 auto', lineHeight: 1.75 }}
+            style={{ fontSize: '14px', color: '#e5e7eb', maxWidth: '400px', margin: '0 auto', lineHeight: 1.75 }}
           >
             Highly-discounted route bundles, parts clearances, and OEM components. Extreme values ready for secure dispatch!
           </motion.p>
@@ -234,18 +234,18 @@ export default function AccountDeals() {
             <p className="font-heading" style={{ color: '#fff', fontSize: '14px', fontWeight: 600, letterSpacing: '0.06em' }}>
               Operating a Skill Game Route or Tavern?
             </p>
-            <p className="font-body" style={{ color: 'var(--muted)', fontSize: '12px', marginTop: '3px' }}>
+            <p className="font-body" style={{ color: '#e5e7eb', fontSize: '12px', marginTop: '3px' }}>
               We buy used Cherry Master countertop slot cabinets, fish game boards, and route terminal inventories. Get competitive cash payouts.
             </p>
           </div>
           <motion.div
             whileHover={{ x: 4 }}
-            style={{ cursor: 'none', flexShrink: 0 }}
+            style={{ cursor: 'pointer', flexShrink: 0 }}
           >
             <Link
               to="/support"
               className="btn btn-outline btn-sm"
-              style={{ cursor: 'none', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
+              style={{ cursor: 'pointer', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}
             >
               Get Route Equipment Valuation <ArrowRight size={12} />
             </Link>
@@ -253,7 +253,7 @@ export default function AccountDeals() {
         </motion.div>
       </div>
 
-      {/* Reusable B2B Inquiry Modal */}
+      {/* Reusable ORDER NOW Modal */}
       <InquiryModal
         isOpen={isInquiryOpen}
         onClose={() => setIsInquiryOpen(false)}
@@ -266,3 +266,5 @@ export default function AccountDeals() {
     </section>
   );
 }
+
+

@@ -1,13 +1,14 @@
 import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { ArrowRight, MessageSquare, Flame } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ArrowRight, MessageSquare, Flame, ShoppingCart } from 'lucide-react';
+import {Link, useNavigate } from 'react-router-dom';
 import { useProductStore } from '../../admin/store/useProductStore';
 import { playHoverSound, playClickSound, playSuccessSound } from '../../utils/audio';
 import InquiryModal from '../common/InquiryModal';
 
 function TrendingCard({ item, index, onInquire }) {
   const [hovered, setHovered] = useState(false);
+  const navigate = useNavigate();
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e) => {
@@ -51,7 +52,7 @@ function TrendingCard({ item, index, onInquire }) {
       className="store-card"
       style={{
         position: 'relative',
-        cursor: 'none',
+        cursor: 'pointer',
         height: '360px',
         width: '100%',
         borderRadius: '16px',
@@ -73,7 +74,7 @@ function TrendingCard({ item, index, onInquire }) {
           transition={{ duration: 0.7, ease: [0.16,1,0.3,1] }}
           style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
         />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(3,3,3,0.7) 0%, rgba(3,3,3,0.35) 50%, transparent 100%)' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0.2) 100%)' }} />
       </div>
 
       {/* Badges */}
@@ -85,7 +86,7 @@ function TrendingCard({ item, index, onInquire }) {
 
       {/* Bottom Content */}
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 10, padding: '24px' }}>
-        <span className="font-heading" style={{ fontSize: '9px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '6px' }}>
+        <span className="font-heading" style={{ fontSize: '9px', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#e5e7eb', display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '6px' }}>
           <Flame size={10} style={{ color: 'var(--accent)' }} /> {item.category}
         </span>
         <h3 className="font-display" style={{ fontSize: '1.6rem', color: '#fff', lineHeight: 1.1, marginBottom: '6px' }}>
@@ -101,7 +102,7 @@ function TrendingCard({ item, index, onInquire }) {
           transition={{ duration: 0.32, ease: [0.16,1,0.3,1] }}
           style={{ overflow: 'hidden' }}
         >
-          <p className="font-body" style={{ fontSize: '12px', color: 'var(--muted)', lineHeight: 1.6, marginBottom: '16px' }}>
+          <p className="font-body" style={{ fontSize: '12px', color: '#e5e7eb', lineHeight: 1.6, marginBottom: '16px' }}>
             {item.description}
           </p>
         </motion.div>
@@ -113,15 +114,11 @@ function TrendingCard({ item, index, onInquire }) {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={(e) => {
-              e.stopPropagation();
-              playSuccessSound();
-              onInquire(item);
-            }}
-            style={{ cursor: 'none', background: item.accentColor || 'var(--accent)', color: '#000', padding: '8px 16px', borderRadius: '6px', fontSize: '12px', fontWeight: 700, border: 'none', display: 'flex', alignItems: 'center', gap: '6px', opacity: hovered ? 1 : 0 }}
+            onClick={(e) => { e.stopPropagation(); navigate(`/product/${item.id}`); }}
+            style={{ cursor: 'pointer', background: item.accentColor || 'var(--accent)', color: '#000', padding: '8px 16px', borderRadius: '6px', fontSize: '12px', fontWeight: 700, border: 'none', display: 'flex', alignItems: 'center', gap: '6px', opacity: hovered ? 1 : 0 }}
             data-cursor="buy"
           >
-            <MessageSquare size={12} /> B2B Inquiry
+            ORDER NOW <ShoppingCart size={14} />
           </motion.button>
         </div>
       </div>
@@ -188,7 +185,7 @@ export default function TrendingAccounts() {
             animate={inView ? { opacity: 1 } : {}}
             transition={{ duration: 0.7, delay: 0.2 }}
             className="font-body"
-            style={{ fontSize: '14px', color: 'var(--muted)', maxWidth: '340px', lineHeight: 1.75 }}
+            style={{ fontSize: '14px', color: '#e5e7eb', maxWidth: '340px', lineHeight: 1.75 }}
           >
             Explore high-popularity replacement components, genuine OEM game motherboards, and stable payout skill boards to upgrade your route terminals.
           </motion.p>
@@ -209,13 +206,13 @@ export default function TrendingAccounts() {
           transition={{ duration: 0.55 }}
           style={{ textAlign: 'center', marginTop: '56px' }}
         >
-          <Link to="/popular" style={{ cursor: 'none', padding: '16px 36px', fontSize: '14px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }} className="btn btn-outline">
+          <Link to="/popular" style={{ cursor: 'pointer', padding: '16px 36px', fontSize: '14px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }} className="btn btn-outline">
             Browse Top Hardware <ArrowRight size={14} style={{ marginLeft: '6px' }} />
           </Link>
         </motion.div>
       </div>
 
-      {/* Reusable B2B Inquiry Modal */}
+      {/* Reusable ORDER NOW Modal */}
       <InquiryModal
         isOpen={isInquiryOpen}
         onClose={() => setIsInquiryOpen(false)}
@@ -229,3 +226,5 @@ export default function TrendingAccounts() {
     </section>
   );
 }
+
+

@@ -71,7 +71,7 @@ export default function CategoryExperience() {
               animate={inView ? { opacity: 1 } : {}}
               transition={{ delay: 0.2 }}
               className="font-body"
-              style={{ fontSize: '14px', color: 'var(--muted)', lineHeight: 1.8, marginBottom: '14px' }}
+              style={{ fontSize: '14px', color: '#e5e7eb', lineHeight: 1.8, marginBottom: '14px' }}
             >
               MMR Amusements was built with one mission: to empower route operators, arcade centers, and local taverns with heavy-duty, high-yielding amusement consoles. We provide the most reliable, legal, and premium cabinets and component setups with dedicated freight logistics.
             </motion.p>
@@ -80,7 +80,7 @@ export default function CategoryExperience() {
               animate={inView ? { opacity: 1 } : {}}
               transition={{ delay: 0.28 }}
               className="font-body"
-              style={{ fontSize: '14px', color: 'var(--muted)', lineHeight: 1.8, marginBottom: '32px' }}
+              style={{ fontSize: '14px', color: '#e5e7eb', lineHeight: 1.8, marginBottom: '32px' }}
             >
               Whether you are looking to install a massive multi-player fish table that serves as a visual crowd-puller, or need genuine motherboard kits (Cherry Master, Pot-O-Gold) and secure bill validators to keep coin-operated revenue running smoothly, our certified technicians are ready to deliver pre-configured systems directly to your venue.
             </motion.p>
@@ -107,7 +107,7 @@ export default function CategoryExperience() {
                       {item.label}
                     </p>
                     {item.lines.map((l, j) => (
-                      <p key={j} className="font-body" style={{ fontSize: '12px', color: 'var(--muted)' }}>{l}</p>
+                      <p key={j} className="font-body" style={{ fontSize: '12px', color: '#e5e7eb' }}>{l}</p>
                     ))}
                   </div>
                 </motion.div>
@@ -119,9 +119,9 @@ export default function CategoryExperience() {
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.55 }}
               whileHover={{ scale: 1.02, y: -1 }}
-              style={{ cursor: 'none', display: 'inline-flex' }}
+              style={{ cursor: 'pointer', display: 'inline-flex' }}
             >
-              <Link to="/gaming-carts" className="btn btn-accent" style={{ cursor: 'none', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Link to="/gaming-carts" className="btn btn-accent" style={{ cursor: 'pointer', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px' }}>
                 Browse Equipment <ArrowRight size={14} />
               </Link>
             </motion.div>
@@ -145,7 +145,7 @@ export default function CategoryExperience() {
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.38 }}
                 className="img-card"
-                style={{ height: i === 0 || i === 3 ? '210px' : '165px', width: '100%', overflow: 'hidden', borderRadius: '10px', cursor: 'none' }}
+                style={{ height: i === 0 || i === 3 ? '210px' : '165px', width: '100%', overflow: 'hidden', borderRadius: '10px', cursor: 'pointer' }}
               >
                 <img src={g.src} alt={g.label} loading="lazy"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.6s ease' }}
@@ -172,3 +172,4 @@ export default function CategoryExperience() {
     </section>
   );
 }
+

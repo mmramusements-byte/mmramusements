@@ -15,6 +15,7 @@ import {
   Share2,
   Briefcase,
   MessageSquare,
+  ShoppingCart,
 } from 'lucide-react';
 
 const navItems = [
@@ -30,6 +31,7 @@ const navItems = [
       { icon: Package, label: 'Products', to: '/admin/products' },
       { icon: Tag, label: 'Categories', to: '/admin/categories' },
       { icon: Zap, label: 'Deals', to: '/admin/deals' },
+      { icon: ShoppingCart, label: 'Orders', to: '/admin/orders' },
     ],
   },
   {

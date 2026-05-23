@@ -94,7 +94,7 @@ export default function SupportPage() {
                     <button
                       onClick={() => toggleFaq(idx)}
                       style={{
-                        cursor: 'none',
+                        cursor: 'pointer',
                         width: '100%',
                         background: 'transparent',
                         border: 'none',
@@ -164,7 +164,7 @@ export default function SupportPage() {
                 onClick={() => playClickSound()}
                 onMouseEnter={() => playHoverSound()}
                 style={{
-                  cursor: 'none',
+                  cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '16px',
@@ -194,7 +194,7 @@ export default function SupportPage() {
                 onClick={() => playClickSound()}
                 onMouseEnter={() => playHoverSound()}
                 style={{
-                  cursor: 'none',
+                  cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '16px',
@@ -222,7 +222,7 @@ export default function SupportPage() {
                 onClick={() => playClickSound()}
                 onMouseEnter={() => playHoverSound()}
                 style={{
-                  cursor: 'none',
+                  cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '16px',
@@ -299,7 +299,7 @@ export default function SupportPage() {
                     style={{
                       display: 'block',
                       textDecoration: 'none',
-                      cursor: 'none',
+                      cursor: 'pointer',
                       marginTop: '4px',
                       transition: 'color 0.2s'
                     }}

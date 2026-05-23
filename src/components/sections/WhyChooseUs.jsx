@@ -76,7 +76,7 @@ export default function WhyChooseUs() {
                 background: 'var(--card)',
                 border: '1px solid var(--border)',
                 borderRadius: '12px',
-                cursor: 'none',
+                cursor: 'pointer',
                 transition: 'border-color 0.25s, box-shadow 0.25s',
                 width: '100%',
               }}
@@ -94,7 +94,7 @@ export default function WhyChooseUs() {
               <h3 className="font-heading" style={{ fontWeight: 600, color: '#fff', fontSize: '15px', letterSpacing: '0.05em', marginBottom: '8px' }}>
                 {f.title}
               </h3>
-              <p className="font-body" style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.75 }}>
+              <p className="font-body" style={{ fontSize: '13px', color: '#e5e7eb', lineHeight: 1.75 }}>
                 {f.desc}
               </p>
             </motion.div>
@@ -112,3 +112,4 @@ export default function WhyChooseUs() {
     </section>
   );
 }
+

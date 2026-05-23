@@ -1,16 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Briefcase, MapPin, Clock, Users, Zap, TrendingUp, Heart, Shield, Upload, CheckCircle, AlertCircle } from 'lucide-react';
 import api from '../lib/api';
-
-const openPositions = [
-  { title: 'Technical Support Specialist', dept: 'Operations', location: 'San Antonio, TX', type: 'Full-Time', level: 'Mid-Level' },
-  { title: 'Sales Representative — Route Operators', dept: 'Sales', location: 'Remote / Texas', type: 'Full-Time', level: 'Entry-Level' },
-  { title: 'Warehouse & Logistics Coordinator', dept: 'Logistics', location: 'San Antonio, TX', type: 'Full-Time', level: 'Mid-Level' },
-  { title: 'IT & Software Support Technician', dept: 'Technology', location: 'San Antonio, TX', type: 'Full-Time', level: 'Senior' },
-  { title: 'Marketing & Content Specialist', dept: 'Marketing', location: 'Remote', type: 'Part-Time / Contract', level: 'Mid-Level' },
-  { title: 'Field Service Technician', dept: 'Operations', location: 'Southwest US (Travel)', type: 'Full-Time', level: 'Mid-Level' },
-];
 
 const benefits = [
   { icon: <Heart size={24} />, title: 'Health & Wellness', desc: 'Comprehensive medical, dental, and vision coverage for you and your family.' },
@@ -27,6 +18,20 @@ const deptColors = {
 };
 
 export default function CareersPage() {
+  const [openPositions, setOpenPositions] = useState([]);
+  
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const res = await api.get('/careers/jobs');
+        setOpenPositions(res.data);
+      } catch (err) {
+        console.error('Failed to load jobs', err);
+      }
+    };
+    fetchJobs();
+  }, []);
+
   const [form, setForm] = useState({
     full_name: '', email: '', phone: '', position: '', experience: '',
     portfolio_url: '', cover_letter: '', notes: '',
@@ -158,7 +163,7 @@ export default function CareersPage() {
                     <MapPin size={12} /> {pos.location}
                   </div>
                 </div>
-                <button onClick={() => handleApply(pos)} style={{ background: 'var(--accent)', border: 'none', color: '#fff', padding: '12px 28px', borderRadius: '8px', cursor: 'none', fontFamily: "'Oswald',sans-serif", fontWeight: 700, fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.07em', transition: 'all 0.2s', flexShrink: 0 }}
+                <button onClick={() => handleApply(pos)} style={{ background: 'var(--accent)', border: 'none', color: '#fff', padding: '12px 28px', borderRadius: '8px', cursor: 'pointer', fontFamily: "'Oswald',sans-serif", fontWeight: 700, fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.07em', transition: 'all 0.2s', flexShrink: 0 }}
                   onMouseEnter={e => e.currentTarget.style.background = '#dc2626'}
                   onMouseLeave={e => e.currentTarget.style.background = 'var(--accent)'}
                 >
@@ -202,7 +207,7 @@ export default function CareersPage() {
                     <div key={f.name}>
                       <label className="font-heading" style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: '8px' }}>{f.label}</label>
                       <input name={f.name} type={f.type} placeholder={f.placeholder} value={form[f.name]} onChange={handleChange}
-                        style={{ width: '100%', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '12px 16px', color: '#fff', fontSize: '14px', fontFamily: "'Inter',sans-serif", outline: 'none', transition: 'border-color 0.2s', cursor: 'none' }}
+                        style={{ width: '100%', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '12px 16px', color: '#fff', fontSize: '14px', fontFamily: "'Inter',sans-serif", outline: 'none', transition: 'border-color 0.2s', cursor: 'pointer' }}
                         onFocus={e => e.target.style.borderColor = 'var(--accent)'}
                         onBlur={e => e.target.style.borderColor = 'var(--border)'}
                       />
@@ -213,7 +218,7 @@ export default function CareersPage() {
                 <div style={{ marginBottom: '20px' }}>
                   <label className="font-heading" style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: '8px' }}>Position Applying For *</label>
                   <select name="position" value={form.position} onChange={handleChange}
-                    style={{ width: '100%', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '12px 16px', color: form.position ? '#fff' : 'rgba(255,255,255,0.4)', fontSize: '14px', fontFamily: "'Inter',sans-serif", outline: 'none', cursor: 'none' }}
+                    style={{ width: '100%', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '12px 16px', color: form.position ? '#fff' : 'rgba(255,255,255,0.4)', fontSize: '14px', fontFamily: "'Inter',sans-serif", outline: 'none', cursor: 'pointer' }}
                     onFocus={e => e.target.style.borderColor = 'var(--accent)'}
                     onBlur={e => e.target.style.borderColor = 'var(--border)'}
                   >
@@ -226,7 +231,7 @@ export default function CareersPage() {
                 <div style={{ marginBottom: '20px' }}>
                   <label className="font-heading" style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: '8px' }}>Portfolio / LinkedIn URL</label>
                   <input name="portfolio_url" type="url" placeholder="https://linkedin.com/in/yourname" value={form.portfolio_url} onChange={handleChange}
-                    style={{ width: '100%', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '12px 16px', color: '#fff', fontSize: '14px', fontFamily: "'Inter',sans-serif", outline: 'none', cursor: 'none' }}
+                    style={{ width: '100%', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '12px 16px', color: '#fff', fontSize: '14px', fontFamily: "'Inter',sans-serif", outline: 'none', cursor: 'pointer' }}
                     onFocus={e => e.target.style.borderColor = 'var(--accent)'}
                     onBlur={e => e.target.style.borderColor = 'var(--border)'}
                   />
@@ -234,7 +239,7 @@ export default function CareersPage() {
 
                 <div style={{ marginBottom: '20px' }}>
                   <label className="font-heading" style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: '8px' }}>Resume Upload (PDF / DOC / DOCX)</label>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'var(--surface)', border: `1px dashed ${resumeFile ? 'rgba(34,197,94,0.5)' : 'rgba(255,255,255,0.15)'}`, borderRadius: '8px', padding: '16px 20px', cursor: 'none', transition: 'all 0.2s' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'var(--surface)', border: `1px dashed ${resumeFile ? 'rgba(34,197,94,0.5)' : 'rgba(255,255,255,0.15)'}`, borderRadius: '8px', padding: '16px 20px', cursor: 'pointer', transition: 'all 0.2s' }}>
                     <Upload size={20} style={{ color: resumeFile ? '#22c55e' : 'var(--muted)', flexShrink: 0 }} />
                     <span style={{ fontSize: '14px', color: resumeFile ? '#22c55e' : 'var(--muted)' }}>{resumeFile ? resumeFile.name : 'Click to browse or drag & drop your resume'}</span>
                     <input type="file" accept=".pdf,.doc,.docx" onChange={handleFileChange} style={{ display: 'none' }} />
@@ -244,7 +249,7 @@ export default function CareersPage() {
                 <div style={{ marginBottom: '20px' }}>
                   <label className="font-heading" style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: '8px' }}>Cover Letter</label>
                   <textarea name="cover_letter" rows={5} placeholder="Tell us why you'd be a great fit for MMR Amusements..." value={form.cover_letter} onChange={handleChange}
-                    style={{ width: '100%', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '12px 16px', color: '#fff', fontSize: '14px', fontFamily: "'Inter',sans-serif", outline: 'none', resize: 'vertical', cursor: 'none' }}
+                    style={{ width: '100%', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '12px 16px', color: '#fff', fontSize: '14px', fontFamily: "'Inter',sans-serif", outline: 'none', resize: 'vertical', cursor: 'pointer' }}
                     onFocus={e => e.target.style.borderColor = 'var(--accent)'}
                     onBlur={e => e.target.style.borderColor = 'var(--border)'}
                   />
@@ -253,7 +258,7 @@ export default function CareersPage() {
                 <div style={{ marginBottom: '28px' }}>
                   <label className="font-heading" style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block', marginBottom: '8px' }}>Additional Notes</label>
                   <textarea name="notes" rows={3} placeholder="Any additional information you'd like us to know..." value={form.notes} onChange={handleChange}
-                    style={{ width: '100%', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '12px 16px', color: '#fff', fontSize: '14px', fontFamily: "'Inter',sans-serif", outline: 'none', resize: 'vertical', cursor: 'none' }}
+                    style={{ width: '100%', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '8px', padding: '12px 16px', color: '#fff', fontSize: '14px', fontFamily: "'Inter',sans-serif", outline: 'none', resize: 'vertical', cursor: 'pointer' }}
                     onFocus={e => e.target.style.borderColor = 'var(--accent)'}
                     onBlur={e => e.target.style.borderColor = 'var(--border)'}
                   />
@@ -267,7 +272,7 @@ export default function CareersPage() {
                 )}
 
                 <button type="submit" disabled={submitting}
-                  style={{ width: '100%', background: submitting ? 'rgba(239,68,68,0.5)' : 'var(--accent)', border: 'none', color: '#fff', padding: '16px', borderRadius: '10px', cursor: 'none', fontFamily: "'Oswald',sans-serif", fontWeight: 700, fontSize: '16px', textTransform: 'uppercase', letterSpacing: '0.1em', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                  style={{ width: '100%', background: submitting ? 'rgba(239,68,68,0.5)' : 'var(--accent)', border: 'none', color: '#fff', padding: '16px', borderRadius: '10px', cursor: 'pointer', fontFamily: "'Oswald',sans-serif", fontWeight: 700, fontSize: '16px', textTransform: 'uppercase', letterSpacing: '0.1em', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                   onMouseEnter={e => { if (!submitting) e.currentTarget.style.background = '#dc2626'; }}
                   onMouseLeave={e => { if (!submitting) e.currentTarget.style.background = 'var(--accent)'; }}
                 >

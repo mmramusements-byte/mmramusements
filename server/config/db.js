@@ -40,9 +40,7 @@ export const initializeDatabase = async () => {
     `);
 
     // Ensure attempts column exists if table was already created in a previous iteration
-    await client.query(`
-      ALTER TABLE otp_codes ADD COLUMN IF NOT EXISTS attempts INT DEFAULT 0;
-    `);
+    await client.query(`ALTER TABLE otp_codes ADD COLUMN IF NOT EXISTS attempts INT DEFAULT 0;`);
 
     // Create homepage_settings table (only one row is ever used)
     await client.query(`
@@ -63,13 +61,11 @@ export const initializeDatabase = async () => {
     `);
 
     // Ensure all visibility columns exist if the table was already created
-    await client.query(`
-      ALTER TABLE homepage_settings ADD COLUMN IF NOT EXISTS best_sellers_visible BOOLEAN DEFAULT true;
-      ALTER TABLE homepage_settings ADD COLUMN IF NOT EXISTS new_arrivals_visible BOOLEAN DEFAULT true;
-      ALTER TABLE homepage_settings ADD COLUMN IF NOT EXISTS popular_visible BOOLEAN DEFAULT true;
-      ALTER TABLE homepage_settings ADD COLUMN IF NOT EXISTS recommended_visible BOOLEAN DEFAULT true;
-      ALTER TABLE homepage_settings ADD COLUMN IF NOT EXISTS logo_url TEXT;
-    `);
+    await client.query(`ALTER TABLE homepage_settings ADD COLUMN IF NOT EXISTS best_sellers_visible BOOLEAN DEFAULT true;`);
+    await client.query(`ALTER TABLE homepage_settings ADD COLUMN IF NOT EXISTS new_arrivals_visible BOOLEAN DEFAULT true;`);
+    await client.query(`ALTER TABLE homepage_settings ADD COLUMN IF NOT EXISTS popular_visible BOOLEAN DEFAULT true;`);
+    await client.query(`ALTER TABLE homepage_settings ADD COLUMN IF NOT EXISTS recommended_visible BOOLEAN DEFAULT true;`);
+    await client.query(`ALTER TABLE homepage_settings ADD COLUMN IF NOT EXISTS logo_url TEXT;`);
 
     // Seed the homepage_settings if it doesn't exist
     const settingsCheck = await client.query('SELECT COUNT(*) FROM homepage_settings');
@@ -110,10 +106,25 @@ export const initializeDatabase = async () => {
     `);
     
     // Ensure all new product columns exist if the table was already created
+    await client.query(`ALTER TABLE products ADD COLUMN IF NOT EXISTS new_arrival BOOLEAN DEFAULT false;`);
+    await client.query(`ALTER TABLE products ADD COLUMN IF NOT EXISTS popular BOOLEAN DEFAULT false;`);
+    await client.query(`ALTER TABLE products ADD COLUMN IF NOT EXISTS recommended BOOLEAN DEFAULT false;`);
+    await client.query(`ALTER TABLE products ADD COLUMN IF NOT EXISTS subcategory VARCHAR(255);`);
+    await client.query(`ALTER TABLE products ADD COLUMN IF NOT EXISTS brand VARCHAR(255);`);
+    await client.query(`ALTER TABLE products ADD COLUMN IF NOT EXISTS clearance BOOLEAN DEFAULT false;`);
+
+    // Create categories table
     await client.query(`
-      ALTER TABLE products ADD COLUMN IF NOT EXISTS new_arrival BOOLEAN DEFAULT false;
-      ALTER TABLE products ADD COLUMN IF NOT EXISTS popular BOOLEAN DEFAULT false;
-      ALTER TABLE products ADD COLUMN IF NOT EXISTS recommended BOOLEAN DEFAULT false;
+      CREATE TABLE IF NOT EXISTS categories (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        slug VARCHAR(255) UNIQUE NOT NULL,
+        description TEXT,
+        image_url TEXT,
+        parent_id INT,
+        order_index INT DEFAULT 0,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
     `);
     
     // Optionally insert the whitelisted admin if not exists (hardcoded check is also done in logic)
@@ -153,6 +164,59 @@ export const initializeDatabase = async () => {
         subject VARCHAR(500) NOT NULL,
         message TEXT NOT NULL,
         status VARCHAR(50) DEFAULT 'new',
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    // Careers Jobs table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS careers_jobs (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        dept VARCHAR(100) NOT NULL,
+        type VARCHAR(100) NOT NULL,
+        level VARCHAR(100) NOT NULL,
+        location VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    // Orders table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS orders (
+        id SERIAL PRIMARY KEY,
+        order_number VARCHAR(100) UNIQUE NOT NULL,
+        customer_name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        phone VARCHAR(100) NOT NULL,
+        company_name VARCHAR(255),
+        business_type VARCHAR(100),
+        shipping_address TEXT NOT NULL,
+        city VARCHAR(100) NOT NULL,
+        state VARCHAR(100) NOT NULL,
+        zip_code VARCHAR(50) NOT NULL,
+        country VARCHAR(100) NOT NULL,
+        notes TEXT,
+        preferred_contact_method VARCHAR(50),
+        payment_status VARCHAR(50) DEFAULT 'pending',
+        order_status VARCHAR(50) DEFAULT 'pending',
+        paypal_transaction_id VARCHAR(255),
+        subtotal NUMERIC(10, 2) NOT NULL,
+        total NUMERIC(10, 2) NOT NULL,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    // Order Items table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS order_items (
+        id SERIAL PRIMARY KEY,
+        order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
+        product_id INTEGER NOT NULL,
+        product_name VARCHAR(255) NOT NULL,
+        quantity INTEGER NOT NULL,
+        unit_price NUMERIC(10, 2) NOT NULL,
+        subtotal NUMERIC(10, 2) NOT NULL,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       );
     `);

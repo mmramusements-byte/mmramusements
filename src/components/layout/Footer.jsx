@@ -6,11 +6,11 @@ import { useSocialStore } from '../../admin/store/useSocialStore';
 
 const footerNav = [
   { label: 'Home', href: '/' },
-  { label: 'Shop Equipment', href: '/gaming-carts' },
-  { label: 'Best Sellers', href: '/popular' },
-  { label: 'Deals & Clearance', href: '/deals' },
+  { label: 'Arcade Games', href: '/categories/arcade-games' },
+  { label: 'Game Boards', href: '/categories/game-boards' },
+  { label: 'Best Sellers', href: '/categories/best-sellers' },
+  { label: 'Deals & Clearance', href: '/categories/clearance' },
   { label: 'About Us', href: '/about' },
-  { label: 'Reviews', href: '/reviews' },
 ];
 
 const supportNav = [
@@ -64,8 +64,8 @@ export default function Footer() {
           <div>
             <img
               src="/Logo_NoBackground.png"
-              alt="MMR Amusements"
-              style={{ height: '110px', width: 'auto', objectFit: 'contain', marginBottom: '16px', display: 'block' }}
+              alt="Logo"
+              style={{ height: '140px', width: 'auto', objectFit: 'contain', marginBottom: '8px', display: 'block', marginLeft: '-10px' }}
             />
             <p className="font-heading" style={{ fontSize: '11px', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--accent)', marginBottom: '16px' }}>
               AMUSEMENT MACHINE DISTRIBUTOR
@@ -74,13 +74,18 @@ export default function Footer() {
               America's premier distributor of skill-gaming machines, Cherry Master cabinets, 8-liner boards, bill acceptors, fish tables, and genuine amusement hardware.
             </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <a href="tel:+12103888416" className="font-heading contact-footer-link" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '16px', fontWeight: 600, color: '#22c55e', textDecoration: 'none', cursor: 'pointer', transition: 'all 0.2s', padding: '10px 14px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: '6px', width: 'fit-content' }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(34,197,94,0.2)'; e.currentTarget.style.boxShadow = '0 0 15px rgba(34,197,94,0.15)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(34,197,94,0.1)'; e.currentTarget.style.boxShadow = 'none'; }}
+              >
+                <Phone size={16} /> Call Now: +1 (210) 388-8416
+              </a>
               {[
-                { icon: <Phone size={14} />, text: '+1 (210) 388-8416 (Sales & Support)', href: 'tel:+12103888416' },
                 { icon: <Mail size={14} />, text: 'info@mmramusements.com', href: 'mailto:info@mmramusements.com' },
                 { icon: <MapPin size={14} />, text: '2543 Boardwalk st, San Antonio, TX 78240', href: 'https://maps.google.com/?q=2543+Boardwalk+st,+San+Antonio,+TX+78240' },
               ].map((c, i) => (
-                <a key={i} href={c.href} target={c.href.startsWith('http') ? '_blank' : undefined} rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined} className="font-body contact-footer-link" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: 'var(--muted)', textDecoration: 'none', cursor: 'none', transition: 'color 0.2s' }}>
+                <a key={i} href={c.href} target={c.href.startsWith('http') ? '_blank' : undefined} rel={c.href.startsWith('http') ? 'noopener noreferrer' : undefined} className="font-body contact-footer-link" style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '13px', color: 'var(--muted)', textDecoration: 'none', cursor: 'pointer', transition: 'color 0.2s' }}>
                   <span style={{ color: 'var(--accent)', flexShrink: 0 }}>{c.icon}</span> {c.text}
                 </a>
               ))}
@@ -93,7 +98,7 @@ export default function Footer() {
             <ul style={{ display: 'flex', flexDirection: 'column', gap: '14px', listStyle: 'none' }}>
               {footerNav.map(l => (
                 <li key={l.label}>
-                  <NavLink to={l.href} style={{ cursor: 'none', textDecoration: 'none', position: 'relative' }}
+                  <NavLink to={l.href} style={{ cursor: 'pointer', textDecoration: 'none', position: 'relative' }}
                     className={({ isActive }) => `font-body footer-link ${isActive ? 'active-footer-link' : ''}`}
                   >
                     {l.label}
@@ -109,7 +114,7 @@ export default function Footer() {
             <ul style={{ display: 'flex', flexDirection: 'column', gap: '14px', listStyle: 'none' }}>
               {supportNav.map(l => (
                 <li key={l.label}>
-                  <NavLink to={l.href} style={{ cursor: 'none', textDecoration: 'none', position: 'relative' }}
+                  <NavLink to={l.href} style={{ cursor: 'pointer', textDecoration: 'none', position: 'relative' }}
                     className={({ isActive }) => `font-body footer-link ${isActive ? 'active-footer-link' : ''}`}
                   >
                     {l.label}
@@ -126,7 +131,7 @@ export default function Footer() {
               {activeSocials.map(s => (
                 <motion.a key={s.id} href={s.url} aria-label={s.name} target="_blank" rel="noopener noreferrer"
                   whileHover={{ x: 5, color: '#fff' }}
-                  style={{ cursor: 'none', display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--muted)', textDecoration: 'none', transition: 'color 0.3s' }}
+                  style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--muted)', textDecoration: 'none', transition: 'color 0.3s' }}
                 >
                   <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'var(--surface)', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent)' }}>
                     {iconMap[s.id]}

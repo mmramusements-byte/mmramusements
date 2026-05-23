@@ -1,21 +1,29 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ProductForm from '../components/forms/ProductForm';
 import PageHeader from '../components/ui/PageHeader';
 import { useProductStore } from '../store/useProductStore';
-import { useToast } from '../hooks/useToast.jsx';
+import { useAdminUIStore } from '../store/useAdminUIStore';
+import api from '../../lib/api';
 
 export default function EditProductPage() {
   const { id } = useParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [categories, setCategories] = useState([]);
   
   const getProduct = useProductStore(state => state.getProduct);
   const updateProduct = useProductStore(state => state.updateProduct);
   const product = getProduct(id);
   
-  const toast = useToast();
+  const toast = useAdminUIStore(state => state.toast);
   const navigate = useNavigate();
   
+  useEffect(() => {
+    api.get('/categories')
+      .then(setCategories)
+      .catch(() => toast.error('Failed to load categories'));
+  }, [toast]);
+
   if (!product) {
     return (
       <div className="adm-empty">
@@ -54,6 +62,7 @@ export default function EditProductPage() {
       
       <div style={{ maxWidth: '900px' }}>
         <ProductForm 
+          categories={categories}
           defaultValues={product}
           onSubmit={handleSubmit} 
           onCancel={() => navigate('/admin/products')} 

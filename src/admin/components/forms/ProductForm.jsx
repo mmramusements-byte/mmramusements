@@ -59,7 +59,7 @@ function ProductMediaManager({ value = [], onChange }) {
   const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef(null);
 
-  const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([\/\w .-]*)*\/?$/i;
+  const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/i;
 
   const handleAddUrl = (e) => {
     e.preventDefault();
@@ -422,13 +422,15 @@ function ProductMediaManager({ value = [], onChange }) {
   );
 }
 
-export default function ProductForm({ defaultValues, onSubmit, onCancel, isSubmitting }) {
+export default function ProductForm({ defaultValues, onSubmit, onCancel, isSubmitting, categories = [] }) {
   const preppedDefaultValues = defaultValues ? {
     ...defaultValues,
     images: defaultValues.images || (defaultValues.image ? [defaultValues.image] : [])
   } : {
     title: '',
-    category: 'Cabinets',
+    category: '',
+    subcategory: '',
+    brand: '',
     condition: 'Brand New',
     players: 1,
     price: '',
@@ -449,14 +451,24 @@ export default function ProductForm({ defaultValues, onSubmit, onCancel, isSubmi
     newArrival: false,
     popular: false,
     recommended: false,
+    clearance: false,
     active: true,
     image: '',
     images: []
   };
 
-  const { register, handleSubmit, control, formState: { errors } } = useForm({
+  const { register, handleSubmit, control, watch, formState: { errors } } = useForm({
     defaultValues: preppedDefaultValues
   });
+
+  const selectedMainCategory = watch('category');
+  
+  // Filter main categories and subcategories
+  const mainCategories = categories.filter(c => !c.parent_id);
+  const selectedMainCategoryObj = mainCategories.find(c => c.name === selectedMainCategory || c.slug === selectedMainCategory);
+  const availableSubcategories = selectedMainCategoryObj 
+    ? categories.filter(c => c.parent_id === selectedMainCategoryObj.id)
+    : [];
 
   const handleFormSubmit = (data) => {
     const enrichedData = {
@@ -482,16 +494,41 @@ export default function ProductForm({ defaultValues, onSubmit, onCancel, isSubmi
         
         <div className="adm-form-grid-3">
           <div className="adm-field">
-            <label className="adm-label">Category *</label>
+            <label className="adm-label">Main Category *</label>
             <select className="adm-select" {...register('category', { required: true })}>
-              <option value="Cabinets">Cabinets</option>
-              <option value="Boards">Boards</option>
-              <option value="Validators">Validators</option>
-              <option value="Parts">Parts</option>
-              <option value="Accessories">Accessories</option>
+              <option value="">Select a main category...</option>
+              {mainCategories.map(c => (
+                <option key={c.id || c._id || c.name || c} value={c.slug || c.name}>{c.name || c}</option>
+              ))}
             </select>
           </div>
           
+          <div className="adm-field">
+            <label className="adm-label">Subcategory</label>
+            <select 
+              className="adm-select" 
+              {...register('subcategory')}
+              disabled={!selectedMainCategory || availableSubcategories.length === 0}
+            >
+              <option value="">Select a subcategory...</option>
+              {availableSubcategories.map(c => (
+                <option key={c.id || c.slug || c.name} value={c.slug || c.name}>{c.name}</option>
+              ))}
+            </select>
+            {selectedMainCategory && availableSubcategories.length === 0 && (
+              <div style={{ fontSize: '11px', color: 'var(--adm-muted)', marginTop: '4px' }}>
+                No subcategories available.
+              </div>
+            )}
+          </div>
+
+          <div className="adm-field">
+            <label className="adm-label">Brand</label>
+            <input className="adm-input" {...register('brand')} placeholder="e.g. Nintendo" />
+          </div>
+        </div>
+
+        <div className="adm-form-grid-3" style={{ marginTop: '16px' }}>
           <div className="adm-field">
             <label className="adm-label">Condition *</label>
             <select className="adm-select" {...register('condition', { required: true })}>
@@ -655,6 +692,13 @@ export default function ProductForm({ defaultValues, onSubmit, onCancel, isSubmi
           control={control}
           render={({ field }) => (
             <AdminToggle checked={field.value} onChange={field.onChange} label="New Arrival" description="Show in the New Arrivals section on the homepage." />
+          )}
+        />
+        <Controller
+          name="clearance"
+          control={control}
+          render={({ field }) => (
+            <AdminToggle checked={field.value} onChange={field.onChange} label="Clearance" description="Mark product as clearance item." />
           )}
         />
         <Controller

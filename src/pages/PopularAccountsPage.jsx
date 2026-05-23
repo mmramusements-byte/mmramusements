@@ -55,7 +55,7 @@ function EliteEquipmentCard({ item, index, onInquire }) {
         transform: `perspective(1000px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
         transition: 'transform 0.15s ease-out, border-color 0.3s, box-shadow 0.3s',
         boxShadow: hovered ? `0 14px 40px rgba(0,0,0,0.5), 0 0 25px ${item.accentColor}25` : '0 4px 20px rgba(0,0,0,0.3)',
-        cursor: 'none'
+        cursor: 'pointer'
       }}
       className="elite-item-row"
       data-cursor="view"
@@ -139,7 +139,7 @@ function EliteEquipmentCard({ item, index, onInquire }) {
                 playSuccessSound();
                 onInquire(item);
               }}
-              style={{ cursor: 'none', background: 'var(--accent)', color: '#000', border: 'none', padding: '12px 24px', borderRadius: '8px', fontWeight: 700, fontSize: '13px', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}
+              style={{ cursor: 'pointer', background: 'var(--accent)', color: '#000', border: 'none', padding: '12px 24px', borderRadius: '8px', fontWeight: 700, fontSize: '13px', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}
               data-cursor="buy"
             >
               Order Cabinet <MessageSquare size={12} />
@@ -193,7 +193,7 @@ export default function PopularAccountsPage() {
 
       </div>
 
-      {/* B2B Inquiry Modal */}
+      {/* ORDER NOW Modal */}
       <InquiryModal
         isOpen={isInquiryOpen}
         onClose={() => setIsInquiryOpen(false)}
@@ -212,3 +212,4 @@ export default function PopularAccountsPage() {
     </div>
   );
 }
+

@@ -134,3 +134,55 @@ export const deleteApplication = async (req, res) => {
     res.status(500).json({ error: 'Failed to delete application' });
   }
 };
+
+export const getJobs = async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM careers_jobs ORDER BY created_at DESC');
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('getJobs error:', error);
+    res.status(500).json({ error: 'Failed to fetch jobs' });
+  }
+};
+
+export const addJob = async (req, res) => {
+  try {
+    const { title, dept, type, level, location } = req.body;
+    const result = await pool.query(
+      'INSERT INTO careers_jobs (title, dept, type, level, location) VALUES ($1,$2,$3,$4,$5) RETURNING *',
+      [title, dept, type, level, location]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error('addJob error:', error);
+    res.status(500).json({ error: 'Failed to add job' });
+  }
+};
+
+export const updateJob = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, dept, type, level, location } = req.body;
+    const result = await pool.query(
+      'UPDATE careers_jobs SET title=$1, dept=$2, type=$3, level=$4, location=$5 WHERE id=$6 RETURNING *',
+      [title, dept, type, level, location, id]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Job not found' });
+    res.status(200).json(result.rows[0]);
+  } catch (error) {
+    console.error('updateJob error:', error);
+    res.status(500).json({ error: 'Failed to update job' });
+  }
+};
+
+export const deleteJob = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query('DELETE FROM careers_jobs WHERE id=$1 RETURNING id', [id]);
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Job not found' });
+    res.status(200).json({ message: 'Job deleted' });
+  } catch (error) {
+    console.error('deleteJob error:', error);
+    res.status(500).json({ error: 'Failed to delete job' });
+  }
+};

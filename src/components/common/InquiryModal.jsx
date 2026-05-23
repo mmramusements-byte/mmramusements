@@ -1,14 +1,42 @@
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Phone, Mail, MessageCircle, ExternalLink, ShieldCheck, Truck, Award, Zap } from 'lucide-react';
-import { playClickSound, playHoverSound } from '../../utils/audio';
+import { X, ShieldCheck, Truck, Award, Zap, ShoppingCart, CreditCard, Plus, Minus } from 'lucide-react';
+import { playClickSound, playHoverSound, playSuccessSound } from '../../utils/audio';
+import { useCartStore } from '../../store/useCartStore';
+import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 export default function InquiryModal({ isOpen, onClose, item }) {
+  const [quantity, setQuantity] = useState(1);
+  const addItem = useCartStore(state => state.addItem);
+  const navigate = useNavigate();
+
   if (!item) return null;
 
-  const emailSubject = encodeURIComponent(`B2B Inquiry: ${item.title}`);
-  const emailBody = encodeURIComponent(`Hello MMR Amusements Sales Team,\n\nI am interested in acquiring/inquiring about your commercial equipment:\n\n- Product: ${item.title}\n- Category: ${item.category}\n- Condition: ${item.condition || 'Inspected'}\n- Catalog Price: $${item.price}\n\nPlease contact me regarding secure freight dispatch, harness wiring, and available route settings.\n\nThank you.`);
-  
-  const whatsappText = encodeURIComponent(`Hello MMR Amusements, I'm interested in the "${item.title}" (${item.category}, $${item.price}). Please connect me with a commercial routing specialist.`);
+  const handleAddToCart = () => {
+    playSuccessSound();
+    for(let i=0; i<quantity; i++) {
+      addItem(item);
+    }
+    toast.success(`${quantity}x ${item.title} added to cart`, {
+      style: {
+        background: '#1a1a1a',
+        color: '#fff',
+        border: '1px solid var(--accent)'
+      },
+      iconTheme: {
+        primary: 'var(--accent)',
+        secondary: '#000',
+      },
+    });
+    setQuantity(1);
+  };
+
+  const handleOrderNow = () => {
+    handleAddToCart();
+    onClose();
+    navigate('/checkout');
+  };
 
   return (
     <AnimatePresence>
@@ -22,11 +50,12 @@ export default function InquiryModal({ isOpen, onClose, item }) {
             onClick={() => {
               onClose();
               playClickSound();
+              setQuantity(1);
             }}
             style={{
               position: 'fixed',
               inset: 0,
-              background: 'rgba(3, 3, 3, 0.85)',
+              background: 'rgba(0, 0, 0, 0.9)',
               backdropFilter: 'blur(12px)',
               zIndex: 1000,
             }}
@@ -60,31 +89,33 @@ export default function InquiryModal({ isOpen, onClose, item }) {
                 overflow: 'hidden',
                 position: 'relative',
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                maxHeight: '90vh'
               }}
             >
               {/* Header Visual */}
-              <div style={{ position: 'relative', height: '140px', overflow: 'hidden' }}>
+              <div style={{ position: 'relative', height: '200px', overflow: 'hidden', flexShrink: 0 }}>
                 <img
-                  src={item.image}
+                  src={item.image_url || item.image}
                   alt={item.title}
                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: 'brightness(0.75)' }}
                 />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, var(--card) 0%, rgba(3,3,3,0.3) 100%)' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, var(--card) 0%, rgba(0,0,0,0.5) 100%)' }} />
                 
                 {/* Close button */}
                 <button
                   onClick={() => {
                     onClose();
                     playClickSound();
+                    setQuantity(1);
                   }}
                   onMouseEnter={() => playHoverSound()}
                   style={{
                     position: 'absolute',
                     top: '16px',
                     right: '16px',
-                    background: 'rgba(3,3,3,0.6)',
-                    border: '1px solid rgba(255,255,255,0.1)',
+                    background: 'rgba(0,0,0,0.6)',
+                    border: '1px solid rgba(255,255,255,0.2)',
                     color: '#fff',
                     width: '36px',
                     height: '36px',
@@ -92,15 +123,16 @@ export default function InquiryModal({ isOpen, onClose, item }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    cursor: 'none',
-                    transition: 'all 0.2s'
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    zIndex: 10
                   }}
                 >
                   <X size={18} />
                 </button>
 
                 {/* Title and Category */}
-                <div style={{ position: 'absolute', bottom: '16px', left: '24px' }}>
+                <div style={{ position: 'absolute', bottom: '20px', left: '24px', right: '24px' }}>
                   <span className="font-heading" style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.15em', color: item.accentColor || 'var(--accent)', fontWeight: 700 }}>
                     {item.category} • {item.condition || 'Commercial'}
                   </span>
@@ -111,139 +143,138 @@ export default function InquiryModal({ isOpen, onClose, item }) {
               </div>
 
               {/* Modal Body */}
-              <div style={{ padding: '28px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div style={{ padding: '28px', display: 'flex', flexDirection: 'column', gap: '24px', overflowY: 'auto' }}>
                 {/* Product Stats Grid */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }} className="modal-specs-grid">
-                  <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
-                    <p className="font-heading" style={{ fontSize: '9px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '3px', letterSpacing: '0.05em' }}>B2B Freight</p>
+                  <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
+                    <p className="font-heading" style={{ fontSize: '9px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '3px', letterSpacing: '0.05em' }}>Shipping</p>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', color: '#fff' }}>
                       <Truck size={12} style={{ color: 'var(--accent)' }} />
-                      <span className="font-heading" style={{ fontSize: '11px', fontWeight: 600 }}>Secure Dispatch</span>
+                      <span className="font-heading" style={{ fontSize: '11px', fontWeight: 600 }}>{item.shipping || 'Freight Dispatch'}</span>
                     </div>
                   </div>
-                  <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
+                  <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
                     <p className="font-heading" style={{ fontSize: '9px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '3px', letterSpacing: '0.05em' }}>Warranty</p>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', color: '#fff' }}>
                       <Award size={12} style={{ color: 'var(--accent)' }} />
                       <span className="font-heading" style={{ fontSize: '11px', fontWeight: 600 }}>{item.warranty || '6 Months'}</span>
                     </div>
                   </div>
-                  <div style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
-                    <p className="font-heading" style={{ fontSize: '9px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '3px', letterSpacing: '0.05em' }}>DIP Settings</p>
+                  <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
+                    <p className="font-heading" style={{ fontSize: '9px', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: '3px', letterSpacing: '0.05em' }}>Availability</p>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', color: '#fff' }}>
                       <Zap size={12} style={{ color: 'var(--accent)' }} />
-                      <span className="font-heading" style={{ fontSize: '11px', fontWeight: 600 }}>Pre-Configured</span>
+                      <span className="font-heading" style={{ fontSize: '11px', fontWeight: 600 }}>{item.stock || 'In Stock'}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Description & Value */}
                 <div>
-                  <p className="font-body" style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.6, margin: 0 }}>
+                  <p className="font-body" style={{ fontSize: '14px', color: '#e5e7eb', lineHeight: 1.6, margin: 0 }}>
                     {item.description || 'Premium commercial route terminal and hardware modules. Fully burn-in tested, pre-loaded with latest system software, and wired according to custom standards.'}
                   </p>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginTop: '16px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)', padding: '12px 18px', borderRadius: '8px' }}>
-                    <span className="font-body" style={{ fontSize: '12px', color: 'var(--muted)' }}>Catalog Reference Valuation:</span>
-                    <span className="font-display" style={{ fontSize: '1.8rem', color: item.accentColor || 'var(--accent)', fontWeight: 'bold' }}>${item.price}</span>
-                  </div>
-                </div>
-
-                <div className="rule" />
-
-                {/* Direct B2B Inquiry Channels */}
-                <div>
-                  <h4 className="font-heading" style={{ fontSize: '12px', textTransform: 'uppercase', color: '#fff', letterSpacing: '0.05em', marginBottom: '14px', textAlign: 'center' }}>
-                    SELECT SECURE B2B COMMUNICATIONS CHANNEL
-                  </h4>
                   
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                    {/* Call Channel */}
-                    <a
-                      href="tel:+12103888416"
-                      onClick={() => playClickSound()}
-                      onMouseEnter={() => playHoverSound()}
-                      style={{
-                        cursor: 'none',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        padding: '14px 20px',
-                        background: 'rgba(255,255,255,0.03)',
-                        border: '1px solid rgba(255,255,255,0.06)',
-                        borderRadius: '12px',
-                        textDecoration: 'none',
-                        transition: 'all 0.2s',
-                      }}
-                      className="channel-row"
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                        <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: 'rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', justifySelf: 'center', justifyContent: 'center', color: 'var(--accent)' }}>
-                          <Phone size={16} />
-                        </div>
-                        <div>
-                          <p className="font-heading" style={{ fontSize: '13px', color: '#fff', margin: 0, fontWeight: 600 }}>Call Commercial Hotline</p>
-                          <p className="font-body" style={{ fontSize: '11px', color: 'var(--muted)', margin: 0 }}>Instant routing coordination (8 AM - 6 PM EST)</p>
-                        </div>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span className="font-mono" style={{ fontSize: '12px', color: 'var(--accent)', fontWeight: 'bold' }}>+1 (210) 388-8416</span>
-                        <ExternalLink size={12} style={{ color: 'var(--muted)' }} />
-                      </div>
-                    </a>
-
-                    {/* WhatsApp Channel */}
-                    <a
-                      href={`https://wa.me/12103888416?text=${whatsappText}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() => playClickSound()}
-                      onMouseEnter={() => playHoverSound()}
-                      style={{
-                        cursor: 'none',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        padding: '14px 20px',
-                        background: 'rgba(34, 197, 94, 0.05)',
-                        border: '1px solid rgba(34, 197, 94, 0.15)',
-                        borderRadius: '12px',
-                        textDecoration: 'none',
-                        transition: 'all 0.2s',
-                      }}
-                      className="channel-row"
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                        <div style={{ width: '38px', height: '38px', borderRadius: '50%', background: 'rgba(34, 197, 94, 0.1)', display: 'flex', alignItems: 'center', justifySelf: 'center', justifyContent: 'center', color: '#22c55e' }}>
-                          <MessageCircle size={16} />
-                        </div>
-                        <div>
-                          <p className="font-heading" style={{ fontSize: '13px', color: '#fff', margin: 0, fontWeight: 600 }}>Message via WhatsApp</p>
-                          <p className="font-body" style={{ fontSize: '11px', color: 'var(--muted)', margin: 0 }}>Connect with a route specialist in under 5 minutes</p>
-                        </div>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span className="font-heading" style={{ fontSize: '10px', color: '#22c55e', fontWeight: 'bold', background: 'rgba(34,197,94,0.1)', padding: '2px 8px', borderRadius: '4px' }}>LIVE CHAT</span>
-                        <ExternalLink size={12} style={{ color: '#22c55e' }} />
-                      </div>
-                    </a>
-
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '20px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', padding: '16px 20px', borderRadius: '12px' }}>
+                    <div>
+                      <span className="font-body" style={{ fontSize: '12px', color: 'var(--muted)', display: 'block', marginBottom: '4px' }}>Unit Price</span>
+                      <span className="font-display" style={{ fontSize: '2rem', color: '#fff', fontWeight: 'bold', lineHeight: 1 }}>${item.price}</span>
+                    </div>
+                    
+                    {/* Quantity Selector */}
+                    <div style={{ display: 'flex', alignItems: 'center', background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', padding: '4px' }}>
+                      <button 
+                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                        style={{ background: 'transparent', border: 'none', color: '#fff', padding: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '4px' }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                      >
+                        <Minus size={14} />
+                      </button>
+                      <span className="font-mono" style={{ color: '#fff', fontSize: '14px', fontWeight: 'bold', minWidth: '30px', textAlign: 'center' }}>
+                        {quantity}
+                      </span>
+                      <button 
+                        onClick={() => setQuantity(quantity + 1)}
+                        style={{ background: 'transparent', border: 'none', color: '#fff', padding: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '4px' }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                      >
+                        <Plus size={14} />
+                      </button>
+                    </div>
                   </div>
                 </div>
 
-                {/* Escrow note */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center', color: 'var(--muted)', fontSize: '11px' }}>
-                  <ShieldCheck size={13} style={{ color: '#22c55e' }} />
-                  <span className="font-body">All direct transactions are secured via corporate escrow routing channels.</span>
+                {/* CTAs */}
+                <div style={{ display: 'flex', gap: '12px', marginTop: '4px' }}>
+                  <button
+                    onClick={handleAddToCart}
+                    style={{
+                      flex: 1,
+                      padding: '16px',
+                      background: 'rgba(255,255,255,0.05)',
+                      border: '1px solid var(--accent)',
+                      color: 'var(--accent)',
+                      borderRadius: '12px',
+                      fontSize: '14px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      textTransform: 'uppercase',
+                      transition: 'all 0.2s',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'rgba(34,197,94,0.1)';
+                      playHoverSound();
+                    }}
+                    onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                  >
+                    <ShoppingCart size={16} /> ADD TO CART
+                  </button>
+
+                  <button
+                    onClick={handleOrderNow}
+                    style={{
+                      flex: 1,
+                      padding: '16px',
+                      background: 'var(--accent)',
+                      border: 'none',
+                      color: '#000',
+                      borderRadius: '12px',
+                      fontSize: '14px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      textTransform: 'uppercase',
+                      transition: 'all 0.2s',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.02)';
+                      playHoverSound();
+                    }}
+                    onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                  >
+                    <CreditCard size={16} /> ORDER NOW
+                  </button>
+                </div>
+
+                {/* Guarantee note */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center', color: 'var(--muted)', fontSize: '11px', marginTop: '8px' }}>
+                  <ShieldCheck size={13} style={{ color: 'var(--accent)' }} />
+                  <span className="font-body">Secure commercial transaction processing and freight handling.</span>
                 </div>
               </div>
             </motion.div>
           </div>
 
           <style>{`
-            .channel-row:hover {
-              background: rgba(255,255,255,0.06) !important;
-              border-color: var(--accent) !important;
-            }
             @media (max-width: 500px) {
               .modal-specs-grid {
                 grid-template-columns: 1fr !important;

@@ -40,7 +40,6 @@ body {
   color: var(--text);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   overflow-x: hidden;
-  cursor: none;
   /* Ensure full width always */
   width: 100%;
   min-height: 100vh;
@@ -189,7 +188,7 @@ body {
   text-transform: uppercase;
   border-radius: 6px;
   border: none;
-  cursor: none;
+  cursor: pointer;
   transition: all 0.22s var(--ease-expo);
   text-decoration: none;
   white-space: nowrap;
