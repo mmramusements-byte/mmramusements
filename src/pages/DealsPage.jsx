@@ -35,7 +35,7 @@ export default function DealsPage() {
   const formatNum = (n) => String(n).padStart(2, '0');
 
   return (
-    <div style={{ background: 'var(--black)', minHeight: '100vh', paddingTop: '120px', paddingBottom: '80px' }}>
+    <div style={{ background: 'var(--black)', minHeight: '100vh', paddingTop: '160px', paddingBottom: '80px' }}>
       <div className="mmr-container">
 
         {/* Page Header */}

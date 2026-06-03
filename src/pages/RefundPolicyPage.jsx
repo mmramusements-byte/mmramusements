@@ -3,7 +3,7 @@ import { CalendarCheck } from 'lucide-react';
 
 export default function RefundPolicyPage() {
   return (
-    <div style={{ background: 'var(--black)', minHeight: '100vh', paddingTop: '120px' }}>
+    <div style={{ background: 'var(--black)', minHeight: '100vh', paddingTop: '160px' }}>
       <section className="mmr-section" style={{ padding: '60px 0' }}>
         <div className="mmr-container" style={{ maxWidth: '800px' }}>
           

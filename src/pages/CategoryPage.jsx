@@ -126,7 +126,7 @@ export default function CategoryPage() {
 
   if (loading) {
     return (
-      <div style={{ background: 'var(--black)', minHeight: '100vh', paddingTop: '120px', paddingBottom: '80px' }}>
+      <div style={{ background: 'var(--black)', minHeight: '100vh', paddingTop: '160px', paddingBottom: '80px' }}>
         <style>{`@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }`}</style>
         <div className="mmr-container">
           {/* Skeleton header */}

@@ -20,7 +20,7 @@ export default function ReviewsPage() {
   const allReviews = [...testimonials, ...testimonials].map((r, i) => ({ ...r, id: i }));
 
   return (
-    <div style={{ background: 'var(--black)', minHeight: '100vh', paddingTop: '120px' }}>
+    <div style={{ background: 'var(--black)', minHeight: '100vh', paddingTop: '160px' }}>
       
       {/* Header */}
       <section className="mmr-section" style={{ padding: '40px 0 60px', borderBottom: '1px solid var(--border)' }}>

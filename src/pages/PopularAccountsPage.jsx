@@ -167,7 +167,7 @@ export default function PopularAccountsPage() {
   const eliteEquipment = activeProducts.filter(prod => prod.category === 'Cabinets' || prod.badge === 'Genuine OEM');
 
   return (
-    <div style={{ background: 'var(--black)', minHeight: '100vh', paddingTop: '120px', paddingBottom: '80px' }}>
+    <div style={{ background: 'var(--black)', minHeight: '100vh', paddingTop: '160px', paddingBottom: '80px' }}>
       <div className="mmr-container">
 
         {/* Page Header */}

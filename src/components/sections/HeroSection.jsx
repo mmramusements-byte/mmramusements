@@ -57,7 +57,7 @@ export default function HeroSection() {
       </motion.div>
 
       {/* ── CONTENT LAYER ── */}
-      <div className="mmr-container" style={{ position: 'relative', zIndex: 10, paddingTop: '7rem', paddingBottom: '5rem', width: '100%' }}>
+      <div className="mmr-container" style={{ position: 'relative', zIndex: 10, paddingTop: '11rem', paddingBottom: '5rem', width: '100%' }}>
         <div style={{ maxWidth: '720px' }}>
 
           {/* Intro Label */}
