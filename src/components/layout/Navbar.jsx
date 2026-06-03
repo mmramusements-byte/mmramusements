@@ -142,7 +142,7 @@ export default function Navbar() {
           {/* LOGO */}
           <Link
             to="/"
-            style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', textDecoration: 'none', flexShrink: 0 }}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '4px', cursor: 'pointer', textDecoration: 'none', flexShrink: 0 }}
             onMouseEnter={() => playHoverSound()}
             onClick={() => playClickSound()}
           >
@@ -159,6 +159,9 @@ export default function Navbar() {
                 style={{ height: '80px', width: 'auto', objectFit: 'contain' }}
               />
             )}
+            <span style={{ fontSize: '9px', color: 'rgba(255,255,255,0.5)', maxWidth: '200px', lineHeight: 1.2, fontFamily: "'Inter', sans-serif" }}>
+              MMR amusements is a registered DBA of Rao 2025 Vending LLC . Texas . All rights reserved.
+            </span>
           </Link>
 
           {/* DESKTOP NAV */}
